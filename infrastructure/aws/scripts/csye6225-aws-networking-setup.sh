@@ -1,7 +1,8 @@
 # Create VPC with CLI command
 
 echo "Creating VPC..."
-# aws ec2 create-vpc --cidr-block 10.0.0.0/16
+new_vpc=$(aws ec2 create-vpc --cidr-block 10.0.0.0/16 --query 'Vpc.[VpcId]' --output text)
+echo $new_vpc
 
 echo "Enter STACK_NAME: "
 read STACK_NAME
@@ -16,6 +17,7 @@ echo "STACK_NAME entered: " $STACK_NAME
 # echo $avail_zones
 
 # Create Subnet
+# aws ec2 create-subnet --vpc-id $vpc_id --cidr-block 10.0.1.0/24
 aws ec2 create-subnet --vpc-id vpc-0be70c10aa459c235 --cidr-block 10.0.2.0/24
 
 # Create Subnet 3
