@@ -24,5 +24,15 @@ aws ec2 create-subnet --vpc-id vpc-0be70c10aa459c235 --cidr-block 10.0.2.0/24
 aws ec2 create-subnet --vpc-id $vpc_id --cidr-block 10.0.3.0/24
 
 
+#Create Internet Gateway
+new_ig=$(aws ec2 create-internet-gateway --query 'InternetGateway.[InternetGatewayId]' --output text)
+echo "Internet Gateway : -" $new_ig
+
+#Attach Internet Gateway
+attach_ig=$(aws ec2 attach-internet-gateway --internet-gateway-id $new_ig --vpc-id $new_vpc)
+
+
+
+
 
 
