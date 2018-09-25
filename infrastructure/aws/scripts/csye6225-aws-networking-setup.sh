@@ -33,15 +33,6 @@ read zone1
 sub_id1=$(aws ec2 create-subnet --availability-zone $zone1 --vpc-id $vpc_id --cidr-block $subnet1 --query 'Subnet.[SubnetId]' --output text)
 echo "Generated subnet-id 1: " $sub_id1
 echo "Entered AvailabilityZone : " $zone1
-# Create Route Table
-echo "Creating Route Table..."
-new_rt_id=$(aws ec2 create-route-table --vpc-id $new_vpc --query 'RouteTable.[RouteTableId]' --output text)
-echo "New route table created: " $new_rt_id
-
-# Create Route
-#new_route=$(aws ec2 create-route --route-table-id $new_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id $new_ig_id)
-
-
 
 echo "Enter Valid subnet-2 cidr-block to create subnet 2...."
 read subnet2
@@ -61,3 +52,12 @@ echo "Entered AvailabilityZone : " $zone3
 
 
 echo "Three subnets created successfully...."
+
+
+# Create Route Table
+echo "Creating Route Table..."
+new_rt_id=$(aws ec2 create-route-table --vpc-id $vpc_id --query 'RouteTable.[RouteTableId]' --output text)
+echo "New route table created: " $new_rt_id
+
+# Create Route
+#new_route=$(aws ec2 create-route --route-table-id $new_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id $new_ig_id)
