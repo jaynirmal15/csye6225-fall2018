@@ -18,3 +18,9 @@ echo $vpc_id
 # Create Subnet
 aws ec2 create-subnet --vpc-id $vpc_id --cidr-block 10.0.1.0/24
 
+# Create Subnet 3
+aws ec2 create-subnet --vpc-id $vpc_id --cidr-block 10.0.3.0/24
+
+
+
+
