@@ -20,3 +20,9 @@ echo "STACK_NAME entered: " $STACK_NAME
 # aws ec2 create-subnet --vpc-id $vpc_id --cidr-block 10.0.1.0/24
 aws ec2 create-subnet --vpc-id vpc-0be70c10aa459c235 --cidr-block 10.0.2.0/24
 
+# Create Subnet 3
+aws ec2 create-subnet --vpc-id $vpc_id --cidr-block 10.0.3.0/24
+
+
+
+
