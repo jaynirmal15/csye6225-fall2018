@@ -50,9 +50,8 @@ sub_id3=$(aws ec2 create-subnet --vpc-id $vpc_id --cidr-block $subnet3 --query '
 echo "Generated subnet-id 3: " $sub_id3
 echo "Entered AvailabilityZone : " $zone3
 
-
-
 echo "Three subnets created successfully...."
+
 echo "Creating internt gateway"
 #Create Internet Gateway
 new_ig_id=$(aws ec2 create-internet-gateway --query 'InternetGateway.[InternetGatewayId]' --output text)
@@ -60,11 +59,7 @@ echo "Internet Gateway : -" $new_ig_id
 
 echo "Attaching internet gateway"
 #Attach Internet Gateway
-attach_ig=$(aws ec2 attach-internet-gateway --internet-gateway-id $new_ig_id --vpc-id $new_vpc)
-
-
-
-
+attach_ig=$(aws ec2 attach-internet-gateway --internet-gateway-id $new_ig_id --vpc-id $vpc_id)
 
 # Create Route Table
 echo "Creating Route Table..."
@@ -72,4 +67,14 @@ new_rt_id=$(aws ec2 create-route-table --vpc-id $vpc_id --query 'RouteTable.[Rou
 echo "New route table created: " $new_rt_id
 
 # Create Route
-#new_route=$(aws ec2 create-route --route-table-id $new_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id $new_ig_id)
+new_route=$(aws ec2 create-route --route-table-id $new_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id $new_ig_id)
+echo "New route created...!"
+
+
+# Attach route to subnets
+aws ec2 associate-route-table --route-table-id $new_rt_id --subnet-id $sub_id1
+aws ec2 associate-route-table --route-table-id $new_rt_id --subnet-id $sub_id2
+aws ec2 associate-route-table --route-table-id $new_rt_id --subnet-id $sub_id3
+
+echo "route attached to subnets"
+
