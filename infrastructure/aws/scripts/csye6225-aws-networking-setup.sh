@@ -25,9 +25,11 @@ echo "STACK_NAME entered: " $STACK_NAME
 
 
 # Create Route Table
+echo "Creating Route Table..."
 new_rt_id=$(aws ec2 create-route-table --vpc-id $new_vpc --query 'RouteTable.[RouteTableId]' --output text)
-echo $new_rt_id
+echo "New route table created: " $new_rt_id
 
+# Create Route
 #new_route=$(aws ec2 create-route --route-table-id $new_rt_id --destination-cidr-block 0.0.0.0/0 --gateway-id $new_ig_id)
 
 
