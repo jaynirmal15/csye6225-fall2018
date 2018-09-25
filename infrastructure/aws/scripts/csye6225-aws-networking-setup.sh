@@ -51,7 +51,19 @@ echo "Generated subnet-id 3: " $sub_id3
 echo "Entered AvailabilityZone : " $zone3
 
 
+
 echo "Three subnets created successfully...."
+echo "Creating internt gateway"
+#Create Internet Gateway
+new_ig_id=$(aws ec2 create-internet-gateway --query 'InternetGateway.[InternetGatewayId]' --output text)
+echo "Internet Gateway : -" $new_ig_id
+
+echo "Attaching internet gateway"
+#Attach Internet Gateway
+attach_ig=$(aws ec2 attach-internet-gateway --internet-gateway-id $new_ig_id --vpc-id $new_vpc)
+
+
+
 
 
 # Create Route Table
