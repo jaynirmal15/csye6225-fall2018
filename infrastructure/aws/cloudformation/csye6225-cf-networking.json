@@ -1,0 +1,42 @@
+{
+   "AWOrmatVersion" : "2010-09-09",
+   "Resources" : {
+      "myVPC" : {
+         "Type" : "AWS::EC2::VPC",
+         "Properties" : {
+            "CidrBlock" : "10.0.0.0/16",
+            "EnableDnsSupport" : "false",
+            "EnableDnsHostnames" : "false",
+            "InstanceTenancy" : "dedicated",
+            "Tags" : [ {"Name" : "placeholder"} ]
+         }
+      },
+      "subnet1" : {
+         "Type" : "AWS::EC2::Subnet",
+         "Properties" : {
+            "VpcId" : { "Ref" : "myVPC" },
+            "CidrBlock" : "10.0.0.0/24",
+            "AvailabilityZone" : "us-east-1a",
+            "Tags" : [ { "Key" : "foo", "Value" : "bar" } ]
+         }
+      },
+      "subnet2" : {
+         "Type" : "AWS::EC2::Subnet",
+         "Properties" : {
+            "VpcId" : { "Ref" : "myVPC" },
+            "CidrBlock" : "10.0.1.0/24",
+            "AvailabilityZone" : "us-east-1b",
+            "Tags" : [ { "Key" : "foo", "Value" : "bar" } ]
+         }
+      },
+      "subnet3" : {
+         "Type" : "AWS::EC2::Subnet",
+         "Properties" : {
+            "VpcId" : { "Ref" : "myVPC" },
+            "CidrBlock" : "10.0.2.0/24",
+            "AvailabilityZone" : "us-east-1c",
+            "Tags" : [ { "Key" : "foo", "Value" : "bar" } ]
+         }
+      }
+   }
+}     
