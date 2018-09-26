@@ -18,4 +18,6 @@ db.sequelize = sequelize;
 
 //Models/tables
 db.register = require('../app/model/register')(sequelize,Sequelize);
+
+
 module.exports =db;

@@ -1,5 +1,7 @@
 'use strict';
 const bcrypt = require('bcryptjs');
+const auth = require('basic-auth');
+
 var db = require('../../database/database');
 const register = db.register;
 
@@ -36,9 +38,9 @@ exports.createuser = (req, res) => {
 
 exports.login = (req, res) => {
 	const salt = 10;
-	
+	var credentials = auth(req);
 	// var hash_password = bcrypt.compareSync(req.body.password,salt);
-	register.find({where :{user_name : req.body.user_name,password: req.body.password}}).then(log => {
+	register.find({where :{user_name : credentials.name,password: credentials.pass}}).then(log => {
 	
 if(log){
 	var date = new Date();
@@ -74,5 +76,14 @@ if(!log)
 			res.status(500).json({msg: "error", details: err});
 		});
 };
+exports.checklogin = (req, res) => {
+	
+	var credentials = auth(req);
+	console.log(credentials.name);
+	console.log(credentials.pass);
+
+		res.json("Successfull");
+}
+	
 
 

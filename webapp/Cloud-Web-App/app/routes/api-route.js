@@ -4,7 +4,9 @@ module.exports = function (app) {
    
 
   // send-mail
-   app.route('/time').post(cloudController.login);
+   app.route('/time').get(cloudController.login);
     app.route('/register').post(cloudController.createuser);
+
+    app.route('/tbt').get(cloudController.checklogin);
 
 }

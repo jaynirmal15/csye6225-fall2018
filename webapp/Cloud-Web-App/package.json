@@ -9,6 +9,7 @@
   "author": "Jay Nirmal",
   "license": "ISC",
   "dependencies": {
+    "basic-auth": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
