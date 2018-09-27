@@ -35,17 +35,8 @@ db.connect((err) =>{
 });
 
 app.post('/login',(req,res) =>{
-    if(validationemail(req.body.username))
-    {
-        console.log("Correct");
-    }
-    else
-    {
-        console.log("incorrect");
-    }
     if(req.body.username && req.body.password) {
         if (validationemail(req.body.username)) {
-
             var salt = bcryptjs.genSaltSync(saltRounds);
             var hash = bcryptjs.hashSync(req.body.password, salt);
             let selectsql = `Select username from login WHERE username = '${req.body.username}'`
@@ -72,7 +63,7 @@ app.post('/login',(req,res) =>{
         }
     }
     else {
-        res.send("enter username and password")
+        res.send("enter valid username and password")
     }
 });
 app.get('/time',(req,res) => {
@@ -108,7 +99,7 @@ app.get('/time',(req,res) => {
                     month = (month < 10 ? "0" : "") + month;
 
                     var day = date.getDate();
-                    day = (day < 10 ? "0" : "") + day;
+                    day = (day < 10 ? "0" : "") + day - 1;
 
                     var time = (year + ":" + month + ":" + day + " : " + hour + ":" + min + ":" + seconds);
                     res.send(time);
@@ -129,7 +120,11 @@ function validationemail(email){
     var em= /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return em.test(email);
 }
-
+function hasWhiteSpace(sr)
+{
+    reWhiteSpace = /\s/g;
+    return reWhiteSpace.test(sr);
+}
 
 app.listen('3000',()=>{
     console.log('Server started on port 3000');
