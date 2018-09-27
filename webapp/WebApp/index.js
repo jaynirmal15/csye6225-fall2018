@@ -3,15 +3,24 @@ const mysql  =  require('mysql');
 const bcryptjs = require('bcryptjs');
 const basicAuth = require('basic-auth');
 const bodyparser = require('body-parser');
-var path = require('path');
 const saltRounds = 10;
 const app = express();
+process.env.NODE_ENV = 'test';
+var request = require('supertest');
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let should = chai.should();
+var expect = chai.expect;
+chai.use(chaiHttp);
+
+//bodyparser for testing api inputs
 app.use(bodyparser.urlencoded({
     extended : true
 }));
 
 app.use(bodyparser.json());
 
+//enabling cors
 app.use(function (req,res,next) {
     res.header("Access-Control-Allow-Methods","GET,PUT,POST,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Origin","*");
@@ -19,6 +28,7 @@ app.use(function (req,res,next) {
     next();
 })
 
+//create the connection
 const db =mysql.createConnection({
     host     : 'localhost',
     user     :  'root',
@@ -26,6 +36,12 @@ const db =mysql.createConnection({
     database : 'WebApp'
 });
 
+//start the server
+app.listen('3000',()=>{
+    console.log('Server started on port 3000');
+});
+
+//connect to the database
 db.connect((err) =>{
     if(err)
     {
@@ -34,7 +50,9 @@ db.connect((err) =>{
     console.log("Database connected");
 });
 
-app.post('/login',(req,res) =>{
+//register api
+
+app.post('/register',(req,res) =>{
     if(req.body.username && req.body.password) {
         if (validationemail(req.body.username)) {
             var salt = bcryptjs.genSaltSync(saltRounds);
@@ -66,6 +84,8 @@ app.post('/login',(req,res) =>{
         res.send("enter valid username and password")
     }
 });
+
+//get time api
 app.get('/time',(req,res) => {
     var credentials = basicAuth(req);
     var salt = bcryptjs.genSaltSync(saltRounds);
@@ -115,17 +135,30 @@ app.get('/time',(req,res) => {
         }
     })
 })
+
+//Code to validate email
 function validationemail(email){
   //  var em = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0,9]{1,3}\.[0,9]{1,3}\])\(([a-zA-Z\0-9]+\.)+[a-zA-Z]{2,}))$/;
     var em= /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return em.test(email);
 }
+
+// Code to validate whitespaces and tabs.
 function hasWhiteSpace(sr)
 {
     reWhiteSpace = /\s/g;
     return reWhiteSpace.test(sr);
 }
 
-app.listen('3000',()=>{
-    console.log('Server started on port 3000');
-});
+//Test case for register
+chai.request(app)
+    .post('/register')
+    .send({username: 'rini@gmail.com',password : 'rinimini'})
+    .end(function (err,res) {
+        expect(res).have.status(200);
+        if(err)
+        {
+            console.log(err);
+        }
+        console.log("Test Successfull");
+    })
