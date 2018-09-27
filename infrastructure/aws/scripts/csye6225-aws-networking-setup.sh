@@ -3,7 +3,6 @@
 # define variables
 region=us-east-1
 #vpc_cidr_block="20.0.0.0/16"
-vpc_tag_name="csye6225-vpc-cli-1"
 ###########################
 # Create STACH NAME 
 
@@ -29,6 +28,7 @@ fi
 ##############################
 #Create Tag for generated VPC
 echo "Creating Tag Name for VPC ..."
+read vpc_tag_name
 aws ec2 create-tags --resources $vpc_id --tags Key=Name,Value=$vpc_tag_name --region $region 2>&1
 tag_status=$?
 if [ $tag_status -eq 0 ]; then
