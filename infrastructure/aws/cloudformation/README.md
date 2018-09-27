@@ -1,6 +1,6 @@
 # CSYE6225-Fall2018
 
-# Team Members:
+Team Members:
 1. Supriya Bhide - bhide.su@husky.neu.edu
 2. Jay Nirmal - nirmal.j@husky.neu.edu
 3. Ronak Shingala - shingala.r@husky.neu.edu
