@@ -14,6 +14,29 @@ echo " Route Table Delete - Press 4"
 read input
 
 if [ $input == "1" ]; then
+	echo "Start deleting Vpc....."
+	aws ec2 describe-subnets --filters Name=vpc-id,Values=$vpcId | jq -r '.Subnets[].SubnetId' |
+        while read subnetID; do
+	        aws ec2 delete-subnet --subnet-id ${subnetID} 
+		echo "Deleted subnet (${subnetID}) ..."	
+        done
+	echo "Subnets Deleted successfully..."
+
+	aws ec2 describe-internet-gateways --filter Name=attachment.vpc-id,Values=$vpcId | jq -r '.InternetGateways[].InternetGatewayId' | 
+        while read igwID; do
+        	aws ec2 detach-internet-gateway --internet-gateway-id=${igwID} --vpc-id=$vpcId 
+	        aws ec2 delete-internet-gateway --internet-gateway-id=${igwID} 
+ 		echo " Deleted internet gateway (${igwID}) ..."
+        done
+	echo "Internet Gateway Deleted Successfully..."
+	
+	aws ec2 describe-route-tables --filter Name=vpc-id,Values=$vpcId | jq -r '.RouteTables[].RouteTableId' |
+        while read routeID; do
+        	aws ec2 delete-route-table --route-table-id ${routeID}
+		echo " Deleted Route Table (${routeID}) ..."
+        done
+	echo "Route Table Deleted Successfully...."
+
 	echo " Deleting Vpc with entered the name : " $vpcName
 	aws ec2 delete-vpc --vpc-id $vpcId
 	dl_vpc=$?
@@ -62,6 +85,21 @@ elif [ $input == "4" ]; then
 		echo "Route table deleted successfully...!"
 	else
 		echo "Error in deletion..."
+		echo "\nDeleting all dependencies...."
+		
+		aws ec2 describe-subnets --filters Name=vpc-id,Values=$vpcId | jq -r '.Subnets[].SubnetId' |
+        	while read subnetID; do
+	    	    aws ec2 delete-subnet --subnet-id ${subnetID} 
+			echo "Deleted subnet (${subnetID}) ..."	
+        	done
+		echo "Subnets Deleted successfully..."
+		
+		aws ec2 delete-route-table --route-table-id $rtId
+		if [ $? -eq 0 ]; then
+			echo "Route table deleted successfully...!"
+		else
+			echo "Error in deletion..."
+		fi
 		exit 1
 	fi
 
