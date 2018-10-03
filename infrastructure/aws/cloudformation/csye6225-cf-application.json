@@ -1,5 +1,5 @@
 {
-    "AWSTemplateFormatVersion": "2010-09-09",
+  "AWSTemplateFormatVersion": "2010-09-09",
 	"Resources": {
         "Ec2Instance": {
             "Type": "AWS::EC2::Instance",
@@ -52,24 +52,26 @@
             }
         },
 
-        "csye6225-rds":{
-            "Type" : "AWS::RDS::DBSecurityGroup",
-            "Properties" :
-              {
-                  "EC2VpcId" : { "Ref" : "vpc-ef429095" },
-                  "DBSecurityGroupIngress" : [
-                    {
-                      "EC2SecurityGroupName": { "Ref": "csye6225-webapp"}
-                    }
-                   ],
-                  "GroupDescription" : "Security Group for RDS",
-                  "Tags" : [
-                     {
-                      "key" : "CSYE6225",
-                      "value": "RDS SecurityGroup"
-                    }
-                  ]
-              }
+        "csye6225-rds": {
+          "Type": "AWS::EC2::SecurityGroup",
+          "Properties": {
+              "GroupDescription": "Enable SSH access via port 22 80 and 443",
+              "SecurityGroupIngress": [
+                  {
+                      "IpProtocol": "tcp",
+                      "FromPort": "22",
+                      "ToPort": "22",
+                      "CidrIp": "0.0.0.0/0"
+                  }
+             ],
+             "Tags" :[
+                   {
+                      "Key" : "CSTY6225SG",
+                      "Value" : "Assignment3"
+                   }
+              ],
+            "VpcId" : "vpc-ef429095"
           }
      }
+  }
 }
