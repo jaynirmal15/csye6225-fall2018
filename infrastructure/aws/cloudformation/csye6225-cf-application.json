@@ -19,14 +19,13 @@
             "Ref": "csye6225Webapp"
           }
         ],
-        "KeyName": "supriya-ec2-key",
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-0293c3e7a0f18afb6",
+        "SubnetId": "subnet-03452a288fdcfce19",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "new-stack-2-ec2"
+            "Value": "Nishant-ec2"
           }
         ]
       }
@@ -61,7 +60,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-0970fc9a74351857f"
+        "VpcId": "vpc-04ac171bcd4c02471"
       }
     },
     "csye6225RDS": {
@@ -87,7 +86,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-0970fc9a74351857f"
+        "VpcId": "vpc-04ac171bcd4c02471"
       }
     }
   }
