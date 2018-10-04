@@ -4,21 +4,24 @@
 		"myVpcId" : {
 			"Type": "String",
 			"Default" : "vpc-0970fc9a74351857f"
+		},
+		"myAccountId": {
+			"Type": "String",
+			"Default": "359938524153"
 		}
 	},
 	"Resources": {
 		"Ec2Instance": {
 		  "Type": "AWS::EC2::Instance",
 		  "Properties": {
-			  "SecurityGroups": [
-		   	{
-			 		"Ref": "csye6225Webapp"
-		   	}
+			  "SecurityGroupIds": [
+				 	{
+				 		"Ref": "csye6225Webapp"
+				 	}
 				],
 				"KeyName": "mykey",
 				"ImageId": "ami-9887c6e7",
-				"InstanceType" : "t2.micro",
-				"VpcId" : { "Ref" : "myVpcId" }
+				"InstanceType" : "t2.micro"
 			}
     },
     "csye6225Webapp": {
@@ -30,19 +33,22 @@
                         "IpProtocol": "tcp",
                         "FromPort": "22",
                         "ToPort": "22",
-                        "CidrIp": "0.0.0.0/0"
+                        "CidrIp" : "0.0.0.0/0"
+
                     },
 					          {
                         "IpProtocol": "tcp",
                         "FromPort": "443",
                         "ToPort": "443",
-                        "SecurityGroupIngress": "0.0.0.0/0"
+                        "CidrIp" : "0.0.0.0/0"
+
                       },
                     {
                         "IpProtocol": "tcp",
                         "FromPort": "80",
                         "ToPort": "80",
-                        "SecurityGroupIngress": "0.0.0.0/0"
+                        "CidrIp" : "0.0.0.0/0"
+
                     }
 
                 ],
@@ -56,7 +62,7 @@
             }
         },
 
-        "csye6225-rds": {
+        "csye6225RDS": {
           "Type": "AWS::EC2::SecurityGroup",
           "Properties": {
               "GroupDescription": "Enable SSH access via port 3306",
@@ -64,10 +70,9 @@
                   {
                       "IpProtocol": "tcp",
                       "FromPort": "3306",
-                      "ToPort": "3306",
-                      "CidrIp": "0.0.0.0/0",
-                      "SourceSecurityGroupId": {  "Ref": "csye6225-webapp" },
-                      "SourceSecurityGroupOwnerId": ""
+                      "ToPort": "3306",                     
+                      "SourceSecurityGroupId": {  "Ref": "csye6225Webapp" },
+                      "SourceSecurityGroupOwnerId": {  "Ref": "myAccountId" }
                   }
              ],
              "Tags" :[
