@@ -19,10 +19,11 @@
 				 		"Ref": "csye6225Webapp"
 				 	}
 				],
-				"KeyName": "mykey",
+				"KeyName": "supriya-ec2-key",
 				"ImageId": "ami-9887c6e7",
-				"InstanceType" : "t2.micro"
-			}
+				"InstanceType" : "t2.micro",
+				"SubnetId": "subnet-0293c3e7a0f18afb6"
+			}			
     },
     "csye6225Webapp": {
             "Type": "AWS::EC2::SecurityGroup",
