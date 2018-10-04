@@ -1,3 +1,4 @@
+.gitignore
 node_modules/
 package-lock.json
 .idea
@@ -6,4 +7,4 @@ package-lock.json
 *.ipr
 /out/
 .idea/
-
+/node_modules
