@@ -9,6 +9,7 @@ process.env.NODE_ENV = 'test';
 var request = require('supertest');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
+let uuidv1 = require('uuid/v1')
 let should = chai.should();
 var expect = chai.expect;
 chai.use(chaiHttp);
@@ -38,7 +39,9 @@ const db =mysql.createConnection({
 
 //start the server
 app.listen('3000',()=>{
+
     console.log('Server started on port 3000');
+
 });
 
 //connect to the database
@@ -87,6 +90,113 @@ app.post('/register',(req,res) =>{
 
 //get time api
 app.get('/time',(req,res) => {
+    if(basicAuth(req)) {
+        var credentials = basicAuth(req);
+        var salt = bcryptjs.genSaltSync(saltRounds);
+        var decrypt = bcryptjs.hashSync(credentials.pass, salt);
+        let seesql = `SELECT password from login WHERE username = '${credentials.name}'`
+        db.query(seesql, function (err, passauth) {
+            if (err) {
+                throw err;
+            }
+            if (bcryptjs.compareSync(credentials.pass, passauth[0].password)) {
+
+                let sql = `SELECT username,password from login WHERE username = '${credentials.name}' and password = '${passauth[0].password}'`;
+                db.query(sql, function (err, log) {
+                    if (err) {
+                        throw err;
+                    }
+                    if (log[0]) {
+                        var date = new Date();
+                        var hour = date.getHours();
+                        hour = (hour < 10 ? "0" : "") + hour;
+
+                        var min = date.getMinutes();
+                        min = (min < 10 ? "0" : "") + min;
+
+                        var seconds = date.getSeconds();
+                        seconds = (seconds < 10 ? "0" : "") + seconds;
+
+                        var year = date.getFullYear();
+
+                        var month = date.getMonth() + 1;
+                        month = (month < 10 ? "0" : "") + month;
+
+                        var day = date.getDate();
+                        day = (day < 10 ? "0" : "") + day - 1;
+
+                        var time = (year + ":" + month + ":" + day + " : " + hour + ":" + min + ":" + seconds);
+                        res.send(time);
+                    }
+                    if (!log[0]) {
+                        res.send("invalid username/password")
+                    }
+
+                })
+            }
+            else {
+                res.send("invalid credentionals")
+            }
+        })
+    }
+    else{
+        res.send("Please enter credentials");
+    }
+})
+
+app.get('/transaction',(req,res) => {
+    if(basicAuth(req)) {
+        var credentials = basicAuth(req);
+        var salt = bcryptjs.genSaltSync(saltRounds);
+        var decrypt = bcryptjs.hashSync(credentials.pass, salt);
+        let seesql = `SELECT password from login WHERE username = '${credentials.name}'`
+        db.query(seesql, function (err, passauth) {
+            if (err) {
+                throw err;
+            }
+            if (bcryptjs.compareSync(credentials.pass, passauth[0].password)) {
+
+                let sql = `SELECT username,password from login WHERE username = '${credentials.name}' and password = '${passauth[0].password}'`;
+                db.query(sql, function (err, log) {
+                    if (err) {
+                        throw err;
+                    }
+                    if (log[0]) {
+                        let trans_sql = `SELECT * from transactions WHERE username = '${credentials.name}'`;
+                        db.query(trans_sql, function (err, transac) {
+                            if (err) {
+                                throw err;
+
+                            }
+                            if (transac) {
+                                res.json(transac);
+                            }
+                            if (!transac) {
+                                res.status(400).send("No transactions found");
+                            }
+
+                        })
+                    }
+
+                    if (!log[0]) {
+                        res.status(401).send("invalid username/password")
+                    }
+
+                })
+            }
+            else {
+                res.status(400).send("invalid credentionals");
+            }
+        })
+    }
+    else{
+        res.status(401).send("Please enter credentials");
+        
+    }
+})
+
+
+app.post('/transaction',(req,res) => {
     var credentials = basicAuth(req);
     var salt = bcryptjs.genSaltSync(saltRounds);
     var decrypt = bcryptjs.hashSync(credentials.pass, salt);
@@ -103,27 +213,28 @@ app.get('/time',(req,res) => {
                     throw err;
                 }
                 if (log[0]) {
-                    var date = new Date();
-                    var hour = date.getHours();
-                    hour = (hour < 10 ? "0" : "") + hour;
+                    var uidtesting = uuidv1();
+                    console.log(uidtesting);
+                    let trans_sql = `INSERT INTO transactions values('${uidtesting}','${req.body.description}','${req.body.merchant}','${req.body.amount}','${req.body.date}','${req.body.category}','${credentials.name}')`;
+                    db.query(trans_sql, function (err,transac) {
+                        if(err)
+                        {
+                            console.log(err)
+                            throw err;
 
-                    var min = date.getMinutes();
-                    min = (min < 10 ? "0" : "") + min;
+                        }
+                        if(transac)
+                        {
+                            res.json(transac);
+                        }
+                        if(!transac)
+                        {
+                            res.send("No transactions found");
+                        }
 
-                    var seconds = date.getSeconds();
-                    seconds = (seconds < 10 ? "0" : "") + seconds;
-
-                    var year = date.getFullYear();
-
-                    var month = date.getMonth() + 1;
-                    month = (month < 10 ? "0" : "") + month;
-
-                    var day = date.getDate();
-                    day = (day < 10 ? "0" : "") + day - 1;
-
-                    var time = (year + ":" + month + ":" + day + " : " + hour + ":" + min + ":" + seconds);
-                    res.send(time);
+                    })
                 }
+
                 if (!log[0]) {
                     res.send("invalid username/password")
                 }
@@ -135,6 +246,70 @@ app.get('/time',(req,res) => {
         }
     })
 })
+app.put('/transaction/:id',(req,res) => {
+    if(req.params.id) {
+        var credentials = basicAuth(req);
+        let sql = `SELECT password from login WHERE username = '${credentials.name}'`
+        db.query(sql, function (err, passauth) {
+            if (err) {
+                throw err;
+            }
+            if (bcryptjs.compareSync(credentials.pass, passauth[0].password)) {
+                let transQuery = `SELECT id,username from transactions WHERE id = '${req.params.id}'`
+                db.query(transQuery, function (err, trans) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    if ((trans.length > 0)) {
+
+                        if (trans[0].username == credentials.name) {
+
+                            ins_query = `UPDATE transactions SET tran_description ='${req.body.description}',merchant ='${req.body.merchant}',amount ='${req.body.amount}',transaction_date ='${req.body.date}',category ='${req.body.category}' WHERE id = '${req.params.id}'`;
+                            db.query(ins_query, function (err, put_function) {
+                                if (err) {
+                                    throw err;
+                                }
+                                console.log(put_function);
+                                if (put_function.protocol41 == true) {
+                                    select_query = `SELECT * from transactions WHERE id='${req.params.id}'`;
+                                    db.query(select_query, function (err, result) {
+                                        if (err) {
+                                            throw err;
+                                        }
+                                        if (result) {
+                                            res.send(result);
+                                        }
+
+                                    })
+                                }
+                                else {
+                                    res.send("Error while updating transactions please try again later.")
+                                }
+                            })
+                        }
+                        else {
+                            res.status(401).send("User not authorzied to update this transaction");
+                        }
+                    }
+                    else {
+                        res.send("No transactions found");
+                    }
+                })
+
+            }
+            else {
+                res.send("invalid credentionals")
+            }
+        })
+    }
+    else{
+        res.send("Please enter an id");
+    }
+})
+
+
+
 
 //Code to validate email
 function validationemail(email){
