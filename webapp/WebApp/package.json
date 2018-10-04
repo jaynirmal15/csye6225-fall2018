@@ -15,7 +15,8 @@
     "chai-http": "^4.2.0",
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
