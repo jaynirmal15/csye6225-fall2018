@@ -225,18 +225,18 @@ app.post('/transaction',(req,res) => {
                         }
                         if(transac)
                         {
-                            res.json(transac);
+                            res.status(201).json(transac);
                         }
                         if(!transac)
                         {
-                            res.send("No transactions found");
+                            res.status(400).send("No transactions found");
                         }
 
                     })
                 }
 
                 if (!log[0]) {
-                    res.send("invalid username/password")
+                    res.status(401).send("Unauthorized")
                 }
 
             })
@@ -245,6 +245,52 @@ app.post('/transaction',(req,res) => {
             res.send("invalid credentionals")
         }
     })
+})
+
+app.delete('/transaction/:id',(req,res) =>{
+    if(req.params.id && basicAuth(req)){
+        var credentials = basicAuth(req);
+        let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
+        db.query(sql,function (err,passauth) {
+            if(err){
+                throw err;
+            }
+            if(bcryptjs.compareSync(credentials.pass,passauth[0].password)){
+                let transQuery = `SELECT id,username from transactions WHERE id ='${req.params.id}'`;
+                db.query(transQuery,function (err,trans) {
+                       if(err){
+                           throw err;
+                       }
+                       if((trans.length) > 0){
+                           if(trans[0].username == credentials.name){
+                               delete_query = `DELETE from transactions WHERE id = '${req.params.id}'`;
+                               db.query(delete_query,function (err,deleted) {
+                                     if(err){
+                                         throw err;
+                                     }
+                                     if(deleted){
+                                         res.status(201).send("Transaction deleted successfully");
+                                     }
+                               })
+
+                           }
+                           else{
+                               res.status(401).send("User not authorized");
+                           }
+                       }
+                       else{
+                           res.status(400).send("Transaction not found");
+                       }
+                })
+            }
+            else{
+                res.status(401).send("Authentication failed");
+            }
+        })
+    }
+    else{
+        res.status(400).send("Please enter credentials");
+    }
 })
 app.put('/transaction/:id',(req,res) => {
     if(req.params.id) {
@@ -293,20 +339,27 @@ app.put('/transaction/:id',(req,res) => {
                         }
                     }
                     else {
-                        res.send("No transactions found");
+                        res.status(400).send("No transactions found");
                     }
                 })
 
             }
             else {
-                res.send("invalid credentionals")
+                res.status(401).send("Authentication failed");
             }
         })
     }
     else{
         res.send("Please enter an id");
     }
-})
+});
+
+
+
+
+
+
+
 
 
 
