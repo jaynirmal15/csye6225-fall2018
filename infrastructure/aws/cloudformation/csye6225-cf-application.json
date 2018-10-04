@@ -55,13 +55,15 @@
         "csye6225-rds": {
           "Type": "AWS::EC2::SecurityGroup",
           "Properties": {
-              "GroupDescription": "Enable SSH access via port 22 80 and 443",
+              "GroupDescription": "Enable SSH access via port 3306",
               "SecurityGroupIngress": [
                   {
                       "IpProtocol": "tcp",
-                      "FromPort": "22",
-                      "ToPort": "22",
-                      "CidrIp": "0.0.0.0/0"
+                      "FromPort": "3306",
+                      "ToPort": "3306",
+                      "CidrIp": "0.0.0.0/0",
+                      "SourceSecurityGroupId": {  "Ref": "csye6225-webapp" },
+                      "SourceSecurityGroupOwnerId": ""
                   }
              ],
              "Tags" :[
