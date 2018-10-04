@@ -15,8 +15,9 @@ Following things to be done in order to connect the WebApp to MySql :- Open mysq
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Hardik-2010'
 CREATE DATABASE WebApp
 user WebApp
-CREATE TABLE login( username varchar(255), password varchar(255) );
+CREATE TABLE login( username varchar(255), password varchar(255) PRIMARY KEY (username) );
 To run the application executue following commands :-
+CREATE TABLE transactions( id varchar(255),tran_description varchar(255),transaction_date varchar(255), amount varchar(255),merchant varhcar(255), category varchar(255),username varchar(255), PRIMARY KEY (id) , FOREIGN KEY (username) REFERENCES login(username));
 
 node express or
 npm start or
