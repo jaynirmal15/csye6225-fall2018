@@ -58,7 +58,7 @@
 				                "Value" : "Assignment3"
 			               }
                 ],
-	      "VpcId" : { "Ref" : "myVpcId" }
+	      				"VpcId" : "vpc-0970fc9a74351857f"
             }
         },
 
@@ -81,7 +81,7 @@
                       "Value" : "Assignment3"
                    }
               ],
-            "VpcId" : { "Ref" : "myVpcId" }
+            "VpcId" : "vpc-0970fc9a74351857f"
           }
      }
   }
