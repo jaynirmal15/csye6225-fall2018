@@ -1,12 +1,18 @@
-echo "Please Enter a Name for the stack: "
+echo "Please Enter a new name for the stack: "
 read stack_name
 
-#VPC Name
-#refVPC=$(cat ../cloudformation/csye6225-cf-networking.json | jq '.Resources.myVPC')
+echo "Retrieving VPC:"
+echo "Please enter the Stack name where VPC belongs to: "
+read vpc_stack_name
 
-#echo $refVPC
+vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$vpc_stack_name']].VpcId" --output text)
+echo $vpc_id
 
-#jq '.Resources.Ec2Instance.Properties.VpcId.Ref = "'$refVPC'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+jq '.Resources.csye6225Webapp.Properties.VpcId = "'$vpc_id'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+
+jq '.Resources.csye6225RDS.Properties.VpcId = "'$vpc_id'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+
+jq '.Resources.Ec2Instance.Properties.Tags[0].Value = "'$stack_name'-ec2"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
 echo "Executing Create Stack....."
 

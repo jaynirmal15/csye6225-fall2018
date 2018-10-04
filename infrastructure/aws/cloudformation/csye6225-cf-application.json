@@ -1,89 +1,94 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-	"Parameters" : {
-		"myVpcId" : {
-			"Type": "String",
-			"Default" : "vpc-0970fc9a74351857f"
-		},
-		"myAccountId": {
-			"Type": "String",
-			"Default": "359938524153"
-		}
-	},
-	"Resources": {
-		"Ec2Instance": {
-		  "Type": "AWS::EC2::Instance",
-		  "Properties": {
-			  "SecurityGroupIds": [
-				 	{
-				 		"Ref": "csye6225Webapp"
-				 	}
-				],
-				"KeyName": "supriya-ec2-key",
-				"ImageId": "ami-9887c6e7",
-				"InstanceType" : "t2.micro",
-				"SubnetId": "subnet-0293c3e7a0f18afb6"
-			}			
+  "Parameters": {
+    "myVpcId": {
+      "Type": "String",
+      "Default": "vpc-0970fc9a74351857f"
+    },
+    "myAccountId": {
+      "Type": "String",
+      "Default": "359938524153"
+    }
+  },
+  "Resources": {
+    "Ec2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "SecurityGroupIds": [
+          {
+            "Ref": "csye6225Webapp"
+          }
+        ],
+        "KeyName": "supriya-ec2-key",
+        "ImageId": "ami-9887c6e7",
+        "InstanceType": "t2.micro",
+        "SubnetId": "subnet-0293c3e7a0f18afb6",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "new-stack-2-ec2"
+          }
+        ]
+      }
     },
     "csye6225Webapp": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties": {
-                "GroupDescription": "Enable SSH access via port 22 80 and 443",
-                "SecurityGroupIngress": [
-                    {
-                        "IpProtocol": "tcp",
-                        "FromPort": "22",
-                        "ToPort": "22",
-                        "CidrIp" : "0.0.0.0/0"
-
-                    },
-					          {
-                        "IpProtocol": "tcp",
-                        "FromPort": "443",
-                        "ToPort": "443",
-                        "CidrIp" : "0.0.0.0/0"
-
-                      },
-                    {
-                        "IpProtocol": "tcp",
-                        "FromPort": "80",
-                        "ToPort": "80",
-                        "CidrIp" : "0.0.0.0/0"
-
-                    }
-
-                ],
-	             "Tags" :[
-			               {
-				                "Key" : "CSTY6225SG",
-				                "Value" : "Assignment3"
-			               }
-                ],
-	      				"VpcId" : "vpc-0970fc9a74351857f"
-            }
-        },
-
-        "csye6225RDS": {
-          "Type": "AWS::EC2::SecurityGroup",
-          "Properties": {
-              "GroupDescription": "Enable SSH access via port 3306",
-              "SecurityGroupIngress": [
-                  {
-                      "IpProtocol": "tcp",
-                      "FromPort": "3306",
-                      "ToPort": "3306",                     
-                      "SourceSecurityGroupId": {  "Ref": "csye6225Webapp" },
-                      "SourceSecurityGroupOwnerId": {  "Ref": "myAccountId" }
-                  }
-             ],
-             "Tags" :[
-                   {
-                      "Key" : "CSTY6225SG",
-                      "Value" : "Assignment3"
-                   }
-              ],
-            "VpcId" : "vpc-0970fc9a74351857f"
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Enable SSH access via port 22 80 and 443",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
           }
-     }
+        ],
+        "Tags": [
+          {
+            "Key": "CSTY6225SG",
+            "Value": "new-stack-1-ec2"
+          }
+        ],
+        "VpcId": "vpc-0970fc9a74351857f"
+      }
+    },
+    "csye6225RDS": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Enable SSH access via port 3306",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "3306",
+            "ToPort": "3306",
+            "SourceSecurityGroupId": {
+              "Ref": "csye6225Webapp"
+            },
+            "SourceSecurityGroupOwnerId": {
+              "Ref": "myAccountId"
+            }
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "CSTY6225SG",
+            "Value": "Assignment3"
+          }
+        ],
+        "VpcId": "vpc-0970fc9a74351857f"
+      }
+    }
   }
 }
