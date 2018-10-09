@@ -88,6 +88,30 @@
         ],
         "VpcId": "vpc-04ac171bcd4c02471"
       }
+    },
+    "Dynamodb": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "Range"
+          }
+        ],
+        "TableName": "csye6225",
+        "Tags": [
+          {
+            "key": "csye6225",
+            "value": "psawale-Dynamodb"
+          }
+        ]
+      }
     }
   }
 }
