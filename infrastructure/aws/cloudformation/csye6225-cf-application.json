@@ -101,14 +101,32 @@
         "KeySchema": [
           {
             "AttributeName": "id",
-            "KeyType": "Range"
+            "KeyType": "HASH"
           }
         ],
-        "TableName": "csye6225",
+        "TableName": "csye6225-2",
         "Tags": [
           {
-            "key": "csye6225",
-            "value": "psawale-Dynamodb"
+            "Key": "csye6225",
+            "Value": "psawale-Dynamodb"
+          }
+        ],
+        "ProvisionedThroughput" :
+          {
+            "ReadCapacityUnits" : 2,
+            "WriteCapacityUnits": 2
+          }
+      }
+    },
+    "S3Bucket":{
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+      "AccessControl" : "Private",
+      "BucketName" : "csye6225-fall2018-sawale.me.tld.csye6225.com",
+      "Tags" : [
+          {
+            "Key": "csye6225Bucket",
+            "Value": "psawaleBucket"
           }
         ]
       }
