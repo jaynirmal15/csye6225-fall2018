@@ -130,6 +130,40 @@
           }
         ]
       }
+    },
+    "RDS":{
+      "Type" : "AWS::RDS::DBInstance",
+      "Properties": {
+        "Engine" : "MySQL",
+        "DBInstanceClass" : "db.t2.medium",
+        "MultiAZ" : "false",
+        "SourceDBInstanceIdentifier" : "csye6225-spring2018",
+        "MasterUsername": "csye6225master",
+        "MasterUserPassword": "csye6225password",
+        "DBSubnetGroupName" : "",
+        "PubliclyAccessible" : "No",
+        "DBName" : "csye6225"
+      }
+    },
+    "csye6225RDSSG": {
+      {
+         "Type" : "AWS::RDS::DBSecurityGroup",
+         "Properties" :
+         {
+            "EC2VpcId" : { "Ref" : "myVpcId" },
+            "DBSecurityGroupIngress" : [
+              {
+                "EC2SecurityGroupId": "sg-6c53cd23"
+              }
+             ],
+            "Tags" : [
+                {
+                  "Key": "csye6225",
+                  "Value": "RDS SEcurity Group"
+                }
+             ]
+         }
+      }
     }
   }
 }
