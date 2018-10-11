@@ -21,7 +21,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "pa2-ec2"
+            "Value": "pw-ec2"
           }
         ]
       }
@@ -100,7 +100,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "csye6225-3",
+        "TableName": "csye6225-w",
         "Tags": [
           {
             "Key": "csye6225",
@@ -117,7 +117,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.com3",
+        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.comw",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -133,11 +133,37 @@
         "Engine": "MySQL",
         "DBInstanceClass": "db.t2.medium",
         "MultiAZ": "false",
-        "DBInstanceIdentifier": "csye6225-fall20181",
+        "DBInstanceIdentifier": "csye6225-fall20180w",
         "MasterUsername": "csye6225master",
         "MasterUserPassword": "csye6225password",
         "PubliclyAccessible": "false",
-        "DBName": "csye6225"
+        "DBName": "csye6225",
+        "DBSubnetGroupName": {
+          "Ref": "DBsubnetGroup"
+        },
+        "DBSecurityGroups": [
+          {
+            "Ref": "csye6225RDSSG"
+          }
+        ]
+      }
+    },
+    "DBsubnetGroup": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "RDS DB subnet group",
+        "DBSubnetGroupName": "csyeDBSubnetgroup",
+        "SubnetIds": [
+          "subnet-01c432b13f6c89b61",
+          "subnet-0239631e83948b1c0",
+          "subnet-039b549f798f34e70"
+        ],
+        "Tags": [
+          {
+            "Key": "csye6225",
+            "Value": "Assignment4"
+          }
+        ]
       }
     },
     "csye6225RDSSG": {
