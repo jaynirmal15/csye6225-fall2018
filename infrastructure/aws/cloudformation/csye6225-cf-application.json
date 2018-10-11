@@ -134,8 +134,8 @@
         "DBInstanceClass": "db.t2.medium",
         "MultiAZ": "false",
         "DBInstanceIdentifier": "csye6225-fall20180w",
-        "MasterUsername": "csye6225master",
-        "MasterUserPassword": "csye6225password",
+        "MasterUsername": "csye6225master", /*variable*/
+        "MasterUserPassword": "csye6225password", /*variable*/
         "PubliclyAccessible": "false",
         "DBName": "csye6225",
         "DBSubnetGroupName": {
