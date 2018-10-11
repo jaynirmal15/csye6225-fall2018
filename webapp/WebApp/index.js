@@ -5,11 +5,10 @@ const basicAuth = require('basic-auth');
 const bodyparser = require('body-parser');
 const saltRounds = 10;
 const app = express();
-
-
-
+const path=require('path');
+const multer = require('multer');
 //testing
-process.env.NODE_ENV = 'test';
+//process.env.NODE_ENV = 'test';
 var request = require('supertest');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -17,63 +16,7 @@ let should = chai.should();
 var expect = chai.expect;
 chai.use(chaiHttp);
 
-//aws and image configuration
-const multer = require('multer');
- var upload = multer({ storage: storage });
-const de=require('dotenv').load();
-const AWS = require('aws-sdk');
-const multerS3 = require('multer-s3');
-//storage configuration
-const dt=Date.now();
-var storage=null;
-const uploadDir="upload/";
 
-const s3 = new AWS.S3();
-const sns = new AWS.SNS({
-    region: 'us-east-1'
-});
-
-
-
-
-
-
-
-if(process.env.NODE_ENV==="local")
-
-{
-    storage = multer.diskStorage({
-        destination:uploadDir,
-        filename: function(req, file, callback) {
-            callback(null, file.originalname + '-' + dt + path.extname(file.originalname))
-        }
-    });
-}
-else if(process.env.NODE_ENV==="development")
-{
-    storage=multerS3({
-        s3: s3,
-        bucket: process.env.BUCKET,//bucketname
-        acl: 'public-read',
-        metadata: function (req, file, cb) {
-            cb(null, {fieldName: file.fieldname});//fieldname
-        },
-        key: function (req, file, cb) {
-            cb(null, file + '-' + dt + path.extname(file))//uploaded file name after upload
-        }
-    });
-}
-
-function checkFileType(file,callback){
-    const fileTypes=/jpeg|jpg|png|gif/;
-    const extName=fileTypes.test(path.extname(file).toLowerCase());
-    const mimeType=fileTypes.test(file.mimetype);
-    if(mimeType && extName){
-        return callback(null,true);
-    } else{
-        callback('Error: Images Only');
-    }
-}
 
 
 //bodyparser for testing api inputs
@@ -82,6 +25,34 @@ app.use(bodyparser.urlencoded({
 }));
 
 app.use(bodyparser.json());
+
+
+const storage =multer.diskStorage({
+    destination: './uploads',
+    filename : function (reqe,file,cb) {
+        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage : storage
+}).single('jayjay');
+app.post('/test',function (req,res) {
+    upload(req,res,(err => {
+        if(err)
+        {
+            throw err;
+        }
+        else
+        {
+            console.log("file name")
+            console.log(req.file)
+            res.send(req.file);
+        }
+    }))
+    //res.send('test');
+    //console.log(req.files.filename);
+})
 
 //enabling cors
 app.use(function (req,res,next) {
@@ -101,8 +72,8 @@ const db =mysql.createConnection({
 });
 
 //start the server
-app.listen('3000',()=>{
-    console.log('Server started on port 3000');
+app.listen('5000',()=>{
+    console.log('Server started on port 5000');
 });
 
 //connect to the database
@@ -114,15 +85,7 @@ db.connect((err) =>{
     console.log("Database connected");
 });
 
-//register api
-app.post('/testing',upload.single('recipt'),function (req,res) {
-    res.send(req.file);
-    console.log(req.file);
-})
 app.post('/register',(req,res) =>{
-    //var u_image=uploadDir + req.file + '-' + dt + path.extname(req.file);
-    var form = req.form;
-    console.log(req.file);
     if(req.body.username && req.body.password) {
         if (validationemail(req.body.username)) {
             var salt = bcryptjs.genSaltSync(saltRounds);
