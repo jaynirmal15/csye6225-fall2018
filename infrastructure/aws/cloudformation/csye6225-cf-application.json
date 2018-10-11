@@ -17,11 +17,11 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-08f08245660268c93",
+        "SubnetId": "subnet-0b1d301959ff5f218",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "pw-ec2"
+            "Value": "p3-ec2"
           }
         ]
       }
@@ -56,7 +56,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-074e1a21f3062b4bd"
+        "VpcId": "vpc-00b39769e2e297faf"
       }
     },
     "csye6225RDS": {
@@ -82,7 +82,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-074e1a21f3062b4bd"
+        "VpcId": "vpc-00b39769e2e297faf"
       }
     },
     "Dynamodb": {
@@ -100,7 +100,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "csye6225-w",
+        "TableName": "dynamo3",
         "Tags": [
           {
             "Key": "csye6225",
@@ -117,7 +117,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.comw",
+        "BucketName": "lkjhgfd",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -154,9 +154,9 @@
         "DBSubnetGroupDescription": "RDS DB subnet group",
         "DBSubnetGroupName": "csyeDBSubnetgroup",
         "SubnetIds": [
-          "subnet-01c432b13f6c89b61",
-          "subnet-0239631e83948b1c0",
-          "subnet-039b549f798f34e70"
+          "subnet-05f84d239e91ca698",
+          "subnet-0cc63e7cf88ae327d",
+          "subnet-0f8c5f97d44e1d8ae"
         ],
         "Tags": [
           {
@@ -169,7 +169,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-074e1a21f3062b4bd",
+        "EC2VpcId": "vpc-00b39769e2e297faf",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {
