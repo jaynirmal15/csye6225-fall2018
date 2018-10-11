@@ -7,6 +7,18 @@ const saltRounds = 10;
 const app = express();
 const path=require('path');
 const multer = require('multer');
+const de = require('dotenv');
+const ms3 = require('multer-s3');
+const AWS = require('aws-sdk');
+var accessKeyId = process.env.AWS_ACCESS_KEY;
+var secretAccessKey = process.env.AWS_ACCESS_SECRET;
+const s3 = new AWS.S3({
+	accessKeyId : accessKeyId,
+	secretAccessKey : secretAccessKey
+});
+const SNS = new AWS.SNS({
+	region : 'us-east-1'
+});
 //testing
 //process.env.NODE_ENV = 'test';
 var request = require('supertest');
@@ -17,39 +29,58 @@ let should = chai.should();
 var expect = chai.expect;
 chai.use(chaiHttp);
 
-
-
-
 //bodyparser for testing api inputs
 app.use(bodyparser.urlencoded({
     extended : false
 }));
 
 app.use(bodyparser.json());
+var storage = null;
 
-
-const storage =multer.diskStorage({
+if(process.env.NODE_ENV === 'local'){
+		storage =multer.diskStorage({
     destination: './uploads',
     filename : function (reqe,file,cb) {
         cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
-});
+	});
+}
+
+else if(process.env.NODE_ENV === 'dev'){
+	storage = ms3({
+		s3: s3,
+		bucket:'csye6255-fall2018-sawale.me.tld.csye6255.com ',
+		acl: 'public-read',
+		metadata: function(req, file, cb){
+			cb(null, {fieldName: file.fieldname});
+		},
+		key: function(req, file, cb){
+			cb(null, file.originalname+'-'+Date.now()+path.extname(file.originalname));
+		}
+	});
+}
 
 const upload = multer({
     storage : storage
-}).single('jayjay');
+}).single('image');
+
 app.post('/test',function (req,res) {
     upload(req,res,(err => {
-        if(err)
-        {
-            throw err;
-        }
-        else
-        {
-            console.log("file name")
-            console.log(req.file)
-            res.send(req.file);
-        }
+    		if(process.env.NODE_ENV === 'local'){
+    			if(err)
+		      {
+		          throw err;
+		      }
+		      else
+		      {
+		          console.log("file name")
+		          console.log(req.file)
+		          res.send(req.file);
+		      }
+    		} else if(process.env.NODE_ENV === 'dev'){
+    			console.log('I am in Dev mode');
+    			res.send('This is DEV');
+    		}       
     }))
     //res.send('test');
     //console.log(req.files.filename);
@@ -86,6 +117,7 @@ db.connect((err) =>{
     }
     console.log("Database connected");
 });
+
 
 app.post('/register',(req,res) =>{
     if(req.body.username && req.body.password) {
@@ -386,16 +418,6 @@ app.put('/transaction/:id',(req,res) => {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
 //Code to validate email
 function validationemail(email){
   //  var em = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0,9]{1,3}\.[0,9]{1,3}\])\(([a-zA-Z\0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -409,6 +431,61 @@ function hasWhiteSpace(sr)
     reWhiteSpace = /\s/g;
     return reWhiteSpace.test(sr);
 }
+
+//*************************************************************
+
+
+app.get('/transaction/:id/attachments',(req,res) => {
+    if(basicAuth(req)) {
+        var credentials = basicAuth(req);
+        var salt = bcryptjs.genSaltSync(saltRounds);
+        var decrypt = bcryptjs.hashSync(credentials.pass, salt);
+        let seesql = `SELECT password from login WHERE username = '${credentials.name}'`
+        db.query(seesql, function (err, passauth) {
+            if (err) {
+                throw err;
+            }
+            if (bcryptjs.compareSync(credentials.pass, passauth[0].password)) {
+
+                let sql = `SELECT username,password from login WHERE username = '${credentials.name}' and password = '${passauth[0].password}'`;
+                db.query(sql, function (err, log) {
+                    if (err) {
+                        throw err;
+                    }
+                    if (log[0]) {
+                        let trans_sql = `SELECT receipt from transactions WHERE username = '${credentials.name}' AND id = '${req.params.id}'`;
+                        db.query(trans_sql, function (err, transac) {
+                            if (err) {
+                                throw err;
+
+                            }
+                            if (transac) {
+                                res.json(transac);
+                            }
+                            if (!transac) {
+                                res.status(400).send("No attachments found");
+                            }
+
+                        })
+                    }
+
+                    if (!log[0]) {
+                        res.status(401).send("invalid username/password")
+                    }
+
+                })
+            }
+            else {
+                res.status(400).send("invalid credentionals");
+            }
+        })
+    }
+    else{
+        res.status(401).send("Please enter credentials");
+        
+    }
+})
+
 
 //Test case for register
 // chai.request(app)
