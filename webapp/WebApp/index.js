@@ -79,22 +79,41 @@ function checkFileType(file,callback){
     }
 }
 
-app.post('/postTesting',function (req,res) {
+app.post('/transactions/:id/attachments',function (req,res) {
 
     upload(req,res,(err => {
         if(err){
-		          throw err;
-		      }
+            throw err;
+        }
         else {
             if(req.file === undefined){
                 res.send("Please select an image");
                 console.log("No images selected");
             }
             else {
-                res.send(req.file);
-    			res.send('This is DEV');
-    		}       
-            }        
+                var uid = uuidv1();
+                var url;
+                if(process.env.NODE_ENV ==="dev"){
+                    url = "https://s3.amazonaws.com/" + bucket_name + req.file.originalname;
+                }
+                else if (process.env.NODE_ENV ==="local") {
+                    url = uploadDir + req.file.originalname;
+                }
+
+                var sql = `INSERT into attachments values('${uid}','${url}','${req.params.id}')`;
+                db.query(sql,function (err,postSucess) {
+                    if(err){
+                        throw err;
+                    }
+                    else {
+                        if (postSucess) {
+                        res.send("Attachment posted successfully");
+                        }
+                    }
+                })
+
+            }
+        }
     }));
 });
 //enabling cors
@@ -115,6 +134,10 @@ const db =mysql.createConnection({
 });
 
 //start the server
+app.listen('3000',()=>{
+
+    console.log('Server started on port 3000');
+
 });
 
 //connect to the database
@@ -127,7 +150,6 @@ db.connect((err) =>{
 });
 
 //register api
-
 
 app.post('/register',(req,res) =>{
     if(req.body.username && req.body.password) {
@@ -428,6 +450,16 @@ app.put('/transaction/:id',(req,res) => {
     }
 });
 
+
+
+
+
+
+
+
+
+
+
 //Code to validate email
 function validationemail(email){
   //  var em = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0,9]{1,3}\.[0,9]{1,3}\])\(([a-zA-Z\0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -441,61 +473,6 @@ function hasWhiteSpace(sr)
     reWhiteSpace = /\s/g;
     return reWhiteSpace.test(sr);
 }
-
-//*************************************************************
-
-
-app.get('/transaction/:id/attachments',(req,res) => {
-    if(basicAuth(req)) {
-        var credentials = basicAuth(req);
-        var salt = bcryptjs.genSaltSync(saltRounds);
-        var decrypt = bcryptjs.hashSync(credentials.pass, salt);
-        let seesql = `SELECT password from login WHERE username = '${credentials.name}'`
-        db.query(seesql, function (err, passauth) {
-            if (err) {
-                throw err;
-            }
-            if (bcryptjs.compareSync(credentials.pass, passauth[0].password)) {
-
-                let sql = `SELECT username,password from login WHERE username = '${credentials.name}' and password = '${passauth[0].password}'`;
-                db.query(sql, function (err, log) {
-                    if (err) {
-                        throw err;
-                    }
-                    if (log[0]) {
-                        let trans_sql = `SELECT receipt from transactions WHERE username = '${credentials.name}' AND id = '${req.params.id}'`;
-                        db.query(trans_sql, function (err, transac) {
-                            if (err) {
-                                throw err;
-
-                            }
-                            if (transac) {
-                                res.json(transac);
-                            }
-                            if (!transac) {
-                                res.status(400).send("No attachments found");
-                            }
-
-                        })
-                    }
-
-                    if (!log[0]) {
-                        res.status(401).send("invalid username/password")
-                    }
-
-                })
-            }
-            else {
-                res.status(400).send("invalid credentionals");
-            }
-        })
-    }
-    else{
-        res.status(401).send("Please enter credentials");
-        
-    }
-})
-
 
 //Test case for register
 // chai.request(app)
