@@ -11,6 +11,7 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
+const fs = require('fs');
 //testing
 //process.env.NODE_ENV = 'test';
 var request = require('supertest');
@@ -31,7 +32,7 @@ app.use(bodyparser.json());
 const bucket_name = config.aws.bucket_name;
 const dt=Date.now();
 var storage=null;
-const uploadDir='./uploads';
+const uploadDir='uploads/';
 if(process.env.NODE_ENV==="local")
 {
     storage = multer.diskStorage({
@@ -76,96 +77,220 @@ function checkFileType(file,callback){
     }
 }
 
+
+
 app.post('/transactions/:id/attachments',function (req,res) {
-
-    upload(req,res,(err => {
-        if(err){
-            throw err;
-        }
-        else {
-            if(req.file === undefined){
-                res.send("Please select an image");
-                console.log("No images selected");
+    if(req.params.id && basicAuth(req)){
+        var credentials = basicAuth(req);
+        let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
+        db.query(sql,function (err,passauth) {
+            if(err){
+                throw err;
             }
-            else {
-                var uid = uuidv1();
-                var url;
-                if(process.env.NODE_ENV ==="dev"){
-                    url = "https://s3.amazonaws.com/" + bucket_name + req.file.originalname;
-                }
-                else if (process.env.NODE_ENV ==="local") {
-                    url = uploadDir + req.file.originalname;
-                }
-
-                var sql = `INSERT into attachments values('${uid}','${url}','${req.params.id}','${process.env.NODE_ENV}')`;
-                db.query(sql,function (err,postSucess) {
+            if(bcryptjs.compareSync(credentials.pass,passauth[0].password)){
+                let transQuery = `SELECT id,username from transactions WHERE id ='${req.params.id}'`;
+                db.query(transQuery,function (err,trans) {
                     if(err){
                         throw err;
                     }
-                    else {
-                        if (postSucess) {
-                        res.send("Attachment posted successfully");
+                    if((trans.length) > 0){
+                        if(trans[0].username == credentials.name){
+                            upload(req,res,(err => {
+                                if(err){
+                                    throw err;
+                                }
+                                else {
+                                    if(req.file === undefined){
+                                        res.send("Please select an image");
+                                        console.log("No images selected");
+                                    }
+                                    else {
+                                        var uid = uuidv1();
+                                        var url;
+                                        if(process.env.NODE_ENV ==="dev"){
+                                            url = "https://s3.amazonaws.com/" + bucket_name + req.file.originalname;
+                                        }
+                                        else if (process.env.NODE_ENV ==="local") {
+                                            url = uploadDir + req.file.originalname;
+                                        }
+
+                                        var sql = `INSERT into attachments values('${uid}','${url}','${req.params.id}','${process.env.NODE_ENV}')`;
+                                        db.query(sql,function (err,postSucess) {
+                                            if(err){
+                                                throw err;
+                                            }
+                                            else {
+                                                if (postSucess) {
+                                                    res.send("Attachment posted successfully");
+                                                }
+                                            }
+                                        })
+
+                                    }
+                                }
+                            }));
+                        }
+                        else{
+                            res.status(401).send("User not authorized");
                         }
                     }
+                    else{
+                        res.status(400).send("Transaction not found");
+                    }
                 })
-
             }
-        }
-    }));
-});
-app.get('/transactions/:id/attachments',function (req,res) {
-    var sql = `SELECT transaction_id,id,receipt from attachments WHERE transaction_id = '${req.params.id}' AND environment = '${process.env.NODE_ENV}' `;
-    db.query(sql,function (err,getSuccess) {
-        if(err){
-            throw err;
-        }
-        else{
-            if(getSuccess[0])
-            {
-                res.send(getSuccess);
+            else{
+                res.status(401).send("Authentication failed");
             }
-            else {
-                res.send("No receipts found for this transaction");
-            }
-        }
-    })
+        })
+    }
+    else{
+        res.status(400).send("Please enter credentials");
+    }
 })
-app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
-    var sql = `SELECT receipt from attachments WHERE id = '${req.params.attachmentId}' && transaction_id = '${req.params.id}'`
-    db.query(sql,function (err,deleteSuccess) {
-        if(err){
-            throw err;
-        }
-        else {
-            if(deleteSuccess[0]){
 
-                if(process.env.NODE_ENV === "dev"){
-                    var url = deleteSuccess[0].receipt.split(bucket_name);
-                  //  console.log(url[1]);
-                    s3.deleteObject({
-                        Bucket : config.aws.bucket_name,
-                        Key : url[1]
-                    },function (err,data) {
-                      //  res.send(data);
-                        var deleteSql = `DELETE from attachments where id = '${req.params.attachmentId}'`;
-                        db.query(deleteSql, function (err,deleteSuc) {
-                            if(err){
-                                throw err;
-                            }
-                            else {
-                                    res.send("Image delete successfully");
-
-                            }
-                        })
-                    })
-                }
-                else if (process.env.NODE_ENV ==="local"){
-                    //var url = deleteSuccess[0].require.
-                }
-
+app.get('/transactions/:id/attachments',function (req,res) {
+    if(req.params.id && basicAuth(req)){
+        var credentials = basicAuth(req);
+        let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
+        db.query(sql,function (err,passauth) {
+            if(err){
+                throw err;
             }
-        }
-    })
+            if(bcryptjs.compareSync(credentials.pass,passauth[0].password)){
+                let transQuery = `SELECT id,username from transactions WHERE id ='${req.params.id}'`;
+                db.query(transQuery,function (err,trans) {
+                    if(err){
+                        throw err;
+                    }
+                    if((trans.length) > 0){
+                        if(trans[0].username == credentials.name){
+                            var qwsql = `SELECT transaction_id,id,receipt from attachments WHERE transaction_id = '${req.params.id}' AND environment = '${process.env.NODE_ENV}' `;
+                            db.query(qwsql,function (err,getSuccess) {
+                                if(err){
+                                    throw err;
+                                }
+                                else{
+                                    if(getSuccess[0])
+                                    {
+                                        res.send(getSuccess);
+                                    }
+                                    else {
+                                        res.send("No receipts found for this transaction");
+                                    }
+                                }
+                            })
+
+                        }
+                        else{
+                            res.status(401).send("User not authorized");
+                        }
+                    }
+                    else{
+                        res.status(400).send("Transaction not found");
+                    }
+                })
+            }
+            else{
+                res.status(401).send("Authentication failed");
+            }
+        })
+    }
+    else{
+        res.status(400).send("Please enter credentials");
+    }
+})
+
+app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
+    if(req.params.id && basicAuth(req)){
+        var credentials = basicAuth(req);
+        let qwsql = `SELECT password from login WHERE username = '${credentials.name}'`;
+        db.query(qwsql,function (err,passauth) {
+            if(err){
+                throw err;
+            }
+            if(bcryptjs.compareSync(credentials.pass,passauth[0].password)){
+                let transQuery = `SELECT id,username from transactions WHERE id ='${req.params.id}'`;
+                db.query(transQuery,function (err,trans) {
+                    if(err){
+                        throw err;
+                    }
+                    if((trans.length) > 0){
+                        if(trans[0].username == credentials.name){
+                            var sql = `SELECT receipt from attachments WHERE id = '${req.params.attachmentId}' && transaction_id = '${req.params.id}'`
+                            db.query(sql,function (err,deleteSuccess) {
+                                if(err){
+                                    throw err;
+                                }
+                                else {
+                                    if(deleteSuccess[0]){
+
+                                        if(process.env.NODE_ENV === "dev"){
+                                            var url = deleteSuccess[0].receipt.split(bucket_name);
+                                            //  console.log(url[1]);
+                                            s3.deleteObject({
+                                                Bucket : config.aws.bucket_name,
+                                                Key : url[1]
+                                            },function (err,data) {
+                                                //  res.send(data);
+                                                var deleteSql = `DELETE from attachments where id = '${req.params.attachmentId}'`;
+                                                db.query(deleteSql, function (err,deleteSuc) {
+                                                    if(err){
+                                                        throw err;
+                                                    }
+                                                    else {
+                                                        res.send("Image delete successfully");
+
+                                                    }
+                                                })
+                                            })
+                                        }
+                                        else if (process.env.NODE_ENV ==="local"){
+                                            var localurl =  deleteSuccess[0].receipt;
+                                            fs.unlink(localurl, (err) => {
+                                                if(err){
+                                                    throw err;
+                                                }
+                                                else {
+                                                    var deletSql = `DELETE from attachments where id = '${req.params.attachmentId}'`;
+                                                    db.query(deletSql, function (err,deleteSuc) {
+                                                        if(err){
+                                                            throw err;
+                                                        }
+                                                        else {
+                                                            res.send("Image delete successfully");
+
+                                                        }
+                                                    })
+                                                }
+                                                // res.send("Image Successfully delete");
+                                            })
+                                        }
+
+                                    }
+                                    else{
+                                        res.send("No attachments found");
+                                    }
+                                }
+                            })
+                        }
+                        else{
+                            res.status(401).send("User not authorized");
+                        }
+                    }
+                    else{
+                        res.status(400).send("Transaction not found");
+                    }
+                })
+            }
+            else{
+                res.status(401).send("Authentication failed");
+            }
+        })
+    }
+    else{
+        res.status(400).send("Please enter credentials");
+    }
 });
 
 // PUT request
