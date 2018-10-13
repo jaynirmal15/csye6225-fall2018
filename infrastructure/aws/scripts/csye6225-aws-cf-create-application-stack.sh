@@ -9,8 +9,6 @@ echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
 bucket_name="dummy-bucket-152"
-dbidentifier="psawale-sye6225-fall2018q"
-dBsubnetGroup_name="psawale-dbSubnetGrpq"
 
 vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$nw_stack_name']].VpcId" --output text)
 echo "VPC ID: " $vpc_id
