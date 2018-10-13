@@ -21,9 +21,6 @@ let should = chai.should();
 var expect = chai.expect;
 chai.use(chaiHttp);
 
-
-
-
 //bodyparser for testing api inputs
 app.use(bodyparser.urlencoded({
     extended : false
@@ -169,7 +166,56 @@ app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
             }
         }
     })
+});
+
+// PUT request
+app.put('/transaction/{id}/attachments/{idAttachments}',(req,res) =>{
+    if(req.body.username && req.body.password) {
+        if (validationemail(req.body.username)) {
+            var salt = bcryptjs.genSaltSync(saltRounds);
+            var hash = bcryptjs.hashSync(req.body.password, salt);
+            
+            if(isTransactionPresent(req.params.id)){
+            	isAttachmentPresent(req.params.idAttachments){
+            		
+            	} else{
+            		res.send('Image Not Present');
+            	}            	
+            } else {
+            	res.send('Transaction Not Present');
+            }
+            
+            
+            let selectsql = `Select username from login WHERE username = '${req.body.username}'`
+            db.query(selectsql, function (err, resu) {
+                if (err) {
+                    throw err;
+                }
+                if (!resu[0]) {
+                    let sql = `INSERT INTO   login (username,password) VALUES ('${req.body.username}','${hash}')`
+                    db.query(sql, function (err, result) {
+                        if (err) {
+                            throw err;
+                        }
+                        res.send("User Successfully Created");
+                    })
+                }
+                if (resu[0]) {
+                    res.send("User already exits");
+                }
+            })
+        }
+        else {
+            res.send("incorrect username")
+        }
+    }
+    else {
+        res.send("enter valid username and password")
+    }
 })
+
+
+
 //enabling cors
 app.use(function (req,res,next) {
 
@@ -504,7 +550,94 @@ app.put('/transaction/:id',(req,res) => {
     }
 });
 
+// PUT attachments
+app.put('/transaction/:id/attachments/:attachmentId',(req,res) => {
+    if(req.params.id) {
+        var credentials = basicAuth(req);
+        let sql = `SELECT password from login WHERE username = '${credentials.name}'`
+        db.query(sql, function (err, passauth) {
+            if (err) {
+                throw err;
+            }
+            if (bcryptjs.compareSync(credentials.pass, passauth[0].password)) {
+                let transQuery = `SELECT id,username from transactions WHERE id = '${req.params.id}'`
+                db.query(transQuery, function (err, trans) {
+                    if (err) {
+                        throw err;
+                    }
 
+                    if ((trans.length > 0)) {
+
+                        if (trans[0].username == credentials.name) {
+														let attachmentQuery = `SELECT receipt, environment from attachments WHERE transaction_id = '${req.params.id}' AND id = '${req.params.attachmentId}'`
+														
+														db.query(attachmentQuery, function (err, attach){
+															if(err){
+																throw err;
+															}
+															if(attach.length > 0){
+																	upload(req,res,(err => {
+																		if(err){
+																			throw err;
+																		}
+																		else {
+																			if(attach.environment == 'dev'){
+																				// delete from S3
+																				// Post on S3															
+																			}
+																			else if (attach.environment == 'local'){
+																				// Delete from local dir
+																				// Save on local
+																			}
+																			// Update in SQL
+																		}
+																	}))												
+															}
+															res.send('Image Not Present..!')
+														})
+														
+                            ins_query = `UPDATE transactions SET tran_description ='${req.body.description}',merchant ='${req.body.merchant}',amount ='${req.body.amount}',transaction_date ='${req.body.date}',category ='${req.body.category}' WHERE id = '${req.params.id}'`;
+                            db.query(ins_query, function (err, put_function) {
+                                if (err) {
+                                    throw err;
+                                }
+                                console.log(put_function);
+                                if (put_function.protocol41 == true) {
+                                    select_query = `SELECT * from transactions WHERE id='${req.params.id}'`;
+                                    db.query(select_query, function (err, result) {
+                                        if (err) {
+                                            throw err;
+                                        }
+                                        if (result) {
+                                            res.send(result);
+                                        }
+
+                                    })
+                                }
+                                else {
+                                    res.send("Error while updating transactions please try again later.")
+                                }
+                            })
+                        }
+                        else {
+                            res.status(401).send("User not authorzied to update this transaction");
+                        }
+                    }
+                    else {
+                        res.status(400).send("No transactions found");
+                    }
+                })
+
+            }
+            else {
+                res.status(401).send("Authentication failed");
+            }
+        })
+    }
+    else{
+        res.send("Please enter an id");
+    }
+});
 
 
 
@@ -526,6 +659,34 @@ function hasWhiteSpace(sr)
 {
     reWhiteSpace = /\s/g;
     return reWhiteSpace.test(sr);
+}
+
+function isTransactionPresent(id){
+	var isPresent = false;
+	var sql = `select * from transactions where id = '${id}';`;
+	db.query(sql,function (err,result) {
+      if(err){
+          throw err;
+      }
+      //console.log(result.length);
+      if(result.length > 0)
+      	isPresent = true;
+  });
+  return isPresent;
+}
+
+function isAttachmentPresent(id){
+	var isPresent = false;
+	var sql = `select * from attachments where id = '${id}';`;
+	db.query(sql,function (err,result) {
+      if(err){
+          throw err;
+      }
+      //console.log(result.length);
+      if(result.length > 0)
+      	isPresent = true;
+  });
+  return isPresent;
 }
 
 //Test case for register
