@@ -17,9 +17,7 @@ echo "VPC ID: " $vpc_id
 
 pvt=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='net2-csye6225-private-route-table']].Associations[].SubnetId")
 echo $pvt
-#pvt=$pvt | sed "s/\"//g"
 
-#$subnets
 $count=0
 for i in $pvt
 do
@@ -62,7 +60,7 @@ jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloud
 
 echo "Executing Create Stack....."
 
-#aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-application.json --capabilities=CAPABILITY_NAMED_IAM
+aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-application.json --capabilities=CAPABILITY_NAMED_IAM
 
 if [ $? -eq 0 ]; then
 	echo "Waiting to create gets executed completely...!"
