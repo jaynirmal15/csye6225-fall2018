@@ -17,11 +17,11 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-0b1d301959ff5f218",
+        "SubnetId": "subnet-0b3a89b545c08ef1b",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "z1-ec2"
+            "Value": "stack-1-ec2"
           }
         ]
       }
@@ -56,7 +56,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-00b39769e2e297faf"
+        "VpcId": "vpc-0d6143eb6c54068dd"
       }
     },
     "csye6225RDS": {
@@ -82,7 +82,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-00b39769e2e297faf"
+        "VpcId": "vpc-0d6143eb6c54068dd"
       }
     },
     "Dynamodb": {
@@ -100,7 +100,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "dynamoz1",
+        "TableName": "table1",
         "Tags": [
           {
             "Key": "csye6225",
@@ -117,7 +117,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.comz1",
+        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -152,11 +152,11 @@
       "Type": "AWS::RDS::DBSubnetGroup",
       "Properties": {
         "DBSubnetGroupDescription": "RDS DB subnet group",
-        "DBSubnetGroupName": "dbSubnetGrpz1",
+        "DBSubnetGroupName": "dbSubnetGrp-1",
         "SubnetIds": [
-          "subnet-05f84d239e91ca698",
-          "subnet-0cc63e7cf88ae327d",
-          "subnet-0f8c5f97d44e1d8ae"
+          "subnet-0fe114b818f01bcf9",
+          "subnet-05996c87d7c2e686d",
+          "subnet-0d5e72085313e592b"
         ],
         "Tags": [
           {
@@ -169,7 +169,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-00b39769e2e297faf",
+        "EC2VpcId": "vpc-0d6143eb6c54068dd",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {
