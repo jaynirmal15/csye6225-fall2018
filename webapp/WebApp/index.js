@@ -108,7 +108,7 @@ app.post('/transactions/:id/attachments',function (req,res) {
                                         var uid = uuidv1();
                                         var url;
                                         if(process.env.NODE_ENV ==="dev"){
-                                            url = "https://s3.amazonaws.com/" + bucket_name + req.file.originalname;
+                                            url = "https://s3.amazonaws.com/" + bucket_name + "/" + req.file.originalname;
                                         }
                                         else if (process.env.NODE_ENV ==="local") {
                                             url = uploadDir + req.file.originalname;
@@ -226,8 +226,9 @@ app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
                                     if(deleteSuccess[0]){
 
                                         if(process.env.NODE_ENV === "dev"){
-                                            var url = deleteSuccess[0].receipt.split(bucket_name);
-                                            //  console.log(url[1]);
+                                            var spliturl = deleteSuccess[0].receipt.split(bucket_name);
+                                            var url = spliturl[1].split("/");
+                                              console.log(url[1]);
                                             s3.deleteObject({
                                                 Bucket : config.aws.bucket_name,
                                                 Key : url[1]
@@ -626,9 +627,7 @@ app.put('/transaction/:id',(req,res) => {
         res.send("Please enter an id");
     }
 });
-
-// PUT attachments
-app.put('/transaction/:id/attachments/:attachmentId',(req,res) => {
+app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
     if(req.params.id) {
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`
@@ -646,53 +645,67 @@ app.put('/transaction/:id/attachments/:attachmentId',(req,res) => {
                     if ((trans.length > 0)) {
 
                         if (trans[0].username == credentials.name) {
-														let attachmentQuery = `SELECT receipt, environment from attachments WHERE transaction_id = '${req.params.id}' AND id = '${req.params.attachmentId}'`
-														
-														db.query(attachmentQuery, function (err, attach){
-															if(err){
-																throw err;
-															}
-															if(attach.length > 0){
-																	upload(req,res,(err => {
-																		if(err){
-																			throw err;
-																		}
-																		else {
-																			if(attach.environment == 'dev'){
-																				// delete from S3
-																				// Post on S3															
-																			}
-																			else if (attach.environment == 'local'){
-																				// Delete from local dir
-																				// Save on local
-																			}
-																			// Update in SQL
-																		}
-																	}))												
-															}
-															res.send('Image Not Present..!')
-														})
-														
-                            ins_query = `UPDATE transactions SET tran_description ='${req.body.description}',merchant ='${req.body.merchant}',amount ='${req.body.amount}',transaction_date ='${req.body.date}',category ='${req.body.category}' WHERE id = '${req.params.id}'`;
-                            db.query(ins_query, function (err, put_function) {
-                                if (err) {
+                            let attachmentQuery = `SELECT receipt, environment from attachments WHERE transaction_id = '${req.params.id}' AND id = '${req.params.attachmentId}'`;
+                            db.query(attachmentQuery,function (err,att) {
+                                if(err){
                                     throw err;
                                 }
-                                console.log(put_function);
-                                if (put_function.protocol41 == true) {
-                                    select_query = `SELECT * from transactions WHERE id='${req.params.id}'`;
-                                    db.query(select_query, function (err, result) {
-                                        if (err) {
+                                if(att[0]){
+                                    console.log(att[0]);
+                                    upload(req,res, (err => {
+                                        if(err){
                                             throw err;
                                         }
-                                        if (result) {
-                                            res.send(result);
-                                        }
+                                        else{
+                                            if(att[0].environment == 'dev'){
+                                                console.log("andar aaya dev delete k")
+                                                var spliturl = att[0].receipt.split(bucket_name);
+                                                var url = spliturl[1].split("/");
+                                                console.log(url[1]);
+                                                s3.deleteObject({
+                                                    Bucket : config.aws.bucket_name,
+                                                    Key : url[1]
+                                                },function (err,data) {
+                                                    //  res.send(data);
+                                                    var awsUrl = "https://s3.amazonaws.com/" + bucket_name + "/" + req.file.originalname;
+                                                    var updateSql = `UPDATE attachments SET receipt = '${awsUrl}' where id = '${req.params.attachmentId}'`;
+                                                    db.query(updateSql,function (err,delSuc) {
+                                                        if(err){
+                                                            throw err;
+                                                        }
+                                                        else {
+                                                            res.send("Image Delete Success fully");
+                                                        }
+                                                    });
+                                                });
 
-                                    })
+                                            }
+                                            else if (att[0].environment == 'local'){
+                                                console.log("Local aaya me")
+                                                console.log(att[0].receipt);
+                                                fs.unlink(att[0].receipt,(err) => {
+                                                    if(err){
+                                                        throw  err;
+                                                    }
+                                                    else {
+                                                        var url = uploadDir + req.file.originalname;
+                                                        var updateSql = `UPDATE attachments SET receipt = '${url}' WHERE id = '${req.params.attachmentId}'`;
+                                                        db.query(updateSql, function (err,updated) {
+                                                            if(err){
+                                                                throw err;
+                                                            }
+                                                            else {
+                                                                res.send("Image update successfully");
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }));
                                 }
-                                else {
-                                    res.send("Error while updating transactions please try again later.")
+                                else{
+                                    res.send("Image not found");
                                 }
                             })
                         }
@@ -715,6 +728,7 @@ app.put('/transaction/:id/attachments/:attachmentId',(req,res) => {
         res.send("Please enter an id");
     }
 });
+
 
 
 
