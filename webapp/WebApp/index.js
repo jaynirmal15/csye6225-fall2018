@@ -30,8 +30,8 @@ app.use(bodyparser.urlencoded({
 }));
 
 app.use(bodyparser.json());
-console.log(config);
-const bucket_name = config.aws.bucket_image;
+//console.log(config);
+const bucket_name = config.aws.bucket_name;
 const dt=Date.now();
 var storage=null;
 const uploadDir='./uploads';
@@ -100,7 +100,7 @@ app.post('/transactions/:id/attachments',function (req,res) {
                     url = uploadDir + req.file.originalname;
                 }
 
-                var sql = `INSERT into attachments values('${uid}','${url}','${req.params.id}')`;
+                var sql = `INSERT into attachments values('${uid}','${url}','${req.params.id}','${process.env.NODE_ENV}')`;
                 db.query(sql,function (err,postSucess) {
                     if(err){
                         throw err;
@@ -117,7 +117,7 @@ app.post('/transactions/:id/attachments',function (req,res) {
     }));
 });
 app.get('/transactions/:id/attachments',function (req,res) {
-    var sql = `SELECT id,receipt from attachments WHERE transaction_id = '${req.params.id}' `;
+    var sql = `SELECT transaction_id,id,receipt from attachments WHERE transaction_id = '${req.params.id}' AND environment = '${process.env.NODE_ENV}' `;
     db.query(sql,function (err,getSuccess) {
         if(err){
             throw err;
@@ -129,6 +129,43 @@ app.get('/transactions/:id/attachments',function (req,res) {
             }
             else {
                 res.send("No receipts found for this transaction");
+            }
+        }
+    })
+})
+app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
+    var sql = `SELECT receipt from attachments WHERE id = '${req.params.attachmentId}' && transaction_id = '${req.params.id}'`
+    db.query(sql,function (err,deleteSuccess) {
+        if(err){
+            throw err;
+        }
+        else {
+            if(deleteSuccess[0]){
+
+                if(process.env.NODE_ENV === "dev"){
+                    var url = deleteSuccess[0].receipt.split(bucket_name);
+                  //  console.log(url[1]);
+                    s3.deleteObject({
+                        Bucket : config.aws.bucket_name,
+                        Key : url[1]
+                    },function (err,data) {
+                      //  res.send(data);
+                        var deleteSql = `DELETE from attachments where id = '${req.params.attachmentId}'`;
+                        db.query(deleteSql, function (err,deleteSuc) {
+                            if(err){
+                                throw err;
+                            }
+                            else {
+                                    res.send("Image delete successfully");
+
+                            }
+                        })
+                    })
+                }
+                else if (process.env.NODE_ENV ==="local"){
+                    //var url = deleteSuccess[0].require.
+                }
+
             }
         }
     })

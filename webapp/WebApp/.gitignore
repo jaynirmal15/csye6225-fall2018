@@ -1,5 +1,6 @@
 .gitignore
 node_modules/
+config.js/
 package-lock.json
 .idea
 *.iws
