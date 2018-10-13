@@ -7,6 +7,9 @@ const saltRounds = 10;
 const app = express();
 const path=require('path');
 const multer = require('multer');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
 //testing
 //process.env.NODE_ENV = 'test';
 var request = require('supertest');
@@ -27,34 +30,72 @@ app.use(bodyparser.urlencoded({
 
 app.use(bodyparser.json());
 
-
-const storage =multer.diskStorage({
-    destination: './uploads',
-    filename : function (reqe,file,cb) {
-        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+const bucket_name = 'dummy-bucket-152';
+const dt=Date.now();
+var storage=null;
+const uploadDir='./uploads';
+if(process.env.NODE_ENV==="local")
+{
+    storage = multer.diskStorage({
+        destination:uploadDir,
+        filename: function(req, file, callback) {
+            callback(null, file.originalname)
+        }
+    });
+}
+else if(process.env.NODE_ENV==="dev")
+{
+    storage=multerS3({
+        s3: s3,
+        bucket: bucket_name,//bucketname
+        metadata: function (req, file, cb) {
+            cb(null, {fieldName: file.fieldname});//fieldname
+        },
+        key: function (req, file, cb) {
+            cb(null, file.originalname)//uploaded file name after upload
+        }
+    });
+}
+else{console.log("3");}
+//init upload
+const upload=multer({
+    storage:storage,
+    limits:{fileSize:1000000},
+    fileFilter:function(req,file,callback){
+        checkFileType(file,callback);
+        console.log(file);
     }
-});
+}).single('fileupload');
 
-const upload = multer({
-    storage : storage
-}).single('jayjay');
-app.post('/test',function (req,res) {
+function checkFileType(file,callback){
+    const fileTypes=/jpeg|jpg|png|gif/;
+    const extName=fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimeType=fileTypes.test(file.mimetype);
+    if(mimeType && extName){
+        return callback(null,true);
+    } else{
+        callback('Error: Images Only');
+    }
+}
+
+app.post('/postTesting',function (req,res) {
+
     upload(req,res,(err => {
-        if(err)
-        {
+        if(err){
             throw err;
         }
-        else
-        {
-            console.log("file name")
-            console.log(req.file)
-            res.send(req.file);
-        }
-    }))
-    //res.send('test');
-    //console.log(req.files.filename);
-})
+        else {
+            if(req.file === undefined){
+                res.send("Please select an image");
+                console.log("No images selected");
+            }
+            else {
+                res.send(req.file);
 
+            }
+        }
+    }));
+});
 //enabling cors
 app.use(function (req,res,next) {
 
