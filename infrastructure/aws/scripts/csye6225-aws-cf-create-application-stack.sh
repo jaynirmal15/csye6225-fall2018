@@ -8,15 +8,39 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.comz1"
-dbidentifier="csye6225-fall2018z1"
-dBsubnetGroup_name="dbSubnetGrpz1"
+bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.com"
+dbidentifier="psawale-sye6225-fall2018"
+dBsubnetGroup_name="psawale-dbSubnetGrp"
 
 vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$nw_stack_name']].VpcId" --output text)
 echo "VPC ID: " $vpc_id
 
-subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'public')]] | [0].SubnetId " --output text)
-echo "Subnet ID: " $subnet_id
+pvt=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='net2-csye6225-private-route-table']].Associations[].SubnetId")
+echo $pvt
+#pvt=$pvt | sed "s/\"//g"
+
+#$subnets
+$count=0
+for i in $pvt
+do
+    if [ "$i" = "[" ] || [ "$i" = "]" ]; then
+    echo "...."
+  else
+    #subnets+=$i
+    #subnet=`echo $i  | sed "s/\"//g" | sed 's/,/ /g'`
+    subnet=`echo $i  | sed 's/,/ /g'`
+    echo $subnet
+    jq '.Resources.DBsubnetGroup.Properties.SubnetIds['$count'] =  '"$subnet"' ' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+    ((count++))
+    echo $count
+  fi;
+done
+
+#echo $subnets
+
+
+subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'private')]] | [0].SubnetId " --output text)
+#echo "Subnet ID: " $subnet_id
 
 jq '.Resources.csye6225Webapp.Properties.VpcId = "'$vpc_id'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
@@ -38,7 +62,7 @@ jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloud
 
 echo "Executing Create Stack....."
 
-aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-application.json --capabilities=CAPABILITY_NAMED_IAM
+#aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-application.json --capabilities=CAPABILITY_NAMED_IAM
 
 if [ $? -eq 0 ]; then
 	echo "Waiting to create gets executed completely...!"
