@@ -78,7 +78,7 @@ function checkFileType(file,callback){
     }
 }
 
-app.post('/postTesting',function (req,res) {
+app.post('/transactions/:id/attachments',function (req,res) {
 
     upload(req,res,(err => {
         if(err){
@@ -90,7 +90,26 @@ app.post('/postTesting',function (req,res) {
                 console.log("No images selected");
             }
             else {
-                res.send(req.file);
+                var uid = uuidv1();
+                var url;
+                if(process.env.NODE_ENV ==="dev"){
+                    url = "https://s3.amazonaws.com/" + bucket_name + req.file.originalname;
+                }
+                else if (process.env.NODE_ENV ==="local") {
+                    url = uploadDir + req.file.originalname;
+                }
+
+                var sql = `INSERT into attachments values('${uid}','${url}','${req.params.id}')`;
+                db.query(sql,function (err,postSucess) {
+                    if(err){
+                        throw err;
+                    }
+                    else {
+                        if (postSucess) {
+                        res.send("Attachment posted successfully");
+                        }
+                    }
+                })
 
             }
         }
