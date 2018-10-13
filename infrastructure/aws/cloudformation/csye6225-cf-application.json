@@ -1,10 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Parameters": {
-    "myVpcId": {
-      "Type": "String",
-      "Default": "vpc-0970fc9a74351857f"
-    },
     "myAccountId": {
       "Type": "String",
       "Default": "359938524153"
@@ -21,11 +17,11 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-03452a288fdcfce19",
+        "SubnetId": "subnet-0b3a89b545c08ef1b",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "Nishant-ec2"
+            "Value": "stack-1-ec2"
           }
         ]
       }
@@ -60,7 +56,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-04ac171bcd4c02471"
+        "VpcId": "vpc-0d6143eb6c54068dd"
       }
     },
     "csye6225RDS": {
@@ -86,7 +82,108 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-04ac171bcd4c02471"
+        "VpcId": "vpc-0d6143eb6c54068dd"
+      }
+    },
+    "Dynamodb": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "TableName": "table1",
+        "Tags": [
+          {
+            "Key": "csye6225",
+            "Value": "psawale-Dynamodb"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 2,
+          "WriteCapacityUnits": 2
+        }
+      }
+    },
+    "S3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "AccessControl": "Private",
+        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
+        "Tags": [
+          {
+            "Key": "csye6225Bucket",
+            "Value": "psawaleBucket"
+          }
+        ]
+      }
+    },
+    "RDS": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AllocatedStorage": "10",
+        "Engine": "MySQL",
+        "DBInstanceClass": "db.t2.medium",
+        "MultiAZ": "false",
+        "DBInstanceIdentifier": "csye6225-fall2018-1",
+        "MasterUsername": "csye6225master",
+        "MasterUserPassword": "csye6225password",
+        "PubliclyAccessible": "false",
+        "DBName": "csye6225",
+        "DBSubnetGroupName": {
+          "Ref": "DBsubnetGroup"
+        },
+        "DBSecurityGroups": [
+          {
+            "Ref": "csye6225RDSSG"
+          }
+        ]
+      }
+    },
+    "DBsubnetGroup": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "RDS DB subnet group",
+        "DBSubnetGroupName": "dbSubnetGrp-1",
+        "SubnetIds": [
+          "subnet-0fe114b818f01bcf9",
+          "subnet-05996c87d7c2e686d",
+          "subnet-0d5e72085313e592b"
+        ],
+        "Tags": [
+          {
+            "Key": "csye6225",
+            "Value": "Assignment4"
+          }
+        ]
+      }
+    },
+    "csye6225RDSSG": {
+      "Type": "AWS::RDS::DBSecurityGroup",
+      "Properties": {
+        "EC2VpcId": "vpc-0d6143eb6c54068dd",
+        "DBSecurityGroupIngress": [
+          {
+            "EC2SecurityGroupId": {
+              "Ref": "csye6225Webapp"
+            }
+          }
+        ],
+        "GroupDescription": "test",
+        "Tags": [
+          {
+            "Key": "csye6225",
+            "Value": "RDS SEcurity Group"
+          }
+        ]
       }
     }
   }
