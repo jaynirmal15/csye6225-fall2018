@@ -6,6 +6,7 @@ const bodyparser = require('body-parser');
 const saltRounds = 10;
 const app = express();
 const path=require('path');
+const config = require('./config.js');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
@@ -29,8 +30,8 @@ app.use(bodyparser.urlencoded({
 }));
 
 app.use(bodyparser.json());
-
-const bucket_name = 'dummy-bucket-152';
+console.log(config);
+const bucket_name = config.aws.bucket_image;
 const dt=Date.now();
 var storage=null;
 const uploadDir='./uploads';
