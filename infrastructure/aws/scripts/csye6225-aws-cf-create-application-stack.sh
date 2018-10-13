@@ -8,17 +8,20 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.com"
-dbidentifier="psawale-sye6225-fall2018"
-dBsubnetGroup_name="psawale-dbSubnetGrp"
+bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.comq"
+dbidentifier="psawale-sye6225-fall2018q"
+dBsubnetGroup_name="psawale-dbSubnetGrpq"
 
 vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$nw_stack_name']].VpcId" --output text)
 echo "VPC ID: " $vpc_id
 
-pvt=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='net2-csye6225-private-route-table']].Associations[].SubnetId")
+subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'public')]] | [0].SubnetId " --output text)
+echo "Subnet ID: " $subnet_id
+pvt=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='$nw_stack_name-csye6225-private-route-table']].Associations[].SubnetId")
+#pvt=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='net1-csye6225-private-route-table']].Associations[].SubnetId")
 echo $pvt
 
-$count=0
+count=0
 for i in $pvt
 do
     if [ "$i" = "[" ] || [ "$i" = "]" ]; then
@@ -28,7 +31,7 @@ do
     #subnet=`echo $i  | sed "s/\"//g" | sed 's/,/ /g'`
     subnet=`echo $i  | sed 's/,/ /g'`
     echo $subnet
-    jq '.Resources.DBsubnetGroup.Properties.SubnetIds['$count'] =  '"$subnet"' ' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+    jq '.Resources.DBsubnetGroup.Properties.SubnetIds['$count'] =  '"$subnet"'' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
     ((count++))
     echo $count
   fi;
