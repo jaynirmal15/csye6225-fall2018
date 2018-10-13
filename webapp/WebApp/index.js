@@ -293,54 +293,6 @@ app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
     }
 });
 
-// PUT request
-app.put('/transaction/{id}/attachments/{idAttachments}',(req,res) =>{
-    if(req.body.username && req.body.password) {
-        if (validationemail(req.body.username)) {
-            var salt = bcryptjs.genSaltSync(saltRounds);
-            var hash = bcryptjs.hashSync(req.body.password, salt);
-            
-            if(isTransactionPresent(req.params.id)){
-            	isAttachmentPresent(req.params.idAttachments){
-            		
-            	} else{
-            		res.send('Image Not Present');
-            	}            	
-            } else {
-            	res.send('Transaction Not Present');
-            }
-            
-            
-            let selectsql = `Select username from login WHERE username = '${req.body.username}'`
-            db.query(selectsql, function (err, resu) {
-                if (err) {
-                    throw err;
-                }
-                if (!resu[0]) {
-                    let sql = `INSERT INTO   login (username,password) VALUES ('${req.body.username}','${hash}')`
-                    db.query(sql, function (err, result) {
-                        if (err) {
-                            throw err;
-                        }
-                        res.send("User Successfully Created");
-                    })
-                }
-                if (resu[0]) {
-                    res.send("User already exits");
-                }
-            })
-        }
-        else {
-            res.send("incorrect username")
-        }
-    }
-    else {
-        res.send("enter valid username and password")
-    }
-})
-
-
-
 //enabling cors
 app.use(function (req,res,next) {
 
