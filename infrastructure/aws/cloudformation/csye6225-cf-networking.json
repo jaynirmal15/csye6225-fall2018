@@ -8,7 +8,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-csye6225-vpc"
+            "Value": "abc-csye6225-vpc"
           }
         ]
       }
@@ -25,7 +25,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-public-subnet-1"
+            "Value": "abc-public-subnet-1"
           }
         ]
       }
@@ -42,7 +42,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-private-subnet-1"
+            "Value": "abc-private-subnet-1"
           }
         ]
       }
@@ -59,7 +59,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-public-subnet-2"
+            "Value": "abc-public-subnet-2"
           }
         ]
       }
@@ -76,7 +76,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-private-subnet-2"
+            "Value": "abc-private-subnet-2"
           }
         ]
       }
@@ -93,7 +93,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-public-subnet-3"
+            "Value": "abc-public-subnet-3"
           }
         ]
       }
@@ -110,7 +110,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-private-subnet-3"
+            "Value": "abc-private-subnet-3"
           }
         ]
       }
@@ -121,7 +121,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-csye6225-InternetGateway"
+            "Value": "abc-csye6225-InternetGateway"
           }
         ]
       }
@@ -137,7 +137,7 @@
         }
       }
     },
-    "myRouteTable": {
+    "publicRouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": {
@@ -146,17 +146,17 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": "SupriyaBhide-csye6225-public-route-table"
+            "Value": "abc-csye6225-public-route-table"
           }
         ]
       }
     },
-    "myRoute": {
+    "publicRoute": {
       "Type": "AWS::EC2::Route",
       "DependsOn": "AttachGateway",
       "Properties": {
         "RouteTableId": {
-          "Ref": "myRouteTable"
+          "Ref": "publicRouteTable"
         },
         "DestinationCidrBlock": "0.0.0.0/0",
         "GatewayId": {
@@ -168,7 +168,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "RouteTableId": {
-          "Ref": "myRouteTable"
+          "Ref": "publicRouteTable"
         },
         "SubnetId": {
           "Ref": "publicsubnet1"
@@ -179,7 +179,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "RouteTableId": {
-          "Ref": "myRouteTable"
+          "Ref": "publicRouteTable"
         },
         "SubnetId": {
           "Ref": "publicsubnet2"
@@ -190,10 +190,70 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "RouteTableId": {
-          "Ref": "myRouteTable"
+          "Ref": "publicRouteTable"
         },
         "SubnetId": {
           "Ref": "publicsubnet3"
+        }
+      }
+    },
+    "privateRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "myVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "abc-csye6225-private-route-table"
+          }
+        ]
+      }
+    },
+    "privateRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "AttachGateway",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "privateRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "myInternetGateway"
+        }
+      }
+    },
+    "privateSubnet1RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "privateRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "privatesubnet1"
+        }
+      }
+    },
+    "privateSubnet2RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "privateRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "privatesubnet2"
+        }
+      }
+    },
+    "privateSubnet3RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "privateRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "privatesubnet3"
         }
       }
     }
