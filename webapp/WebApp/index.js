@@ -115,6 +115,23 @@ app.post('/transactions/:id/attachments',function (req,res) {
         }
     }));
 });
+app.get('/transactions/:id/attachments',function (req,res) {
+    var sql = `SELECT id,receipt from attachments WHERE transaction_id = '${req.params.id}' `;
+    db.query(sql,function (err,getSuccess) {
+        if(err){
+            throw err;
+        }
+        else{
+            if(getSuccess[0])
+            {
+                res.send(getSuccess);
+            }
+            else {
+                res.send("No receipts found for this transaction");
+            }
+        }
+    })
+})
 //enabling cors
 app.use(function (req,res,next) {
 
