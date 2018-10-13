@@ -7,18 +7,9 @@ const saltRounds = 10;
 const app = express();
 const path=require('path');
 const multer = require('multer');
-const de = require('dotenv');
-const ms3 = require('multer-s3');
+const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
-var accessKeyId = process.env.AWS_ACCESS_KEY;
-var secretAccessKey = process.env.AWS_ACCESS_SECRET;
-const s3 = new AWS.S3({
-	accessKeyId : accessKeyId,
-	secretAccessKey : secretAccessKey
-});
-const SNS = new AWS.SNS({
-	region : 'us-east-1'
-});
+const s3 = new AWS.S3();
 //testing
 //process.env.NODE_ENV = 'test';
 var request = require('supertest');
@@ -29,63 +20,84 @@ let should = chai.should();
 var expect = chai.expect;
 chai.use(chaiHttp);
 
+
+
+
 //bodyparser for testing api inputs
 app.use(bodyparser.urlencoded({
     extended : false
 }));
 
 app.use(bodyparser.json());
-var storage = null;
 
-if(process.env.NODE_ENV === 'local'){
-		storage =multer.diskStorage({
-    destination: './uploads',
-    filename : function (reqe,file,cb) {
-        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+const bucket_name = 'dummy-bucket-152';
+const dt=Date.now();
+var storage=null;
+const uploadDir='./uploads';
+if(process.env.NODE_ENV==="local")
+{
+    storage = multer.diskStorage({
+        destination:uploadDir,
+        filename: function(req, file, callback) {
+            callback(null, file.originalname)
+        }
+    });
+}
+else if(process.env.NODE_ENV==="dev")
+{
+    storage=multerS3({
+        s3: s3,
+        bucket: bucket_name,//bucketname
+        metadata: function (req, file, cb) {
+            cb(null, {fieldName: file.fieldname});//fieldname
+        },
+        key: function (req, file, cb) {
+            cb(null, file.originalname)//uploaded file name after upload
+        }
+    });
+}
+else{console.log("3");}
+//init upload
+const upload=multer({
+    storage:storage,
+    limits:{fileSize:1000000},
+    fileFilter:function(req,file,callback){
+        checkFileType(file,callback);
+        console.log(file);
     }
-	});
+}).single('fileupload');
+
+function checkFileType(file,callback){
+    const fileTypes=/jpeg|jpg|png|gif/;
+    const extName=fileTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimeType=fileTypes.test(file.mimetype);
+    if(mimeType && extName){
+        return callback(null,true);
+    } else{
+        callback('Error: Images Only');
+    }
 }
 
-else if(process.env.NODE_ENV === 'dev'){
-	storage = ms3({
-		s3: s3,
-		bucket:'csye6255-fall2018-sawale.me.tld.csye6255.com ',
-		acl: 'public-read',
-		metadata: function(req, file, cb){
-			cb(null, {fieldName: file.fieldname});
-		},
-		key: function(req, file, cb){
-			cb(null, file.originalname+'-'+Date.now()+path.extname(file.originalname));
-		}
-	});
-}
+app.post('/postTesting',function (req,res) {
 
-const upload = multer({
-    storage : storage
-}).single('image');
-
-app.post('/test',function (req,res) {
     upload(req,res,(err => {
-    		if(process.env.NODE_ENV === 'local'){
-    			if(err)
-		      {
+        if(err){
 		          throw err;
 		      }
-		      else
-		      {
-		          console.log("file name")
-		          console.log(req.file)
-		          res.send(req.file);
-		      }
-    		} else if(process.env.NODE_ENV === 'dev'){
-    			console.log('I am in Dev mode');
+        else {
+            if(req.file === undefined){
+                res.send("Please select an image");
+                console.log("No images selected");
+            }
+            else {
+                res.send(req.file);
     			res.send('This is DEV');
     		}       
-    }))
-    //res.send('test');
-    //console.log(req.files.filename);
-})
 
+            }
+        }
+    }));
+});
 //enabling cors
 app.use(function (req,res,next) {
 
@@ -104,9 +116,6 @@ const db =mysql.createConnection({
 });
 
 //start the server
-app.listen('5000',()=>{
-    console.log('Server started on port 5000');
-
 });
 
 //connect to the database
@@ -117,6 +126,8 @@ db.connect((err) =>{
     }
     console.log("Database connected");
 });
+
+//register api
 
 
 app.post('/register',(req,res) =>{
