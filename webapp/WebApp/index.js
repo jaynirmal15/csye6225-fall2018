@@ -674,7 +674,7 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
                                                             throw err;
                                                         }
                                                         else {
-                                                            res.send("Image Delete Success fully");
+                                                            res.send("Image Updated Successfully");
                                                         }
                                                     });
                                                 });
