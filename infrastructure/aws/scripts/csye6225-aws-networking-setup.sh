@@ -44,81 +44,176 @@ fi
 
 ###############################
 # Create Public Subnets
+### public subnet-1
 echo "Enter Valid Public subnet-1 cidr-block : "
 read pub_subnet1
 echo "Enter Valid availability Public zone 1 : "
 read pub_zone1
 pub_subid1=$(aws ec2 create-subnet --availability-zone $pub_zone1 --vpc-id $vpc_id --cidr-block $pub_subnet1 --query 'Subnet.[SubnetId]' --output text)
-echo "Generated Public subnet-id 1: " $pub_subid1
-echo "Entered AvailabilityZone for Public subnet-1 : " $pub_zone1
-echo "Enter public subnet-1 Tag Name : "
-read sub_tag1
-aws ec2 create-tags --resources $pub_subid1 --tags "Key=Name,Value=$sub_tag1" 2>&1
+spub1=$?
+if [ $spub1 -eq 0 ]; then
+        echo "Generated Public subnet-id 1: " $pub_subid1
+	echo "Entered AvailabilityZone for Public subnet-1 : " $pub_zone1
+	echo "Enter public subnet-1 Tag Name : "
+	read sub_tag1
+	aws ec2 create-tags --resources $pub_subid1 --tags "Key=Name,Value=$sub_tag1" 2>&1
+	spub1_tag_st=$?
+	if [ $spub1_tag_st -eq 0 ]; then
+        	echo "public subnet-1 tag name created successfully.."
+	else
+	        echo "Error in creating tag name..."
+	        exit $spub1_tag_st
+	fi
 
+else
+        echo "Error in public subnet-1...."
+        exit $spub1
+fi
+
+
+### public subnet-2
 
 echo "Enter Valid Public subnet-2 cidr-block : "
 read pub_subnet2
 echo "Enter Valid availability Public zone 2 : "
 read pub_zone2
-pub_subid2=$(aws ec2 create-subnet --availability-zone $pub_zone1 --vpc-id $vpc_id --cidr-block $pub_subnet2 --query 'Subnet.[SubnetId]' --output text)
-echo "Generated Public subnet-id 2: " $pub_subid2
-echo "Entered AvailabilityZone for Public subnet-2 : " $pub_zone2
-echo "Enter public subnet-2 Tag Name : "
-read sub_tag2
-aws ec2 create-tags --resources $pub_subid2 --tags "Key=Name,Value=$sub_tag2" 2>&1
+pub_subid2=$(aws ec2 create-subnet --availability-zone $pub_zone2 --vpc-id $vpc_id --cidr-block $pub_subnet2 --query 'Subnet.[SubnetId]' --output text)
+spub2=$?
+if [ $spub2 -eq 0 ]; then
+        echo "Generated Public subnet-id 2: " $pub_subid2
+        echo "Entered AvailabilityZone for Public subnet-2 : " $pub_zone2
+        echo "Enter public subnet-2 Tag Name : "
+        read sub_tag2
+        aws ec2 create-tags --resources $pub_subid2 --tags "Key=Name,Value=$sub_tag2" 2>&1
+        spub2_tag_st=$?
+        if [ $spub2_tag_st -eq 0 ]; then
+                echo "public subnet-2 tag name created successfully.."
+        else
+                echo "Error in creating tag name..."
+                exit $spub2_tag_st
+        fi
+
+else
+        echo "Error in public subnet-2...."
+        exit $spub2
+fi
 
 
+### Public subnet-3
 echo "Enter Valid subnet-3 cidr-block : "
 read pub_subnet3
 echo "Enter Valid availability public zone 3 : "
 read pub_zone3
 pub_subid3=$(aws ec2 create-subnet --vpc-id $vpc_id --cidr-block $pub_subnet3 --query 'Subnet.[SubnetId]' --output text)
-echo "Generated Public subnet-id 3: " $pub_subid3
-echo "Entered AvailabilityZone for Public Subnet-3 : " $pub_zone3
-echo "Enter public subnet-3 Tag Name : "
-read sub_tag3
-aws ec2 create-tags --resources $pub_subid3 --tags "Key=Name,Value=$sub_tag3" 2>&1
+spub3=$?
+if [ $spub3 -eq 0 ]; then
+        echo "Generated Public subnet-id 3: " $pub_subid3
+        echo "Entered AvailabilityZone for Public subnet-3 : " $pub_zone3
+        echo "Enter public subnet-3 Tag Name : "
+        read sub_tag3
+        aws ec2 create-tags --resources $pub_subid3 --tags "Key=Name,Value=$sub_tag3" 2>&1
+        spub3_tag_st=$?
+        if [ $spub3_tag_st -eq 0 ]; then
+                echo "public subnet-3 tag name created successfully.."
+        else
+                echo "Error in creating tag name..."
+                exit $spub3_tag_st
+        fi
 
+else
+        echo "Error in public subnet-3...."
+        exit $spub3
+fi
 
 echo "Three Public subnets created successfully...."
 
 
 ###############################
 # Create Private Subnets
+
+#### Private subnet - 1
 echo "Enter Valid Private subnet-1 cidr-block : "
 read pri_subnet1
 echo "Enter Valid availability Private zone 1 : "
 read pri_zone1
 pri_subid1=$(aws ec2 create-subnet --availability-zone $pri_zone1 --vpc-id $vpc_id --cidr-block $pri_subnet1 --query 'Subnet.[SubnetId]' --output text)
-echo "Generated Private subnet-id 1: " $pri_subid1
-echo "Entered AvailabilityZone for Private subnet-1 : " $pri_zone1
-echo "Enter Private subnet-1 Tag Name : "
-read pri_tag1
-aws ec2 create-tags --resources $pri_subid1 --tags "Key=Name,Value=$pri_tag1" 2>&1
 
+spri1=$?
+if [ $spri1 -eq 0 ]; then
+        echo "Generated Private subnet-id 1: " $pri_subid1
+        echo "Entered AvailabilityZone for Private subnet-1 : " $pri_zone1
+        echo "Enter private subnet-1 Tag Name : "
+        read pri_tag1
+        aws ec2 create-tags --resources $pri_subid1 --tags "Key=Name,Value=$pri_tag1" 2>&1
+        spri1_tag_st=$?
+        if [ $spri1_tag_st -eq 0 ]; then
+                echo "private subnet-1 tag name created successfully.."
+        else
+                echo "Error in creating tag name..."
+                exit $spri1_tag_st
+        fi
+
+else
+        echo "Error in private subnet-1...."
+        exit $spri1
+fi
+
+
+### Private subnet - 2
 
 echo "Enter Valid Private subnet-2 cidr-block : "
 read pri_subnet2
 echo "Enter Valid availability Private zone 2 : "
 read pri_zone2
 pri_subid2=$(aws ec2 create-subnet --availability-zone $pri_zone2 --vpc-id $vpc_id --cidr-block $pri_subnet2 --query 'Subnet.[SubnetId]' --output text)
-echo "Generated Private subnet-id 2: " $pri_subid2
-echo "Entered AvailabilityZone for Private subnet-2 : " $pri_zone2
-echo "Enter Private subnet-2 Tag Name : "
-read pri_tag2
-aws ec2 create-tags --resources $pri_subid2 --tags "Key=Name,Value=$pri_tag2" 2>&1
 
+spri2=$?
+if [ $spri2 -eq 0 ]; then
+        echo "Generated Private subnet-id 2: " $pri_subid2
+        echo "Entered AvailabilityZone for Private subnet-2 : " $pri_zone2
+        echo "Enter private subnet-2 Tag Name : "
+        read pri_tag2
+        aws ec2 create-tags --resources $pri_subid2 --tags "Key=Name,Value=$pri_tag2" 2>&1
+        spri2_tag_st=$?
+        if [ $spri2_tag_st -eq 0 ]; then
+                echo "private subnet-2 tag name created successfully.."
+        else
+                echo "Error in creating tag name..."
+                exit $spri2_tag_st
+        fi
+
+else
+        echo "Error in private subnet-1...."
+        exit $spri2
+fi
+
+### Private Subnet - 3
 
 echo "Enter Valid Private subnet-3 cidr-block : "
 read pri_subnet3
 echo "Enter Valid availability private zone 3 : "
 read pri_zone3
 pri_subid3=$(aws ec2 create-subnet --availability-zone $pri_zone3 --vpc-id $vpc_id --cidr-block $pri_subnet3 --query 'Subnet.[SubnetId]' --output text)
-echo "Generated Private subnet-id 3: " $pri_subid3
-echo "Entered AvailabilityZone for Private Subnet-3 : " $pri_zone3
-echo "Enter Private subnet-3 Tag Name : "
-read pri_tag3
-aws ec2 create-tags --resources $pri_subid3 --tags "Key=Name,Value=$pri_tag3" 2>&1
+
+spri3=$?
+if [ $spri3 -eq 0 ]; then
+        echo "Generated Private subnet-id 3: " $pri_subid3
+        echo "Entered AvailabilityZone for Private subnet-3 : " $pri_zone3
+        echo "Enter private subnet-3 Tag Name : "
+        read pri_tag3
+        aws ec2 create-tags --resources $pri_subid3 --tags "Key=Name,Value=$pri_tag3" 2>&1
+        spri3_tag_st=$?
+        if [ $spri3_tag_st -eq 0 ]; then
+                echo "private subnet-3 tag name created successfully.."
+        else
+                echo "Error in creating tag name..."
+                exit $spri3_tag_st
+        fi
+
+else
+        echo "Error in private subnet-1...."
+        exit $spri3
+fi
 
 echo "Three Private subnets created successfully...."
 
@@ -185,20 +280,47 @@ else
 	exit $pub_rt_status
 fi
 
+##################################
+# Create Private Route Table
+echo "Creating Private Route Table..."
+pri_rt_id=$(aws ec2 create-route-table --vpc-id $vpc_id --query 'RouteTable.[RouteTableId]' --output text --region $region 2>&1)
+pri_rt_status=$?
+if [ $pri_rt_status -eq 0 ]; then
+        echo "New Private Route Table Created Successfully : " $pri_rt_id
+else
+        echo "Error in creating private  Route Table..."
+        exit $pri_rt_status
+fi
 
 ###################################
-# Add Name to Route Table
-echo "Adding Name to Route Table..."
-echo "Please enter valid Route Table Name : "
+# Add Name to Public Route Table
+echo "Adding Name to Public Route Table..."
+echo "Please enter valid Public Route Table Name : "
 read rt_tag_name
 aws ec2 create-tags --resources $pub_rt_id --tags "Key=Name,Value=$rt_tag_name" 2>&1
 rt_tag_status=$?
 if [ $rt_tag_status -eq 0 ]; then
-        echo "Route Table Tag created successfully with name : "$rt_tag_name
+        echo "Public Route Table Tag created successfully with name : "$rt_tag_name
 else
-        echo "Error in creating tag for Route Table..."
+        echo "Error in creating tag for public Route Table..."
         exit $rt_tag_status
 fi
+
+
+###################################
+# Add Name to private Route Table
+echo "Adding Name to private Route Table..."
+echo "Please enter valid private Route Table Name : "
+read rt_tag_name_pri
+aws ec2 create-tags --resources $pri_rt_id --tags "Key=Name,Value=$rt_tag_name_pri" 2>&1
+rt_tag_status_pri=$?
+if [ $rt_tag_status_pri -eq 0 ]; then
+        echo "private Route Table Tag created successfully with name : "$rt_tag_name_pri
+else
+        echo "Error in creating tag for private Route Table..."
+        exit $rt_tag_status_pri
+fi
+
 
 #####################################
 # Create Route to Internet Gateway...
@@ -225,16 +347,30 @@ fi
 #fi
 
 ########################################
-# Attach route to subnets
+# Attach public route to public subnets
 aws ec2 associate-route-table --route-table-id $pub_rt_id --subnet-id $pub_subid1
 aws ec2 associate-route-table --route-table-id $pub_rt_id --subnet-id $pub_subid2
 aws ec2 associate-route-table --route-table-id $pub_rt_id --subnet-id $pub_subid3
-rt_sub_status=$?
-if [ $rt_sub_status -eq 0 ]; then
-        echo "Route associated to subnet successfully...."
+rt_spub_status=$?
+if [ $rt_spub_status -eq 0 ]; then
+        echo "Public routes associated to public subnet successfully...."
 else
-        echo "Error in associating Routes to subnets...."
-        exit $rt_sub_status
+        echo "Error in associating public routes to public subnets...."
+        exit $rt_spub_status
+fi
+
+
+########################################
+# Attach private route to private subnets
+aws ec2 associate-route-table --route-table-id $pri_rt_id --subnet-id $pri_subid1
+aws ec2 associate-route-table --route-table-id $pri_rt_id --subnet-id $pri_subid2
+aws ec2 associate-route-table --route-table-id $pri_rt_id --subnet-id $pri_subid3
+rt_spri_status=$?
+if [ $rt_spri_status -eq 0 ]; then
+        echo "private Route associated to private subnet successfully...."
+else
+        echo "Error in associating private Routes to subnets...."
+        exit $rt_spri_status
 fi
 
 echo "Script run successfully....."

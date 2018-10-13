@@ -18,8 +18,9 @@ jq '.Resources.privatesubnet3.Properties.Tags[0].Value = "'$stack_name'-private-
 #Internet Gateway
 jq '.Resources.myInternetGateway.Properties.Tags[0].Value = "'$stack_name'-csye6225-InternetGateway"' ../cloudformation/csye6225-cf-networking.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-networking.json
 #Route Table
-jq '.Resources.myRouteTable.Properties.Tags[0].Value = "'$stack_name'-csye6225-public-route-table"' ../cloudformation/csye6225-cf-networking.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-networking.json
+jq '.Resources.publicRouteTable.Properties.Tags[0].Value = "'$stack_name'-csye6225-public-route-table"' ../cloudformation/csye6225-cf-networking.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-networking.json
 
+jq '.Resources.privateRouteTable.Properties.Tags[0].Value = "'$stack_name'-csye6225-private-route-table"' ../cloudformation/csye6225-cf-networking.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-networking.json
 
 echo "Executing Create Stack....."
 
