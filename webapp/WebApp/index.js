@@ -31,7 +31,7 @@ app.use(bodyparser.urlencoded({
 
 app.use(bodyparser.json());
 console.log(config);
-const bucket_name = config.config.aws.bucket_image;
+const bucket_name = config.aws.bucket_image;
 const dt=Date.now();
 var storage=null;
 const uploadDir='./uploads';
