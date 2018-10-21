@@ -32,6 +32,7 @@ app.use(bodyparser.json());
 const bucket_name = config.aws.bucket_name;
 const dt=Date.now();
 var storage=null;
+var lname;
 const uploadDir='uploads/';
 if(process.env.NODE_ENV==="local")
 {
@@ -44,10 +45,12 @@ if(process.env.NODE_ENV==="local")
 }
 else if(process.env.NODE_ENV==="dev")
 {
+
     storage=multerS3({
         s3: s3,
         bucket: bucket_name,//bucketname
         metadata: function (req, file, cb) {
+          //  console.log(bname);
             cb(null, {fieldName: file.fieldname});//fieldname
         },
         key: function (req, file, cb) {
@@ -313,6 +316,15 @@ const db =mysql.createConnection({
 
 //start the server
 app.listen('3000',()=>{
+    if(process.env.NODE_ENV==='dev'){
+        s3.listBuckets(function(err, data) {
+            if (err) {
+                console.log("Error", err);
+            } else {
+                lname = data.Buckets[0].Name;
+            }
+        });
+    }
 
     console.log('Server started on port 3000');
 
@@ -330,6 +342,7 @@ db.connect((err) =>{
 //register api
 
 app.post('/register',(req,res) =>{
+    console.log(lname);
     if(req.body.username && req.body.password) {
         if (validationemail(req.body.username)) {
             var salt = bcryptjs.genSaltSync(saltRounds);
