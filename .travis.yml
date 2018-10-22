@@ -4,8 +4,6 @@ node_js:
 
 
 script:
-  - npm install
-  - npm test
   - cd webapp/WebApp/
   - npm install
   - ls -lrt
