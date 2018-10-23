@@ -8,9 +8,9 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.com"
-dbidentifier="psawale-sye6225-fall2018"
-dBsubnetGroup_name="psawale-dbSubnetGrp"
+bucket_name="csye6225-fall2018-shingalar.me.tld.csye6225.com"
+dbidentifier="rshingala-csye6225-fall2018"
+dBsubnetGroup_name="rshingala-dbSubnetGrp"
 
 vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$nw_stack_name']].VpcId" --output text)
 echo "VPC ID: " $vpc_id
