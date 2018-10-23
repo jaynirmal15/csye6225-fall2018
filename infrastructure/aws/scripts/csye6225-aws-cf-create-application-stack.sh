@@ -23,7 +23,7 @@ read dynamoDB_table
 # Get  a Bucket_name, dbIndentifier, dbSubnetGroup_Name.....
 ###################################################################################
 
-bucket_name="csye6225-fall2018-bhidesu.me.tld.csye6225.com"
+bucket_name="csye6225-fall2018-nirmalj.me.tld.csye6225.com"
 dbidentifier="rshingala-csye6225-fall2018"
 dBsubnetGroup_name="rshingala-dbSubnetGrp"
 

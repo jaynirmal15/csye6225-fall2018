@@ -17,7 +17,7 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-0c95e7793236a87e7",
+        "SubnetId": "subnet-0fe62d2ef156350f6",
         "Tags": [
           {
             "Key": "Name",
@@ -56,7 +56,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-0c6b602f039897575"
+        "VpcId": "vpc-0dc8a627ad0f4ee93"
       }
     },
     "csye6225RDS": {
@@ -82,7 +82,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-0c6b602f039897575"
+        "VpcId": "vpc-0dc8a627ad0f4ee93"
       }
     },
     "Dynamodb": {
@@ -100,7 +100,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "myDB",
+        "TableName": "poi",
         "Tags": [
           {
             "Key": "csye6225",
@@ -117,7 +117,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
+        "BucketName": "csye6225-fall2018-nirmalj.me.tld.csye6225.com",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -154,9 +154,9 @@
         "DBSubnetGroupDescription": "RDS DB subnet group",
         "DBSubnetGroupName": "rshingala-dbSubnetGrp",
         "SubnetIds": [
-          "subnet-0285d599d57fb5ac3",
-          "subnet-04164b411a4aecda4",
-          "subnet-0c95e7793236a87e7"
+          "subnet-0fe62d2ef156350f6",
+          "subnet-0e528e28b88e43be0",
+          "subnet-032693566ee24f369"
         ],
         "Tags": [
           {
@@ -169,7 +169,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-0c6b602f039897575",
+        "EC2VpcId": "vpc-0dc8a627ad0f4ee93",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {
