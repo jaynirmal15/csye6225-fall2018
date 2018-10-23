@@ -15,9 +15,9 @@ after_success:
   - pwd
   - ls -ltr
   - mkdir codedeploy_artifact
-  - cp csye6225-fall2018/infrastructure/aws/codedeploy/*.sh .
-  - cp csye6225-fall2018/infrastructure/aws/codedeploy/**yml .
-  - zip -r csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip webapp/WebApp/* **.sh **yml
+  - cp infrastructure/aws/codedeploy/*.sh .
+  - cp infrastructure/aws/codedeploy/**yml .
+  - zip -r csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip webapp/WebApp/package.json **.sh **yml
   - ls -la
   - mv csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip codedeploy_artifact/
   - ls -la
