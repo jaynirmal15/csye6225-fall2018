@@ -41,7 +41,7 @@ deploy:
     secret_access_key: $secret_access_key
     wait-until-deployed: true
     on:
-      branch: Assignment5-6
+      branch: asn5-6-ronak
 
   - provider: codedeploy
     access_key_id: $access_key_id
@@ -54,7 +54,7 @@ deploy:
     secret_access_key: $secret_access_key
     wait-until-deployed: true
     on:
-      branch: Assignment5-6
+      branch: asn5-6-ronak
 
 
 cache:
