@@ -15,20 +15,19 @@ after_success:
   - pwd
   - ls -ltr
   - mkdir codedeploy_artifact
-  - cp csye6225-fall2018/infrastructure/aws/codedeploy/*.sh ./codedeploy_artifact/
-  - cp csye6225-fall2018/infrastructure/aws/codedeploy/*.yml ./codedeploy_artifact/
-  - cd csye6225-fall2018/
-  - zip -r csye6225-fall2018.zip ./* >/dev/null
-  - cp csye6225-fall2018.zip ./../codedeploy_artifact/
-  - rm -rf csye6225-fall2018.zip
-  - pwd
+  - cp csye6225-fall2018/infrastructure/aws/codedeploy/*.sh .
+  - cp csye6225-fall2018/infrastructure/aws/codedeploy/**yml .
+  - zip -r csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip webapp/WebApp/* **.sh **yml
+  - ls -la
+  - mv csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip codedeploy_artifact/
+  - ls -la
   - cd ..
   - cd codedeploy_artifact/
-  - zip -r csye6225-fall2018-$TRAVIS_JOB_NUMBER.zip *.yml *.sh csye6225-fall2018.zip >/dev/null 2>&1
-  - rm -rf csye6225-fall2018.zip *.yml *.sh
+  - ls -la
   - pwd
-  - ls -lrt
   - cd ..
+  - pwd
+  - ls -la
 
 
 deploy:
