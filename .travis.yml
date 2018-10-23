@@ -20,20 +20,21 @@ after_success:
   - cp infrastructure/aws/codedeploy/*.yml .
   - zip -r csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip webapp/WebApp/index.js **.sh *.yml
   - ls -la
-  - mv csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip codedeploy_artifact/
+  - mv csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip  codedeploy_artifact/
   - ls -la
   - cd ..
-  - cd codedeploy_artifact/
+  - cd  codedeploy_artifact/
   - ls -la
   - pwd
   - cd ..
+  - chmod -R 777 codedeploy_artifact/
   - pwd
   - ls -la
 
 
 deploy:
   - provider: s3
-    local_dir: codedeploy_artifact
+    local_dir: ./codedeploy_artifact/
     bucket: $s3_bucket
     region: us-east-1
     skip_cleanup: true
