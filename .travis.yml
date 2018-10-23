@@ -30,7 +30,6 @@ after_success:
 #  - pwd
 #  - ls -la
 
-   - pwd
    - mkdir codedeploy_artifact
    - ls -la
    - cp infrastructure/aws/codedeploy/*.sh codedeploy_artifact/
