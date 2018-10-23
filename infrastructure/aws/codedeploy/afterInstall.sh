@@ -7,11 +7,11 @@ pwd
 ls -lrt
 echo "#CSYE6225: doing after install: remove webapp if already exist"
 sudo rm -rf myapp
-echo "#CSYE6225: doing after install: make dir webapp"
+echo "#CSYE6225: doing after install: make dir myapp"
 sudo mkdir -p myapp
 pwd
 ls -lrt
-echo "#CSYE6225: doing after install: move zip to webapp dir"
+echo "#CSYE6225: doing after install: move zip to myapp dir"
 sudo mv csye6225-fall2018.zip myapp/
 cd myapp/
 echo "#CSYE6225: doing after install: go in webapp"

@@ -2,8 +2,8 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./webapp/WebApp/index.js
-    destination: /usr/bin/node
+  - source: ./csye6255-fall2018.zip
+    destination: /var
 hooks:
   AfterInstall:
    - location: ./afterInstall.sh
