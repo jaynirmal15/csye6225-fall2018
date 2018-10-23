@@ -2,14 +2,14 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./csye6225-fall2018.zip
-    destination: /var
+  - source: ./webapp/WebApp/index.js
+    destination: /usr/bin/node
 hooks:
   AfterInstall:
    - location: ./afterInstall.sh
      timeout: 180
-     runas: ubuntu
+     runas: CentOs
   ApplicationStart:
    - location: ./applicationStart.sh
      timeout: 180
-     runas: ubuntu
+     runas: CentOs
