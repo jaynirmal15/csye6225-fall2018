@@ -17,11 +17,11 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-061772aa8f395b1d7",
+        "SubnetId": "subnet-0c95e7793236a87e7",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "jayNirmal-ec2"
+            "Value": "app-stack-ec2"
           }
         ]
       }
@@ -56,7 +56,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-03ba8c4fb14ddd70c"
+        "VpcId": "vpc-0c6b602f039897575"
       }
     },
     "csye6225RDS": {
@@ -82,7 +82,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-03ba8c4fb14ddd70c"
+        "VpcId": "vpc-0c6b602f039897575"
       }
     },
     "Dynamodb": {
@@ -100,7 +100,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "dynamoDb1",
+        "TableName": "myDB",
         "Tags": [
           {
             "Key": "csye6225",
@@ -117,7 +117,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-shingalar.me.tld.csye6225.com",
+        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -154,9 +154,9 @@
         "DBSubnetGroupDescription": "RDS DB subnet group",
         "DBSubnetGroupName": "rshingala-dbSubnetGrp",
         "SubnetIds": [
-          "subnet-0a54c6042ef3b5a33",
-          "subnet-0304d593a93028879",
-          "subnet-061772aa8f395b1d7"
+          "subnet-0285d599d57fb5ac3",
+          "subnet-04164b411a4aecda4",
+          "subnet-0c95e7793236a87e7"
         ],
         "Tags": [
           {
@@ -169,7 +169,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-03ba8c4fb14ddd70c",
+        "EC2VpcId": "vpc-0c6b602f039897575",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {

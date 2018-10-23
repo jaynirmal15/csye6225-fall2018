@@ -251,7 +251,7 @@
         "ApplicationName" : {"Ref" : "appname"},
         "Ec2TagFilters" : [{
           "Key" : "Name",
-          "Value" : "MyEC2Instance",
+          "Value" : "app-stack-ec2",
           "Type" : "KEY_AND_VALUE"
         }],
         "ServiceRoleArn" : {"Fn::GetAtt" : ["CodeDeployServiceRole", "Arn"]},
