@@ -8,8 +8,8 @@ hooks:
   AfterInstall:
    - location: ./afterInstall.sh
      timeout: 180
-     runas: CentOs
+     runas: centos
   ApplicationStart:
    - location: ./applicationStart.sh
      timeout: 180
-     runas: CentOs
+     runas: centos
