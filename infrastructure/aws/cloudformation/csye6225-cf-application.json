@@ -4,6 +4,10 @@
     "myAccountId": {
       "Type": "String",
       "Default": "359938524153"
+    },
+    "s3domain": {
+      "Type": "String",
+      "Default": "csye6225-fall2018-sawale.me.tld.csye6225.com1"
     }
   },
   "Resources": {
@@ -17,11 +21,12 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-0b3a89b545c08ef1b",
+        "SubnetId": "subnet-0e32c8ede3c5ff249",
+        "KeyName": "psawale",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "stack-1-ec2"
+            "Value": "app1-ec2"
           }
         ],
         "UserData": {
@@ -35,20 +40,17 @@
                 "sudo apt-get install ruby -y \n",
                 "sudo apt-get install wget -y \n",
                 "sudo apt-get install python -y \n",
-
                 "exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1 \n",
                 "curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash - \n",
                 "sudo apt-get install -y nodejs \n",
                 "sudo apt-get install -y build-essential \n",
                 "sudo npm install pm2 -g \n",
-
                 "sudo apt-get update \n",
                 "sudo wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install \n",
                 "sudo chmod +x ./install \n",
                 "sudo ./install auto \n",
                 "sudo service codedeploy-agent start \n",
                 "sudo service codedeploy-agent status \n",
-
                 "sudo echo NODE_ENV=development > /var/.env \n",
                 "sudo echo DB_USER=csye6225master >> /var/.env \n",
                 "sudo echo DB_PASS=csye6225password >> /var/.env \n",
@@ -59,7 +61,9 @@
                     "",
                     [
                       "sudo echo BUCKET=",
-                      {"Ref" : "s3domain"},
+                      {
+                        "Ref": "s3domain"
+                      },
                       " >> /var/.env \n"
                     ]
                   ]
@@ -71,7 +75,7 @@
                       "sudo echo DB_HOST=",
                       {
                         "Fn::GetAtt": [
-                          "RDSDB",
+                          "RDS",
                           "Endpoint.Address"
                         ]
                       },
@@ -83,7 +87,8 @@
             ]
           }
         }
-      }
+      },
+      "DependsOn": "RDS"
     },
     "csye6225Webapp": {
       "Type": "AWS::EC2::SecurityGroup",
@@ -115,7 +120,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-0d6143eb6c54068dd"
+        "VpcId": "vpc-05e22d99c69a79348"
       }
     },
     "csye6225RDS": {
@@ -141,7 +146,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-0d6143eb6c54068dd"
+        "VpcId": "vpc-05e22d99c69a79348"
       }
     },
     "Dynamodb": {
@@ -159,7 +164,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "table1",
+        "TableName": "dynamo1",
         "Tags": [
           {
             "Key": "csye6225",
@@ -176,7 +181,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
+        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.com1",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -192,7 +197,7 @@
         "Engine": "MySQL",
         "DBInstanceClass": "db.t2.medium",
         "MultiAZ": "false",
-        "DBInstanceIdentifier": "csye6225-fall2018z1",
+        "DBInstanceIdentifier": "psawale-sye6225-fall20181",
         "MasterUsername": "csye6225master",
         "MasterUserPassword": "csye6225password",
         "PubliclyAccessible": "false",
@@ -211,11 +216,11 @@
       "Type": "AWS::RDS::DBSubnetGroup",
       "Properties": {
         "DBSubnetGroupDescription": "RDS DB subnet group",
-        "DBSubnetGroupName": "dbSubnetGrp-1",
+        "DBSubnetGroupName": "psawale-dbSubnetGrp1",
         "SubnetIds": [
-          "subnet-0fe114b818f01bcf9",
-          "subnet-05996c87d7c2e686d",
-          "subnet-0d5e72085313e592b"
+          "subnet-0e32c8ede3c5ff249",
+          "subnet-0bc87502777051c71",
+          "subnet-05aa60f0f87ff4a38"
         ],
         "Tags": [
           {
@@ -228,7 +233,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-0d6143eb6c54068dd",
+        "EC2VpcId": "vpc-05e22d99c69a79348",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {

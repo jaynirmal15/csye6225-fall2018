@@ -8,9 +8,14 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.com"
-dbidentifier="psawale-sye6225-fall2018"
-dBsubnetGroup_name="psawale-dbSubnetGrp"
+bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.com1"
+dbidentifier="psawale-sye6225-fall20181"
+dBsubnetGroup_name="psawale-dbSubnetGrp1"
+
+domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
+trimdomain=${domain::-1}
+s3domain="web-app.$trimdomain"
+echo "S3 Domain: $s3domain"
 
 vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$nw_stack_name']].VpcId" --output text)
 echo "VPC ID: " $vpc_id
@@ -60,6 +65,8 @@ jq '.Resources.S3Bucket.Properties.BucketName = "'$bucket_name'"' ../cloudformat
 jq '.Resources.DBsubnetGroup.Properties.DBSubnetGroupName = "'$dBsubnetGroup_name'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
 jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+
+jq '.Parameters.s3domain.Default = "'$bucket_name'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
 echo "Executing Create Stack....."
 
