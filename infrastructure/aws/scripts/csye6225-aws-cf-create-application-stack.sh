@@ -19,7 +19,7 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.com1"
+bucket_name="csye6225-fall2018-nirmalj.me.tld.csye6225.com1"
 dbidentifier="psawale-sye6225-fall20181"
 dBsubnetGroup_name="psawale-dbSubnetGrp1"
 

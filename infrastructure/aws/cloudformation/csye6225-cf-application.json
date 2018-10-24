@@ -7,7 +7,7 @@
     },
     "s3domain": {
       "Type": "String",
-      "Default": "csye6225-fall2018-sawale.me.tld.csye6225.com1"
+      "Default": "csye6225-fall2018-nirmalj.me.tld.csye6225.com1"
     }
   },
   "Resources": {
@@ -21,12 +21,12 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-05f54e890c8f16ab4",
+        "SubnetId": "subnet-0c3fda58764d2b80a",
         "KeyName": "psawale",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "app1-ec2"
+            "Value": "app-stack-ec2"
           }
         ],
         "UserData": {
@@ -119,7 +119,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-05e22d99c69a79348"
+        "VpcId": "vpc-0dc8a627ad0f4ee93"
       }
     },
     "csye6225RDS": {
@@ -145,7 +145,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-05e22d99c69a79348"
+        "VpcId": "vpc-0dc8a627ad0f4ee93"
       }
     },
     "Dynamodb": {
@@ -163,7 +163,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "dynamo1",
+        "TableName": "qwe",
         "Tags": [
           {
             "Key": "csye6225",
@@ -180,7 +180,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.com1",
+        "BucketName": "csye6225-fall2018-nirmalj.me.tld.csye6225.com1",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -217,9 +217,9 @@
         "DBSubnetGroupDescription": "RDS DB subnet group",
         "DBSubnetGroupName": "psawale-dbSubnetGrp1",
         "SubnetIds": [
-          "subnet-0e32c8ede3c5ff249",
-          "subnet-0bc87502777051c71",
-          "subnet-05aa60f0f87ff4a38"
+          "subnet-0fe62d2ef156350f6",
+          "subnet-0e528e28b88e43be0",
+          "subnet-032693566ee24f369"
         ],
         "Tags": [
           {
@@ -232,7 +232,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-05e22d99c69a79348",
+        "EC2VpcId": "vpc-0dc8a627ad0f4ee93",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {
