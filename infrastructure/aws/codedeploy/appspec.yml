@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./csye6225-fall2018.zip
+  - source: ./WebApp
     destination: /var
 hooks:
   AfterInstall:

@@ -13,39 +13,39 @@ script:
   - ls -lrt
 
 after_success:
-# - pwd
-#  - ls -ltr
-#  - mkdir codedeploy_artifact
-#   cp infrastructure/aws/codedeploy/*.sh .
-#  - cp infrastructure/aws/codedeploy/*.yml .
-#  - zip -r csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip webapp/WebApp/index.js **.sh *.yml
-#  - ls -la
-#  - mv csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip  codedeploy_artifact/
-#  - ls -la
-#  - cd  codedeploy_artifact/
-#  - ls -la
-#  - pwd
-#  - cd ..
+  - pwd
+  - ls -ltr
+  - mkdir codedeploy_artifact
+  - cp infrastructure/aws/codedeploy/*.sh .
+  - cp infrastructure/aws/codedeploy/*.yml .
+  - zip -r csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip webapp/WebApp/ **.sh *.yml
+  - ls -la
+  - mv csye6225-fall2018-package-$TRAVIS_JOB_NUMBER.zip  codedeploy_artifact/
+  - ls -la
+  - cd  codedeploy_artifact/
+  - ls -la
+  - pwd
+  - cd ..
 #  - chmod -R 777 codedeploy_artifact/
-#  - pwd
-#  - ls -la
+  - pwd
+  - ls -la
 
-   - mkdir codedeploy_artifact
-   - ls -la
-   - cp infrastructure/aws/codedeploy/*.sh codedeploy_artifact/
-   - cp infrastructure/aws/codedeploy/*.yml codedeploy_artifact/
-   - ls -la
-   - zip -r csye6225-fall2018.zip ./* >/dev/null
-   - cp csye6225-fall2018.zip ./../codedeploy_artifact/
-   - rm -rf csye6225-fall2018.zip
-   - pwd
-   - cd codedeploy_artifact/
-   - ls -la
-   - zip -r csye6225-fall2018-$TRAVIS_JOB_NUMBER.zip *.yml *.sh csye6225-fall2018.zip >/dev/null 2>&1
-   - rm -rf csye6225-fall2018.zip
-   - pwd
-   - cd ..
-   - pwd
+#   - mkdir codedeploy_artifact
+#   - ls -la
+#   - cp infrastructure/aws/codedeploy/*.sh codedeploy_artifact/
+#   - cp infrastructure/aws/codedeploy/*.yml codedeploy_artifact/
+#   - ls -la
+#   - zip -r csye6225-fall2018.zip ./* >/dev/null
+#   - cp csye6225-fall2018.zip ./../codedeploy_artifact/
+#   - rm -rf csye6225-fall2018.zip
+#   - pwd
+#   - cd codedeploy_artifact/
+#   - ls -la
+#   - zip -r csye6225-fall2018-$TRAVIS_JOB_NUMBER.zip *.yml *.sh csye6225-fall2018.zip >/dev/null 2>&1
+#   - rm -rf csye6225-fall2018.zip
+#   - pwd
+#   - cd ..
+#   - pwd
 
 
 deploy:
