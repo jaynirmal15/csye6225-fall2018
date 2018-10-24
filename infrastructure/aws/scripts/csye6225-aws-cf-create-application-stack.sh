@@ -19,14 +19,14 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-###################################################################################
-# Get  a Bucket_name, dbIndentifier, dbSubnetGroup_Name.....
-###################################################################################
+bucket_name="csye6225-fall2018-sawale.me.tld.csye6225.com1"
+dbidentifier="psawale-sye6225-fall20181"
+dBsubnetGroup_name="psawale-dbSubnetGrp1"
 
-bucket_name="csye6225-fall2018-nirmalj.me.tld.csye6225.com"
-dbidentifier="rshingala-csye6225-fall2018"
-dBsubnetGroup_name="rshingala-dbSubnetGrp"
-
+domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
+trimdomain=${domain::-1}
+s3domain="web-app.$trimdomain"
+echo "S3 Domain: $s3domain"
 ###################################################################################
 #retrieve VPC_Id from the existing created STACK
 ###################################################################################
@@ -34,11 +34,10 @@ dBsubnetGroup_name="rshingala-dbSubnetGrp"
 vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$nw_stack_name']].VpcId" --output text)
 echo "VPC ID: " $vpc_id
 
-###################################################################################
+subnet_id_pub=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'public')]] | [0].SubnetId " --output text)
 #retrieve subnet_ids from the existing created vpc using vpc_id and stack name
 ###################################################################################
 
-subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'public')]] | [0].SubnetId " --output text)
 echo "Subnet ID: " $subnet_id
 
 
@@ -90,10 +89,9 @@ jq '.Resources.csye6225RDS.Properties.VpcId = "'$vpc_id'"' ../cloudformation/csy
 
 jq '.Resources.Ec2Instance.Properties.Tags[0].Value = "'$stack_name'-ec2"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
-###################################################################################
+jq '.Resources.Ec2Instance.Properties.SubnetId = "'$subnet_id_pub'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 # stack name reference given to the csye6225-cf-application.json for dynamic creation
 ###################################################################################
-jq '.Resources.Ec2Instance.Properties.SubnetId = "'$subnet_id'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
 ###################################################################################
 # reference of VPC_Id to EC2 instantace.......
@@ -127,6 +125,8 @@ jq '.Resources.DBsubnetGroup.Properties.DBSubnetGroupName = "'$dBsubnetGroup_nam
 ###################################################################################
 
 jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+
+jq '.Parameters.s3domain.Default = "'$bucket_name'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
 
 ###################################################################################
