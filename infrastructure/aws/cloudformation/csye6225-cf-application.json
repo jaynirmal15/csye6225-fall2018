@@ -7,7 +7,7 @@
     },
     "s3domain": {
       "Type": "String",
-      "Default": "csye6225-fall2018-nirmalj.me.tld.csye6225.com1"
+      "Default": "csye6225-fall2018-sawalep.me.tld.csye6225.com3"
     }
   },
   "Resources": {
@@ -21,7 +21,8 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-008c98198283b46c6",
+        "IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
+        "SubnetId": "subnet-05f54e890c8f16ab4",
         "KeyName": "psawale",
         "Tags": [
           {
@@ -41,7 +42,7 @@
                 "sudo yum install wget -y \n",
                 "sudo yum install -y https://centos7.iuscommunity.org/ius-release.rpm -y \n",
                 "sudo yum update \n",
-                "sudo yum unzip-y \n",
+                "sudo yum unzip \n",
                 "curl --silent --location https://rpm.nodesource.com/setup_9.x | sudo bash - \n",
                 "sudo yum install -y python36u python36u-libs python36u-devel python36u-pip -y \n",
                 "sudo yum install nodejs \n",
@@ -122,7 +123,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-02b43026e6fa38e78"
+        "VpcId": "vpc-05e22d99c69a79348"
       }
     },
     "csye6225RDS": {
@@ -148,7 +149,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-02b43026e6fa38e78"
+        "VpcId": "vpc-05e22d99c69a79348"
       }
     },
     "Dynamodb": {
@@ -166,7 +167,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "dynamodb",
+        "TableName": "dynamo3",
         "Tags": [
           {
             "Key": "csye6225",
@@ -183,7 +184,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-nirmalj.me.tld.csye6225.com1",
+        "BucketName": "csye6225-fall2018-sawalep.me.tld.csye6225.com3",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -199,7 +200,7 @@
         "Engine": "MySQL",
         "DBInstanceClass": "db.t2.medium",
         "MultiAZ": "false",
-        "DBInstanceIdentifier": "psawale-sye6225-fall20181",
+        "DBInstanceIdentifier": "psawale-sye6225-fall20183",
         "MasterUsername": "csye6225master",
         "MasterUserPassword": "csye6225password",
         "PubliclyAccessible": "false",
@@ -218,11 +219,11 @@
       "Type": "AWS::RDS::DBSubnetGroup",
       "Properties": {
         "DBSubnetGroupDescription": "RDS DB subnet group",
-        "DBSubnetGroupName": "psawale-dbSubnetGrp1",
+        "DBSubnetGroupName": "psawale-dbSubnetGrp3",
         "SubnetIds": [
-          "subnet-02e921b97d0f6dd9d",
-          "subnet-02f33bb1dccc9fd88",
-          "subnet-0daab480cc09f9741"
+          "subnet-0e32c8ede3c5ff249",
+          "subnet-0bc87502777051c71",
+          "subnet-05aa60f0f87ff4a38"
         ],
         "Tags": [
           {
@@ -235,7 +236,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-02b43026e6fa38e78",
+        "EC2VpcId": "vpc-05e22d99c69a79348",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {

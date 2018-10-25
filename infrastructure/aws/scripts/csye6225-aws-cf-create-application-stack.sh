@@ -19,9 +19,9 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-bucket_name="csye6225-fall2018-sawalep.me.tld.csye6225.com2"
-dbidentifier="psawale-sye6225-fall20182"
-dBsubnetGroup_name="psawale-dbSubnetGrp2"
+bucket_name="csye6225-fall2018-sawalep.me.tld.csye6225.com3"
+dbidentifier="psawale-sye6225-fall20183"
+dBsubnetGroup_name="psawale-dbSubnetGrp3"
 
 domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 trimdomain=${domain::-1}
