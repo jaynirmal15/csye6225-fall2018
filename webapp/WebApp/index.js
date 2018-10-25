@@ -80,7 +80,15 @@ function checkFileType(file,callback){
     }
 }
 
+app.get('/hellotest',function(req,res){
+  if(err){
+  throw err;
+  }
+  else{
+    res.send("HelloWorld");
+  }
 
+})
 
 app.post('/transactions/:id/attachments',function (req,res) {
     if(req.params.id && basicAuth(req)){
