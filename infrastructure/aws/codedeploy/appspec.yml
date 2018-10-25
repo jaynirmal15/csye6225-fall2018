@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: ./webapp/WebApp/
-    destination: /var/myapp
+    destination: /var
 hooks:
   BeforeInstall:
    - location: ./beforeInstall.sh
