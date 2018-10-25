@@ -3,6 +3,7 @@ const mysql  =  require('mysql');
 const bcryptjs = require('bcryptjs');
 const basicAuth = require('basic-auth');
 const bodyparser = require('body-parser');
+const env = require('dotenv');
 const saltRounds = 10;
 const app = express();
 const path=require('path');
@@ -43,7 +44,7 @@ if(process.env.NODE_ENV==="local")
         }
     });
 }
-else if(process.env.NODE_ENV==="dev")
+else if(process.env.NODE_ENV==="development")
 {
 
     storage=multerS3({
@@ -110,7 +111,7 @@ app.post('/transactions/:id/attachments',function (req,res) {
                                     else {
                                         var uid = uuidv1();
                                         var url;
-                                        if(process.env.NODE_ENV ==="dev"){
+                                        if(process.env.NODE_ENV ==="development"){
                                             url = "https://s3.amazonaws.com/" + bucket_name + "/" + req.file.originalname;
                                         }
                                         else if (process.env.NODE_ENV ==="local") {
@@ -228,7 +229,7 @@ app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
                                 else {
                                     if(deleteSuccess[0]){
 
-                                        if(process.env.NODE_ENV === "dev"){
+                                        if(process.env.NODE_ENV === "development"){
                                             var spliturl = deleteSuccess[0].receipt.split(bucket_name);
                                             var url = spliturl[1].split("/");
                                               console.log(url[1]);
@@ -316,7 +317,7 @@ const db =mysql.createConnection({
 
 //start the server
 app.listen('3000',()=>{
-    if(process.env.NODE_ENV==='dev'){
+    if(process.env.NODE_ENV==='development'){
         s3.listBuckets(function(err, data) {
             if (err) {
                 console.log("Error", err);
@@ -670,7 +671,7 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
                                             throw err;
                                         }
                                         else{
-                                            if(att[0].environment == 'dev'){
+                                            if(att[0].environment == 'development'){
                                                 console.log("andar aaya dev delete k")
                                                 var spliturl = att[0].receipt.split(bucket_name);
                                                 var url = spliturl[1].split("/");

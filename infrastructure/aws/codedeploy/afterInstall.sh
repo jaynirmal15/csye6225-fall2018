@@ -17,7 +17,6 @@ cd myapp/
 echo "#CSYE6225: doing after install: go in webapp"
 pwd
 ls -lrt
-
 pwd
 ls -lrt
 cd ..
