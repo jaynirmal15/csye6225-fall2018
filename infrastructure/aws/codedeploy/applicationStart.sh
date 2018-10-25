@@ -5,5 +5,6 @@ cd var/webapp/WebApp/
 echo "PWD AND FILES"
 pwd
 ls -lrt
+sudo kill $(lsof -t -i :3000)
 pm2 start -f index.js
 
