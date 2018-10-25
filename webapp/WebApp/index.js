@@ -308,20 +308,20 @@ app.use(function (req,res,next) {
     next();
 })
 
-//create the connection
-const db =mysql.createConnection({
-    host     : process.env.DB_HOST,
-    user     : process.env.DB_USER,
-    password : process.env.DB_PASS,
-    database : process.env.DB_NAME
-});
+// //create the connection
+// const db =mysql.createConnection({
+//     host     : process.env.DB_HOST,
+//     user     : process.env.DB_USER,
+//     password : process.env.DB_PASS,
+//     database : process.env.DB_NAME
+// });
 
 app.on('listening',function(){
     console.log('ok, server is running');
 });
 
 //start the server
-app.listen('9000',()=>{
+app.listen('3000',()=>{
 
   // console.log(process.env.NODE_ENV);
    //console.log(process.env.DB_NAME);
@@ -331,57 +331,57 @@ app.listen('9000',()=>{
 
 
 //connect to the database
-db.connect((err) =>{
-    if(err)
-    {
-        throw err;
-    }
-    console.log("Database connected");
-});
-var database = 'Create database if not exists ' + process.env.DB_NAME;
-db.query(database,function (err,dataa) {
-    if(err){
-        throw err;
-    }
-    if(dataa){
-        console.log(dataa);
-    }
-    console.log("database selected");
-})
-var data = 'use '+ process.env.DB_NAME;
-db.query(data,function (err,succc) {
-    if(err){
-        throw err;
-    }
-    else console.log("Database Selected")
-})
-var createTBLLoginSql = 'CREATE table if not exists login  ( username varchar(255), password varchar(255))';
-db.query(createTBLLoginSql, function (err,createSuc) {
-    if(err){
-        throw err;
-    } else {
-        console.log("Login Created");
-    }
-});
-
-const createTBLTransactionsSql = 'CREATE table if not exists transactions  (id varchar(255),tran_description varchar(255), merchant varchar(255),amount varchar(255),transaction_date varchar(255),category varchar(255), username varchar(255),PRIMARY KEY (id));';
-db.query(createTBLTransactionsSql, function (err,createSuc) {
-    if(err){
-        throw err;
-    } else {
-        console.log("Transactions Table Created successfully");
-    }
-});
-
-const createTBLAttachmentsSql = 'CREATE table if not exists attachments ( id varchar(255), receipt varchar(255), transaction_id varchar(255),environment varchar(255));';
-db.query(createTBLAttachmentsSql, function (err,createSuc) {
-    if(err){
-        throw err;
-    } else {
-        console.log("Attachments Table Created successfully");
-    }
-});
-//register api
+// db.connect((err) =>{
+//     if(err)
+//     {
+//         throw err;
+//     }
+//     console.log("Database connected");
+// });
+// var database = 'Create database if not exists ' + process.env.DB_NAME;
+// db.query(database,function (err,dataa) {
+//     if(err){
+//         throw err;
+//     }
+//     if(dataa){
+//         console.log(dataa);
+//     }
+//     console.log("database selected");
+// })
+// var data = 'use '+ process.env.DB_NAME;
+// db.query(data,function (err,succc) {
+//     if(err){
+//         throw err;
+//     }
+//     else console.log("Database Selected")
+// })
+// var createTBLLoginSql = 'CREATE table if not exists login  ( username varchar(255), password varchar(255))';
+// db.query(createTBLLoginSql, function (err,createSuc) {
+//     if(err){
+//         throw err;
+//     } else {
+//         console.log("Login Created");
+//     }
+// });
+//
+// const createTBLTransactionsSql = 'CREATE table if not exists transactions  (id varchar(255),tran_description varchar(255), merchant varchar(255),amount varchar(255),transaction_date varchar(255),category varchar(255), username varchar(255),PRIMARY KEY (id));';
+// db.query(createTBLTransactionsSql, function (err,createSuc) {
+//     if(err){
+//         throw err;
+//     } else {
+//         console.log("Transactions Table Created successfully");
+//     }
+// });
+//
+// const createTBLAttachmentsSql = 'CREATE table if not exists attachments ( id varchar(255), receipt varchar(255), transaction_id varchar(255),environment varchar(255));';
+// db.query(createTBLAttachmentsSql, function (err,createSuc) {
+//     if(err){
+//         throw err;
+//     } else {
+//         console.log("Attachments Table Created successfully");
+//     }
+// });
+// //register api
 
 app.post('/register',(req,res) =>{
     console.log(lname);
