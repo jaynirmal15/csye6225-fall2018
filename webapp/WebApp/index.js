@@ -315,13 +315,13 @@ app.use(function (req,res,next) {
 })
 
 //create the connection
-const db =mysql.createConnection({
-    host     : process.env.DB_HOST,
-    user     :  process.env.DB_USER,
-    password : process.env.DB_PASS,
-    database : process.env.DB_NAME,
-    port     : process.env.DB_PORT
-});
+// const db =mysql.createConnection({
+//     host     : process.env.DB_HOST,
+//     user     :  process.env.DB_USER,
+//     password : process.env.DB_PASS,
+//     database : process.env.DB_NAME,
+//     port     : process.env.DB_PORT
+// });
 
 //start the server
 app.listen('3000',()=>{
@@ -334,19 +334,20 @@ app.listen('3000',()=>{
             }
         });
     }
-    console.log(process.env.DB_HOST);
+   // console.log(process.env.NODE_ENV);
+   // console.log(process.env.DB_NAME);
     console.log('Server started on port 3000');
 
 });
 
 //connect to the database
-db.connect((err) =>{
-    if(err)
-    {
-        throw err;
-    }
-    console.log("Database connected");
-});
+// db.connect((err) =>{
+//     if(err)
+//     {
+//         throw err;
+//     }
+//     console.log("Database connected");
+// });
 
 //register api
 
