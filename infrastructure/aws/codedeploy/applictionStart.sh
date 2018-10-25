@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "#CSYE6225: start application pwd and move into nodeapp dir"
 pwd
-cd /var/myapp/webapp/WebApp
+cd /var
 echo "PWD AND FILES"
 pwd
 ls -lrt
