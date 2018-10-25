@@ -36,7 +36,7 @@
             "Fn::Join": [
               "\n",
               [
-                "#!/bin/bash -xe \n",
+                "#!/bin/bash \n",
                 "sudo yum check-update\n",
                 "sudo sudo yum install java-1.8.0-openjdk -y\n",
                 "sudo yum install ruby -y \n",

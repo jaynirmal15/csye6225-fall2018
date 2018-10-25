@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b28af89a-a400-4a3c-aa60-c110c702fc24" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-application.json" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-application.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/aws/scripts/csye6225-aws-cf-create-application-stack.sh" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/scripts/csye6225-aws-cf-create-application-stack.sh" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -90,8 +89,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-application.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="24" column="47" lean-forward="true" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="47" />
+            <state relative-caret-position="74">
+              <caret line="38" column="28" selection-start-line="38" selection-start-column="28" selection-end-line="38" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -186,7 +185,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540481041981" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540481867143" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -213,15 +212,16 @@
       <updated>1540254480443</updated>
       <workItem from="1540254487272" duration="605000" />
       <workItem from="1540424889415" duration="2289000" />
-      <workItem from="1540478914193" duration="2118000" />
+      <workItem from="1540478914193" duration="2806000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5012000" />
+    <option name="totallyTimeSpent" value="5700000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1440" height="873" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25681493" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -283,8 +283,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-application.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="24" column="47" lean-forward="true" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="47" />
+        <state relative-caret-position="74">
+          <caret line="38" column="28" selection-start-line="38" selection-start-column="28" selection-end-line="38" selection-end-column="28" />
         </state>
       </provider>
     </entry>
