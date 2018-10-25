@@ -11,16 +11,13 @@ echo "#CSYE6225: doing after install: make dir myapp"
 sudo mkdir -p myapp
 pwd
 ls -lrt
-echo "#CSYE6225: doing after install: move zip to myapp dir"
-sudo mv webpp/WebApp/ myapp/
-cd myapp/
 echo "#CSYE6225: doing after install: go in webapp"
 pwd
 ls -lrt
 pwd
 ls -lrt
 cd ..
-sudo cp .env myapp/webapp/WebApp
+sudo cp .env var/webapp/WebApp
 cd myapp/webapp/WebApp
 sudo chmod 666 .env
 pwd
