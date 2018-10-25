@@ -5,5 +5,5 @@ cd var/webapp/WebApp/
 echo "PWD AND FILES"
 pwd
 ls -lrt
-pm2 start index.js
+pm2 start -f index.js
 
