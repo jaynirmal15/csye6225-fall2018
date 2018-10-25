@@ -3,7 +3,7 @@ const mysql  =  require('mysql');
 const bcryptjs = require('bcryptjs');
 const basicAuth = require('basic-auth');
 const bodyparser = require('body-parser');
-const env = require('dotenv');
+require('dotenv').config();
 const saltRounds = 10;
 const app = express();
 const path=require('path');
@@ -315,13 +315,14 @@ app.use(function (req,res,next) {
 })
 
 //create the connection
-// const db =mysql.createConnection({
-//     host     : process.env.DB_HOST,
-//     user     :  process.env.DB_USER,
-//     password : process.env.DB_PASS,
-//     database : process.env.DB_NAME,
-//     port     : process.env.DB_PORT
-// });
+const db =mysql.createConnection({
+    host     : process.env.DB_HOST,
+    user     : process.env.DB_USER,
+    password : process.env.DB_PASS,
+    database : process.env.DB_NAME
+});
+
+
 
 //start the server
 app.listen('3000',()=>{
@@ -334,21 +335,63 @@ app.listen('3000',()=>{
             }
         });
     }
-   // console.log(process.env.NODE_ENV);
-   // console.log(process.env.DB_NAME);
+   console.log(process.env.NODE_ENV);
+   console.log(process.env.DB_NAME);
     console.log('Server started on port 3000');
 
 });
 
 //connect to the database
-// db.connect((err) =>{
-//     if(err)
-//     {
-//         throw err;
-//     }
-//     console.log("Database connected");
-// });
+db.connect((err) =>{
+    if(err)
+    {
+        throw err;
+    }
+    console.log("Database connected");
+});
+var database = 'Create database if not exists ' + process.env.DB_NAME;
+db.query(database,function (err,dataa) {
+    if(err){
+        throw err;
+    }
+    if(dataa){
+        console.log(dataa);
+    }
+    console.log("database selected");
+})
+var data = 'use '+ process.env.DB_NAME;
+db.query(data,function (err,succc) {
+    if(err){
+        throw err;
+    }
+    else console.log("Database Selected")
+})
+var createTBLLoginSql = 'CREATE table if not exists login  ( username varchar(255), password varchar(255))';
+db.query(createTBLLoginSql, function (err,createSuc) {
+    if(err){
+        throw err;
+    } else {
+        console.log("Login Created");
+    }
+});
 
+const createTBLTransactionsSql = 'CREATE table if not exists transactions  (id varchar(255),tran_description varchar(255), merchant varchar(255),amount varchar(255),transaction_date varchar(255),category varchar(255), username varchar(255),PRIMARY KEY (id));';
+db.query(createTBLTransactionsSql, function (err,createSuc) {
+    if(err){
+        throw err;
+    } else {
+        console.log("Transactions Table Created successfully");
+    }
+});
+
+const createTBLAttachmentsSql = 'CREATE table if not exists attachments ( id varchar(255), receipt varchar(255), transaction_id varchar(255),environment varchar(255));';
+db.query(createTBLAttachmentsSql, function (err,createSuc) {
+    if(err){
+        throw err;
+    } else {
+        console.log("Attachments Table Created successfully");
+    }
+});
 //register api
 
 app.post('/register',(req,res) =>{
@@ -357,7 +400,7 @@ app.post('/register',(req,res) =>{
         if (validationemail(req.body.username)) {
             var salt = bcryptjs.genSaltSync(saltRounds);
             var hash = bcryptjs.hashSync(req.body.password, salt);
-            let selectsql = `Select username from login WHERE username = '${req.body.username}'`
+            let selectsql = `Select username from login WHERE username = '${req.body.username}'`;
             db.query(selectsql, function (err, resu) {
                 if (err) {
                     throw err;
