@@ -17,7 +17,7 @@ ls -lrt
 pwd
 ls -lrt
 cd ..
-sudo cp .env var/webapp/WebApp
+sudo cp var/.env var/webapp/WebApp
 cd myapp/webapp/WebApp
 sudo chmod 666 .env
 pwd
