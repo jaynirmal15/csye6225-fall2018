@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b28af89a-a400-4a3c-aa60-c110c702fc24" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/infrastructure/aws/codedeploy/applicationStart.sh" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/codedeploy/applicationStart.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/WebApp/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/WebApp/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,11 +74,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/webapp/WebApp/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="356" column="36" lean-forward="true" selection-start-line="356" selection-start-column="36" selection-end-line="356" selection-end-column="36" />
+            <state relative-caret-position="4462">
+              <caret line="322" selection-start-line="322" selection-end-line="322" />
             </state>
           </provider>
         </entry>
@@ -92,7 +92,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/infrastructure/aws/codedeploy/applicationStart.sh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
@@ -138,8 +138,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-application.json" />
-        <option value="$PROJECT_DIR$/webapp/WebApp/index.js" />
         <option value="$PROJECT_DIR$/infrastructure/aws/codedeploy/applicationStart.sh" />
+        <option value="$PROJECT_DIR$/webapp/WebApp/index.js" />
       </list>
     </option>
   </component>
@@ -215,7 +215,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540498864531" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540500126499" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -243,18 +243,17 @@
       <workItem from="1540254487272" duration="605000" />
       <workItem from="1540424889415" duration="2289000" />
       <workItem from="1540478914193" duration="10480000" />
-      <workItem from="1540497015209" duration="2267000" />
+      <workItem from="1540497015209" duration="2625000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15641000" />
+    <option name="totallyTimeSpent" value="15999000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1440" height="873" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26040173" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26040173" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -271,7 +270,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.328877" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.328877" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -296,13 +295,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/webapp/WebApp/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="356" column="36" lean-forward="true" selection-start-line="356" selection-start-column="36" selection-end-line="356" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/webapp/WebApp/database.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -334,6 +326,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webapp/WebApp/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4462">
+          <caret line="322" selection-start-line="322" selection-end-line="322" />
         </state>
       </provider>
     </entry>

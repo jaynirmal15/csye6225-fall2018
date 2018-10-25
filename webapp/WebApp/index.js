@@ -320,15 +320,7 @@ const db =mysql.createConnection({
 
 //start the server
 app.listen('3000',()=>{
-    if(process.env.NODE_ENV==='development'){
-        s3.listBuckets(function(err, data) {
-            if (err) {
-                console.log("Error", err);
-            } else {
-                lname = data.Buckets[0].Name;
-            }
-        });
-    }
+
    console.log(process.env.NODE_ENV);
    console.log(process.env.DB_NAME);
     console.log('Server started on port 3000');
