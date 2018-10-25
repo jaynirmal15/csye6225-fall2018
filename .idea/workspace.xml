@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b28af89a-a400-4a3c-aa60-c110c702fc24" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-application.json" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-application.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-networking.json" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-networking.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/aws/codedeploy/afterInstall.sh" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/codedeploy/afterInstall.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/aws/codedeploy/appspec.yml" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/codedeploy/appspec.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/aws/codedeploy/beforeInstall.sh" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/codedeploy/beforeInstall.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/WebApp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/WebApp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-cicd.json" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/aws/cloudformation/csye6225-cf-cicd.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webapp/WebApp/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/WebApp/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -44,25 +38,25 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="js" value="3" />
-          <entry key="json" value="1" />
+          <entry key="json" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JSON" value="1" />
+          <entry key="JSON" value="2" />
           <entry key="JavaScript" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="41" />
+          <entry key="js" value="65" />
           <entry key="json" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JSON" value="2" />
-          <entry key="JavaScript" value="41" />
+          <entry key="JavaScript" value="65" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.spring.boot.run.usages" />
@@ -73,17 +67,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/webapp/WebApp/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1680">
-              <caret line="672" column="81" selection-start-line="672" selection-start-column="81" selection-end-line="672" selection-end-column="81" />
+            <state relative-caret-position="90">
+              <caret line="60" column="1" selection-start-line="60" selection-start-column="1" selection-end-line="60" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webapp/WebApp/database.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webapp/WebApp/package.json">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
@@ -96,7 +95,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webapp/WebApp/config.js">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
@@ -168,7 +167,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540426806756" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540426898943" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -194,15 +193,16 @@
       <option name="presentableId" value="Default" />
       <updated>1540254480443</updated>
       <workItem from="1540254487272" duration="605000" />
-      <workItem from="1540424889415" duration="1570000" />
+      <workItem from="1540424889415" duration="2289000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2175000" />
+    <option name="totallyTimeSpent" value="2894000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1440" height="873" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25322813" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -253,18 +253,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webapp/WebApp/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1680">
-          <caret line="672" column="81" selection-start-line="672" selection-start-column="81" selection-end-line="672" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/webapp/WebApp/database.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/webapp/WebApp/config.js">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webapp/WebApp/package.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webapp/WebApp/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="60" column="1" selection-start-line="60" selection-start-column="1" selection-end-line="60" selection-end-column="1" />
+        </state>
+      </provider>
     </entry>
   </component>
 </project>

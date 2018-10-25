@@ -59,7 +59,6 @@ else if(process.env.NODE_ENV==="development")
         }
     });
 }
-else{console.log("3");}
 //init upload
 const upload=multer({
     storage:storage,
