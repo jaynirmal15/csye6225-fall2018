@@ -30,7 +30,7 @@ app.use(bodyparser.urlencoded({
 
 app.use(bodyparser.json());
 //console.log(config);
-const bucket_name = config.aws.bucket_name;
+const bucket_name = process.env.BUCKET;
 const dt=Date.now();
 var storage=null;
 var lname;
@@ -316,10 +316,11 @@ app.use(function (req,res,next) {
 
 //create the connection
 const db =mysql.createConnection({
-    host     : 'localhost',
-    user     :  'root',
-    password : 'Hardik-2010',
-    database : 'WebApp'
+    host     : process.env.DB_HOST,
+    user     :  process.env.DB_USER,
+    password : process.env.DB_PASS,
+    database : process.env.DB_NAME,
+    port     : process.env.DB_PORT
 });
 
 //start the server
