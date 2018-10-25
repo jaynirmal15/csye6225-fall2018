@@ -316,7 +316,9 @@ const db =mysql.createConnection({
     database : process.env.DB_NAME
 });
 
-
+app.on('listening',function(){
+    console.log('ok, server is running');
+});
 
 //start the server
 app.listen('3000',()=>{
@@ -326,6 +328,7 @@ app.listen('3000',()=>{
     console.log('Server started on port 3000');
 
 });
+
 
 //connect to the database
 db.connect((err) =>{
