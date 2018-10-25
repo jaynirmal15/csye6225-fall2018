@@ -1,255 +1,513 @@
 {
+
   "AWSTemplateFormatVersion": "2010-09-09",
+
   "Parameters": {
+
     "myAccountId": {
+
       "Type": "String",
+
       "Default": "359938524153"
+
     },
+
     "s3domain": {
+
       "Type": "String",
-      "Default": "csye6225-fall2018-nirmalj.me.tld.csye6225.com11"
+
+      "Default": "csye6225-fall2018-sawale.me.tld.csye6225.com17"
+
     }
+
   },
+
   "Resources": {
+
     "Ec2Instance": {
+
       "Type": "AWS::EC2::Instance",
+
       "Properties": {
+
         "SecurityGroupIds": [
+
           {
+
             "Ref": "csye6225Webapp"
+
           }
+
         ],
+
         "ImageId": "ami-9887c6e7",
+
         "InstanceType": "t2.micro",
-        "DisableApiTermination": "False",
-        "SubnetId": "subnet-008c98198283b46c6",
-        "IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
-        "KeyName": "jaynirmal15",
+
+        "SubnetId": "subnet-05f54e890c8f16ab4",
+				"IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
+        "KeyName": "supriya",
+
         "Tags": [
+
           {
+
             "Key": "Name",
-            "Value": "application-stack-ec2"
+
+            "Value": "app17-ec2"
+
           }
+
         ],
+
         "UserData": {
+
           "Fn::Base64": {
+
             "Fn::Join": [
-              "\n",
+
+              "",
+
               [
+
                 "#!/bin/bash \n",
+
                 "sudo yum check-update\n",
+
                 "sudo sudo yum install java-1.8.0-openjdk -y\n",
+
                 "sudo yum install ruby -y \n",
+
+                "sudo yum install php php-mysql php-devel php-gd php-pecl-memcache php-pspell php-snmp php-xmlrpc php-xml -y \n",
+
                 "sudo yum install wget -y \n",
+
                 "sudo yum install -y https://centos7.iuscommunity.org/ius-release.rpm -y \n",
-                "sudo yum update -y\n",
+
+                "sudo wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm \n",
+
+                "sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm \n",
+
+                "sudo yum install mysql-server -y \n",
+
+                "sudo systemctl start mysqld \n",
+
+                "sudo yum update  -y\n",
+
                 "sudo yum install -y python36u python36u-libs python36u-devel python36u-pip -y \n",
-                "sudo yum install nodejs -y\n",
+
+                "sudo yum install nodejs -y \n",
+
                 "sudo yum install gcc gcc-c++ make -y \n",
+
                 "sudo npm install pm2 -g \n",
+
                 "sudo wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install \n",
+
                 "sudo chmod +x ./install \n",
+
                 "sudo ./install auto \n",
+
                 "sudo service codedeploy-agent start \n",
+
                 "sudo service codedeploy-agent status \n",
+
                 "sudo echo NODE_ENV=development > /var/.env \n",
+
                 "sudo echo DB_USER=csye6225master >> /var/.env \n",
+
                 "sudo echo DB_PASS=csye6225password >> /var/.env \n",
+
                 "sudo echo DB_PORT=3306 >> /var/.env \n",
+
                 "sudo echo DB_NAME=csye6225 >> /var/.env \n",
+
                 {
+
                   "Fn::Join": [
+
                     "",
+
                     [
+
                       "sudo echo BUCKET=",
+
                       {
+
                         "Ref": "s3domain"
+
                       },
+
                       " >> /var/.env \n"
+
                     ]
+
                   ]
+
                 },
+
                 {
+
                   "Fn::Join": [
+
                     "",
+
                     [
+
                       "sudo echo DB_HOST=",
+
                       {
+
                         "Fn::GetAtt": [
+
                           "RDS",
+
                           "Endpoint.Address"
+
                         ]
+
                       },
+
                       " >> /var/.env \n"
+
                     ]
+
                   ]
+
                 }
+
               ]
+
             ]
+
           }
+
         }
-      },
-      "DependsOn": "RDS"
+
+      }
+
     },
+
     "csye6225Webapp": {
+
       "Type": "AWS::EC2::SecurityGroup",
+
       "Properties": {
+
         "GroupDescription": "Enable SSH access via port 22 80 and 443",
+
         "SecurityGroupIngress": [
+
           {
+
             "IpProtocol": "tcp",
+
             "FromPort": "22",
+
             "ToPort": "22",
+
             "CidrIp": "0.0.0.0/0"
+
           },
+
           {
+
             "IpProtocol": "tcp",
+
             "FromPort": "443",
+
             "ToPort": "443",
+
             "CidrIp": "0.0.0.0/0"
+
           },
+
           {
+
             "IpProtocol": "tcp",
+
             "FromPort": "80",
+
             "ToPort": "80",
+
             "CidrIp": "0.0.0.0/0"
+
           }
+
         ],
+
         "Tags": [
+
           {
+
             "Key": "CSTY6225SG",
+
             "Value": "new-stack-1-ec2"
+
           }
+
         ],
-        "VpcId": "vpc-02b43026e6fa38e78"
+
+        "VpcId": "vpc-05e22d99c69a79348"
+
       }
+
     },
+
     "csye6225RDS": {
+
       "Type": "AWS::EC2::SecurityGroup",
+
       "Properties": {
+
         "GroupDescription": "Enable SSH access via port 3306",
+
         "SecurityGroupIngress": [
+
           {
+
             "IpProtocol": "tcp",
+
             "FromPort": "3306",
+
             "ToPort": "3306",
+
             "SourceSecurityGroupId": {
+
               "Ref": "csye6225Webapp"
+
             },
+
             "SourceSecurityGroupOwnerId": {
+
               "Ref": "myAccountId"
+
             }
+
           }
+
         ],
+
         "Tags": [
+
           {
+
             "Key": "CSTY6225SG",
+
             "Value": "Assignment3"
+
           }
+
         ],
-        "VpcId": "vpc-02b43026e6fa38e78"
+
+        "VpcId": "vpc-05e22d99c69a79348"
+
       }
+
     },
+
     "Dynamodb": {
+
       "Type": "AWS::DynamoDB::Table",
+
       "Properties": {
+
         "AttributeDefinitions": [
+
           {
+
             "AttributeName": "id",
+
             "AttributeType": "S"
+
           }
+
         ],
+
         "KeySchema": [
+
           {
+
             "AttributeName": "id",
+
             "KeyType": "HASH"
+
           }
+
         ],
-        "TableName": "abcabc",
+
+        "TableName": "dynamo17",
+
         "Tags": [
+
           {
+
             "Key": "csye6225",
+
             "Value": "psawale-Dynamodb"
+
           }
+
         ],
+
         "ProvisionedThroughput": {
+
           "ReadCapacityUnits": 2,
+
           "WriteCapacityUnits": 2
+
         }
+
       }
+
     },
+
     "S3Bucket": {
+
       "Type": "AWS::S3::Bucket",
+
       "Properties": {
+
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-nirmalj.me.tld.csye6225.com11",
+
+        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.com17",
+
         "Tags": [
+
           {
+
             "Key": "csye6225Bucket",
+
             "Value": "psawaleBucket"
+
           }
+
         ]
+
       }
+
     },
+
     "RDS": {
+
       "Type": "AWS::RDS::DBInstance",
+
       "Properties": {
+
         "AllocatedStorage": "10",
+
         "Engine": "MySQL",
+
         "DBInstanceClass": "db.t2.medium",
+
         "MultiAZ": "false",
-        "DBInstanceIdentifier": "psawale-sye6225-fall201811",
+
+        "DBInstanceIdentifier": "psawale-sye6225-fall201817",
+
         "MasterUsername": "csye6225master",
+
         "MasterUserPassword": "csye6225password",
+
         "PubliclyAccessible": "false",
+
         "DBName": "csye6225",
+
         "DBSubnetGroupName": {
+
           "Ref": "DBsubnetGroup"
+
         },
+
         "DBSecurityGroups": [
+
           {
+
             "Ref": "csye6225RDSSG"
+
           }
+
         ]
+
       }
+
     },
+
     "DBsubnetGroup": {
+
       "Type": "AWS::RDS::DBSubnetGroup",
+
       "Properties": {
+
         "DBSubnetGroupDescription": "RDS DB subnet group",
-        "DBSubnetGroupName": "psawale-dbSubnetGrp11",
+
+        "DBSubnetGroupName": "psawale-dbSubnetGrp17",
+
         "SubnetIds": [
-          "subnet-02e921b97d0f6dd9d",
-          "subnet-02f33bb1dccc9fd88",
-          "subnet-0daab480cc09f9741"
+
+          "subnet-0e32c8ede3c5ff249",
+
+          "subnet-0bc87502777051c71",
+
+          "subnet-05aa60f0f87ff4a38"
+
         ],
+
         "Tags": [
+
           {
+
             "Key": "csye6225",
+
             "Value": "Assignment4"
+
           }
+
         ]
+
       }
+
     },
+
     "csye6225RDSSG": {
+
       "Type": "AWS::RDS::DBSecurityGroup",
+
       "Properties": {
-        "EC2VpcId": "vpc-02b43026e6fa38e78",
+
+        "EC2VpcId": "vpc-05e22d99c69a79348",
+
         "DBSecurityGroupIngress": [
+
           {
+
             "EC2SecurityGroupId": {
+
               "Ref": "csye6225Webapp"
+
             }
+
           }
+
         ],
+
         "GroupDescription": "test",
+
         "Tags": [
+
           {
+
             "Key": "csye6225",
+
             "Value": "RDS SEcurity Group"
+
           }
+
         ]
+
       }
+
     }
+
   }
+
 }
