@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b28af89a-a400-4a3c-aa60-c110c702fc24" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/webapp/WebApp/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/WebApp/index.js" afterDir="false" />
-    </list>
+    <list default="true" id="b28af89a-a400-4a3c-aa60-c110c702fc24" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +213,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540500126499" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540500774242" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -243,12 +241,12 @@
       <workItem from="1540254487272" duration="605000" />
       <workItem from="1540424889415" duration="2289000" />
       <workItem from="1540478914193" duration="10480000" />
-      <workItem from="1540497015209" duration="2625000" />
+      <workItem from="1540497015209" duration="2915000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15999000" />
+    <option name="totallyTimeSpent" value="16289000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1440" height="873" extended-state="6" />
