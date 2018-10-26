@@ -191,7 +191,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-nirmalj.me.tld.csye6225.com",
+        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
         "Tags": [
           {
             "Key": "csye6225Bucket",
