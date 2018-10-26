@@ -2,7 +2,7 @@
 node_modules/
 config.js/
 package-lock.json
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
