@@ -235,7 +235,7 @@ app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
                                             var url = spliturl[1].split("/");
                                               console.log(url[1]);
                                             s3.deleteObject({
-                                                Bucket : config.aws.bucket_name,
+                                                Bucket : bucket_name,
                                                 Key : url[1]
                                             },function (err,data) {
                                                 //  res.send(data);
@@ -718,7 +718,7 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
                                                 var url = spliturl[1].split("/");
                                                 console.log(url[1]);
                                                 s3.deleteObject({
-                                                    Bucket : config.aws.bucket_name,
+                                                    Bucket : bucket_name,
                                                     Key : url[1]
                                                 },function (err,data) {
                                                     //  res.send(data);
