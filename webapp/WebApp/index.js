@@ -3,6 +3,7 @@ const mysql  =  require('mysql');
 const bcryptjs = require('bcryptjs');
 const basicAuth = require('basic-auth');
 const bodyparser = require('body-parser');
+require('dotenv').config();
 const saltRounds = 10;
 const app = express();
 const path=require('path');
@@ -29,9 +30,10 @@ app.use(bodyparser.urlencoded({
 
 app.use(bodyparser.json());
 //console.log(config);
-const bucket_name = config.aws.bucket_name;
+const bucket_name = process.env.BUCKET;
 const dt=Date.now();
 var storage=null;
+var lname;
 const uploadDir='uploads/';
 if(process.env.NODE_ENV==="local")
 {
@@ -42,12 +44,14 @@ if(process.env.NODE_ENV==="local")
         }
     });
 }
-else if(process.env.NODE_ENV==="dev")
+else if(process.env.NODE_ENV==="development")
 {
+
     storage=multerS3({
         s3: s3,
         bucket: bucket_name,//bucketname
         metadata: function (req, file, cb) {
+          //  console.log(bname);
             cb(null, {fieldName: file.fieldname});//fieldname
         },
         key: function (req, file, cb) {
@@ -55,7 +59,6 @@ else if(process.env.NODE_ENV==="dev")
         }
     });
 }
-else{console.log("3");}
 //init upload
 const upload=multer({
     storage:storage,
@@ -77,7 +80,9 @@ function checkFileType(file,callback){
     }
 }
 
-
+app.get('/hellotest',function(req,res){
+    res.send("HelloWorld");
+})
 
 app.post('/transactions/:id/attachments',function (req,res) {
     if(req.params.id && basicAuth(req)){
@@ -107,7 +112,7 @@ app.post('/transactions/:id/attachments',function (req,res) {
                                     else {
                                         var uid = uuidv1();
                                         var url;
-                                        if(process.env.NODE_ENV ==="dev"){
+                                        if(process.env.NODE_ENV ==="development"){
                                             url = "https://s3.amazonaws.com/" + bucket_name + "/" + req.file.originalname;
                                         }
                                         else if (process.env.NODE_ENV ==="local") {
@@ -225,12 +230,12 @@ app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
                                 else {
                                     if(deleteSuccess[0]){
 
-                                        if(process.env.NODE_ENV === "dev"){
+                                        if(process.env.NODE_ENV === "development"){
                                             var spliturl = deleteSuccess[0].receipt.split(bucket_name);
                                             var url = spliturl[1].split("/");
                                               console.log(url[1]);
                                             s3.deleteObject({
-                                                Bucket : config.aws.bucket_name,
+                                                Bucket : bucket_name,
                                                 Key : url[1]
                                             },function (err,data) {
                                                 //  res.send(data);
@@ -305,18 +310,25 @@ app.use(function (req,res,next) {
 
 //create the connection
 const db =mysql.createConnection({
-    host     : 'localhost',
-    user     :  'root',
-    password : 'Hardik-2010',
-    database : 'WebApp'
+    host     : process.env.DB_HOST,
+    user     : process.env.DB_USER,
+    password : process.env.DB_PASS,
+    database : process.env.DB_NAME
+});
+
+app.on('listening',function(){
+    console.log('ok, server is running');
 });
 
 //start the server
 app.listen('3000',()=>{
 
+  // console.log(process.env.NODE_ENV);
+   //console.log(process.env.DB_NAME);
     console.log('Server started on port 3000');
 
 });
+
 
 //connect to the database
 db.connect((err) =>{
@@ -326,15 +338,58 @@ db.connect((err) =>{
     }
     console.log("Database connected");
 });
+var database = 'Create database if not exists ' + process.env.DB_NAME;
+db.query(database,function (err,dataa) {
+    if(err){
+        throw err;
+    }
+    if(dataa){
+        console.log(dataa);
+    }
+    console.log("database selected");
+})
+var data = 'use '+ process.env.DB_NAME;
+db.query(data,function (err,succc) {
+    if(err){
+        throw err;
+    }
+    else console.log("Database Selected")
+})
+var createTBLLoginSql = 'CREATE table if not exists login  ( username varchar(255), password varchar(255))';
+db.query(createTBLLoginSql, function (err,createSuc) {
+    if(err){
+        throw err;
+    } else {
+        console.log("Login Created");
+    }
+});
 
+const createTBLTransactionsSql = 'CREATE table if not exists transactions  (id varchar(255),tran_description varchar(255), merchant varchar(255),amount varchar(255),transaction_date varchar(255),category varchar(255), username varchar(255),PRIMARY KEY (id));';
+db.query(createTBLTransactionsSql, function (err,createSuc) {
+    if(err){
+        throw err;
+    } else {
+        console.log("Transactions Table Created successfully");
+    }
+});
+
+const createTBLAttachmentsSql = 'CREATE table if not exists attachments ( id varchar(255), receipt varchar(255), transaction_id varchar(255),environment varchar(255));';
+db.query(createTBLAttachmentsSql, function (err,createSuc) {
+    if(err){
+        throw err;
+    } else {
+        console.log("Attachments Table Created successfully");
+    }
+});
 //register api
 
 app.post('/register',(req,res) =>{
+    console.log(lname);
     if(req.body.username && req.body.password) {
         if (validationemail(req.body.username)) {
             var salt = bcryptjs.genSaltSync(saltRounds);
             var hash = bcryptjs.hashSync(req.body.password, salt);
-            let selectsql = `Select username from login WHERE username = '${req.body.username}'`
+            let selectsql = `Select username from login WHERE username = '${req.body.username}'`;
             db.query(selectsql, function (err, resu) {
                 if (err) {
                     throw err;
@@ -657,13 +712,13 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
                                             throw err;
                                         }
                                         else{
-                                            if(att[0].environment == 'dev'){
+                                            if(att[0].environment == 'development'){
                                                 console.log("andar aaya dev delete k")
                                                 var spliturl = att[0].receipt.split(bucket_name);
                                                 var url = spliturl[1].split("/");
                                                 console.log(url[1]);
                                                 s3.deleteObject({
-                                                    Bucket : config.aws.bucket_name,
+                                                    Bucket : bucket_name,
                                                     Key : url[1]
                                                 },function (err,data) {
                                                     //  res.send(data);
