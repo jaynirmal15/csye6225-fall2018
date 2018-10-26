@@ -207,7 +207,7 @@
         "Engine": "MySQL",
         "DBInstanceClass": "db.t2.medium",
         "MultiAZ": "false",
-        "DBInstanceIdentifier": "bhidesu-csye6225-fall2018",
+        "DBInstanceIdentifier": "rshingala-csye6225-fall2018",
         "MasterUsername": "csye6225master",
         "MasterUserPassword": "csye6225password",
         "PubliclyAccessible": "false",
@@ -226,7 +226,7 @@
       "Type": "AWS::RDS::DBSubnetGroup",
       "Properties": {
         "DBSubnetGroupDescription": "RDS DB subnet group",
-        "DBSubnetGroupName": "csye6225-dbSubnetGrp",
+        "DBSubnetGroupName": "rshingala-dbSubnetGrp",
         "SubnetIds": [
           "subnet-02e921b97d0f6dd9d",
           "subnet-02f33bb1dccc9fd88",

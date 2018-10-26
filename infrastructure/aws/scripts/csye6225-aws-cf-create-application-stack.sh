@@ -20,8 +20,8 @@ echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
 bucket_name="csye6225-fall2018-nirmalj.me.tld.csye6225.com"
-dbidentifier="bhidesu-csye6225-fall2018"
-dBsubnetGroup_name="csye6225-dbSubnetGrp"
+dbidentifier="rshingala-csye6225-fall2018"
+dBsubnetGroup_name="rshingala-dbSubnetGrp"
 
 domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 trimdomain=${domain::-1}
