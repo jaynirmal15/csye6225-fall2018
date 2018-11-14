@@ -14,7 +14,8 @@
         "Properties":{
             "Subscription":[
             {
-              "Endpoint":{"Ref" :  "lambdaArn"}, "Protocol":"lambda"
+              "Endpoint":{"Ref" :  "lambdaArn"},
+              "Protocol":"lambda"
             }
           ],
           "TopicName":"LambdaTopic"

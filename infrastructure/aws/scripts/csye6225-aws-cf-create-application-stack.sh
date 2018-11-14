@@ -19,14 +19,14 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-bucket_name="csye6225-fall2018-nirmalj.me.tld.csye6225.com"
+
 dbidentifier="csye6225-fall2018-1"
 dBsubnetGroup_name="dbSubnetGrp-1"
 
 domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 trimdomain=${domain::-1}
-s3domain="web-app.$trimdomain"
-echo "S3 Domain: $s3domain"
+bucket_name="$trimdomain.tld.csye6225.com"
+echo "S3 Domain: $bucket_name"
 ###################################################################################
 #retrieve VPC_Id from the existing created STACK
 ###################################################################################
