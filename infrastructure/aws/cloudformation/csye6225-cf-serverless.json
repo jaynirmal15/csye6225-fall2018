@@ -1,0 +1,33 @@
+
+{
+"AWSTemplateFormatVersion" : "2010-09-09",
+"Description" : "SNS",
+"Parameters" : {
+  "lambdaArn" : {
+    "Description" : "Lambda ARN",
+    "Type" : "String"
+  }
+},
+"Resources" : {
+      "MySNSTopic":{
+        "Type":"AWS::SNS::Topic",
+        "Properties":{
+            "Subscription":[
+            {
+              "Endpoint":{"Ref" :  "lambdaArn"}, "Protocol":"lambda"
+            }
+          ],
+          "TopicName":"LambdaTopic"
+        }
+      },
+      "LambdaInvokePermission": {
+        "Type": "AWS::Lambda::Permission",
+        "Properties": {
+            "Action": "lambda:InvokeFunction",
+            "Principal": "sns.amazonaws.com",
+            "SourceArn": {"Ref": "MySNSTopic"},
+            "FunctionName": {"Ref": "lambdaArn"}
+         }
+      }
+    }
+}
