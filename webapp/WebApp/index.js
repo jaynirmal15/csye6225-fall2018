@@ -785,6 +785,27 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
 });
 
 
+app.get('/reset',(req,res)=>{
+    var userEmail = req.headers.userEmail
+  
+    //var useremail = "gupta.tus@northeastern.edu";
+    
+      var msg = userEmail+"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
+      logger.info("Message is --> " + msg)
+      var params = {
+        Message: msg, /* required */
+        TopicArn:process.env.TOPIC_ARN
+      };
+      var sns = new AWS.SNS();
+      sns.publish(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else{
+          logger.info(data);        
+        }           // successful response
+      });
+    
+  });
+
 
 
 
