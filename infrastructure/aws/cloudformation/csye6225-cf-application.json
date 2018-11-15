@@ -11,7 +11,7 @@
     },
     "dynamoDB": {
       "Type": "String",
-      "Default": "dhahahh"
+      "Default": "myDB"
     }
   },
   "Resources": {
