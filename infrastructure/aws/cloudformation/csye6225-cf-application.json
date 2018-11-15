@@ -9,9 +9,9 @@
       "Type": "String",
       "Default": "csye6225-fall2018-nirmalj.me.tld.csye6225.com"
     },
-    "dynamoDB_table": {
+    "dynamoDB": {
       "Type": "String",
-      "Default": "ahahah"
+      "Default": "dhahahh"
     }
   },
   "Resources": {
@@ -72,7 +72,7 @@
                     [
                       "sudo echo DDB_TABLE=",
                       {
-                        "Ref": "dynamoDB_table"
+                        "Ref": "dynamoDB"
                       },
                       " >> /var/.env \n"
                     ]
@@ -191,7 +191,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "ahhahah",
+        "TableName": "dhahahh",
         "Tags": [
           {
             "Key": "csye6225",
