@@ -25,6 +25,7 @@ dBsubnetGroup_name="dbSubnetGrp-1"
 
 domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 trimdomain=${domain::-1}
+senderEmail="noreply@$trimdomain"
 bucket_name="$trimdomain.tld.csye6225.com"
 echo "S3 Domain: $bucket_name"
 ###################################################################################
@@ -129,6 +130,8 @@ jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloud
 jq '.Parameters.s3domain.Default = "'$bucket_name'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
 jq '.Parameters.dynamoDB.Default = "'$dynamoDB_table'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+
+jq '.Parameters.senderEmail.Default = "'$senderEmail'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 ###################################################################################
 # Create a stack with cloudformation  using all required parameters in .json and execute it
 ###################################################################################

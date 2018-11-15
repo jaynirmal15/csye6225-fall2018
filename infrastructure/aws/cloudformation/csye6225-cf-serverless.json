@@ -112,7 +112,7 @@
 	            "Arn"
           	]
         	},
-         	"Handler": "LogEvent::handleRequest",
+         	"Handler": "index.handler",
          	"Runtime": "nodejs8.10",
          	"FunctionName": {"Ref" : "fnName"}
        }
