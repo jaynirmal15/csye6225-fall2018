@@ -786,13 +786,14 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
 
 
 app.get('/reset',(req,res)=>{
-    var userEmail = req.params.userEmail
+    var userEmail = req.header.userEmail
     console.log(userEmail);
     console.log(process.env.EMAIL_SOURCE);
     console.log(req.get('host'));
     //var useremail = "gupta.tus@northeastern.edu";
     AWS.config.update({region:'us-east-1'});
-      var msg = userEmail+"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
+    var testing = "sawale.p@northeastern.edu";
+      var msg = testing +"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
     //  logger.info("Message is --> " + msg)
       var params = {
         Message: msg, /* required */
