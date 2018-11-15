@@ -7,12 +7,17 @@ require('dotenv').config();
 const saltRounds = 10;
 const app = express();
 const path=require('path');
-const config = require('./config.js');
+const config = require('./config.json');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const fs = require('fs');
+const log4js = require('log4js');
+log4js.configure('config.json');
+const logger = log4js.getLogger('result');
+var StatsD = require('node-statsd'),
+client = new StatsD();
 //testing
 //process.env.NODE_ENV = 'test';
 var request = require('supertest');
@@ -82,9 +87,11 @@ function checkFileType(file,callback){
 
 app.get('/hellotest',function(req,res){
     res.send("HelloWorld");
+    client.increment('hello');
 })
 
 app.post('/transactions/:id/attachments',function (req,res) {
+    client.increment('posting_Attachments');
     if(req.params.id && basicAuth(req)){
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
@@ -155,6 +162,7 @@ app.post('/transactions/:id/attachments',function (req,res) {
 })
 
 app.get('/transactions/:id/attachments',function (req,res) {
+    client.increment('getting_Attachments');
     if(req.params.id && basicAuth(req)){
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
@@ -207,6 +215,7 @@ app.get('/transactions/:id/attachments',function (req,res) {
 })
 
 app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
+    client.increment('deleting_Attachments');
     if(req.params.id && basicAuth(req)){
         var credentials = basicAuth(req);
         let qwsql = `SELECT password from login WHERE username = '${credentials.name}'`;
@@ -384,6 +393,7 @@ db.query(createTBLAttachmentsSql, function (err,createSuc) {
 //register api
 
 app.post('/register',(req,res) =>{
+    client.increment('registering');
     console.log(lname);
     if(req.body.username && req.body.password) {
         if (validationemail(req.body.username)) {
@@ -419,6 +429,7 @@ app.post('/register',(req,res) =>{
 
 //get time api
 app.get('/time',(req,res) => {
+    client.increment('getting_time');
     if(basicAuth(req)) {
         var credentials = basicAuth(req);
         var salt = bcryptjs.genSaltSync(saltRounds);
@@ -474,6 +485,7 @@ app.get('/time',(req,res) => {
 })
 
 app.get('/transaction',(req,res) => {
+    client.increment('getting_transaction');
     if(basicAuth(req)) {
         var credentials = basicAuth(req);
         var salt = bcryptjs.genSaltSync(saltRounds);
@@ -526,6 +538,7 @@ app.get('/transaction',(req,res) => {
 
 
 app.post('/transaction',(req,res) => {
+    client.increment('posting_transaction');
     var credentials = basicAuth(req);
     var salt = bcryptjs.genSaltSync(saltRounds);
     var decrypt = bcryptjs.hashSync(credentials.pass, salt);
@@ -577,6 +590,7 @@ app.post('/transaction',(req,res) => {
 })
 
 app.delete('/transaction/:id',(req,res) =>{
+    client.increment('deleting_tranaction');
     if(req.params.id && basicAuth(req)){
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
@@ -622,6 +636,7 @@ app.delete('/transaction/:id',(req,res) =>{
     }
 })
 app.put('/transaction/:id',(req,res) => {
+    client.increment('putting_transaction');
     if(req.params.id) {
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`
@@ -683,6 +698,7 @@ app.put('/transaction/:id',(req,res) => {
     }
 });
 app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
+    client.increment('putting_attachments');
     if(req.params.id) {
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`
@@ -784,6 +800,36 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
     }
 });
 
+app.get('/reset',(req,res)=>{
+    client.increment('reset');
+    var username = req.headers.username
+    AWS.config.update({region:'us-east-1'});
+    var abc={};
+    var sns = new AWS.SNS();
+    sns.listTopics(abc, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else {
+            arn = data.Topics[0].TopicArn;
+            var msg = username +"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
+            var params = {
+                Message: msg, /* required */
+                TopicArn:arn
+              };
+              sns.publish(params, function(err, data) {
+                if (err){
+                    logger.error(err);
+                     console.log(err, err.stack);
+                }  // an error occurred
+                else{
+                    logger.info(data); 
+                    res.send(data);
+                         
+                }           // successful response
+              });
+              logger.info("Message is --> " + msg);
+        }             // successful response
+      }); 
+  });
 
 
 
