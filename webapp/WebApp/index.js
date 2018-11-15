@@ -16,6 +16,8 @@ const fs = require('fs');
 const log4js = require('log4js');
 log4js.configure('config.json');
 const logger = log4js.getLogger('result');
+var StatsD = require('node-statsd'),
+client = new StatsD();
 //testing
 //process.env.NODE_ENV = 'test';
 var request = require('supertest');
@@ -85,6 +87,7 @@ function checkFileType(file,callback){
 
 app.get('/hellotest',function(req,res){
     res.send("HelloWorld");
+    client.increment('hello');
 })
 
 app.post('/transactions/:id/attachments',function (req,res) {
