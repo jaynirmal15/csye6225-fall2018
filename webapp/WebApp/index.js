@@ -787,7 +787,9 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
 
 app.get('/reset',(req,res)=>{
     var userEmail = req.headers.userEmail
-  
+    console.log(userEmail);
+    console.log(process.env.EMAIL_SOURCE);
+    console.log(req.get('host'));
     //var useremail = "gupta.tus@northeastern.edu";
     
       var msg = userEmail+"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
