@@ -791,7 +791,7 @@ app.get('/reset',(req,res)=>{
     console.log(process.env.EMAIL_SOURCE);
     console.log(req.get('host'));
     //var useremail = "gupta.tus@northeastern.edu";
-    
+    AWS.config.update({region:'us-east-1'});
       var msg = userEmail+"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
     //  logger.info("Message is --> " + msg)
       var params = {
