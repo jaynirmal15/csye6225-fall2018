@@ -91,6 +91,7 @@ app.get('/hellotest',function(req,res){
 })
 
 app.post('/transactions/:id/attachments',function (req,res) {
+    client.increment('posting_Attachments');
     if(req.params.id && basicAuth(req)){
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
@@ -161,6 +162,7 @@ app.post('/transactions/:id/attachments',function (req,res) {
 })
 
 app.get('/transactions/:id/attachments',function (req,res) {
+    client.increment('getting_Attachments');
     if(req.params.id && basicAuth(req)){
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
@@ -213,6 +215,7 @@ app.get('/transactions/:id/attachments',function (req,res) {
 })
 
 app.delete('/transactions/:id/attachments/:attachmentId',function (req,res) {
+    client.increment('deleting_Attachments');
     if(req.params.id && basicAuth(req)){
         var credentials = basicAuth(req);
         let qwsql = `SELECT password from login WHERE username = '${credentials.name}'`;
@@ -390,6 +393,7 @@ db.query(createTBLAttachmentsSql, function (err,createSuc) {
 //register api
 
 app.post('/register',(req,res) =>{
+    client.increment('registering');
     console.log(lname);
     if(req.body.username && req.body.password) {
         if (validationemail(req.body.username)) {
@@ -425,6 +429,7 @@ app.post('/register',(req,res) =>{
 
 //get time api
 app.get('/time',(req,res) => {
+    client.increment('getting_time');
     if(basicAuth(req)) {
         var credentials = basicAuth(req);
         var salt = bcryptjs.genSaltSync(saltRounds);
@@ -480,6 +485,7 @@ app.get('/time',(req,res) => {
 })
 
 app.get('/transaction',(req,res) => {
+    client.increment('getting_transaction');
     if(basicAuth(req)) {
         var credentials = basicAuth(req);
         var salt = bcryptjs.genSaltSync(saltRounds);
@@ -532,6 +538,7 @@ app.get('/transaction',(req,res) => {
 
 
 app.post('/transaction',(req,res) => {
+    client.increment('posting_transaction');
     var credentials = basicAuth(req);
     var salt = bcryptjs.genSaltSync(saltRounds);
     var decrypt = bcryptjs.hashSync(credentials.pass, salt);
@@ -583,6 +590,7 @@ app.post('/transaction',(req,res) => {
 })
 
 app.delete('/transaction/:id',(req,res) =>{
+    client.increment('deleting_tranaction');
     if(req.params.id && basicAuth(req)){
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`;
@@ -628,6 +636,7 @@ app.delete('/transaction/:id',(req,res) =>{
     }
 })
 app.put('/transaction/:id',(req,res) => {
+    client.increment('putting_transaction');
     if(req.params.id) {
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`
@@ -689,6 +698,7 @@ app.put('/transaction/:id',(req,res) => {
     }
 });
 app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
+    client.increment('putting_attachments');
     if(req.params.id) {
         var credentials = basicAuth(req);
         let sql = `SELECT password from login WHERE username = '${credentials.name}'`
@@ -791,6 +801,7 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
 });
 
 app.get('/reset',(req,res)=>{
+    client.increment('reset');
     var username = req.headers.username
     AWS.config.update({region:'us-east-1'});
     var abc={};
