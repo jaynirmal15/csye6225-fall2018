@@ -7,11 +7,15 @@
     },
     "s3domain": {
       "Type": "String",
-      "Default": "csye6225-fall2018-sawale.me.tld.csye6225.com"
+      "Default": "csye6225-fall2018-bhidesu.me.tld.csye6225.com"
     },
     "dynamoDB": {
       "Type": "String",
-      "Default": "dynamo1"
+      "Default": "myDB"
+    },
+    "senderEmail": {
+      "Type": "String",
+      "Default": "noreply@csye6225-fall2018-bhidesu.me"
     }
   },
   "Resources": {
@@ -25,7 +29,7 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-0cfc1ce0f504cdffa",
+        "SubnetId": "subnet-0bd23d33a7664224c",
         "IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
         "KeyName": "MyEC2",
         "Tags": [
@@ -67,9 +71,20 @@
                 "sudo echo NODE_ENV=development > /var/.env \n",
                 "sudo echo DB_USER=csye6225master >> /var/.env \n",
                 "sudo echo DB_PASS=csye6225password >> /var/.env \n",
-                "sudo echo DB_PORT=3306 >> /var/.env \n",
-                "sudo echo EMAIL_SOURCE=noreply@csye6225-fall2018-nirmalj.me >> /var/.env \n",
+                "sudo echo DB_PORT=3306 >> /var/.env \n",                
                 "sudo echo DB_NAME=csye6225 >> /var/.env \n",
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "sudo echo EMAIL_SOURCE=",
+                      {
+                        "Ref": "senderEmail"
+                      },
+                      " >> /var/.env \n"
+                    ]
+                  ]
+                },
                 {
                   "Fn::Join": [
                     "",
@@ -151,7 +166,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-0a192efb18debccf0"
+        "VpcId": "vpc-0839bfdf92131dbd8"
       }
     },
     "csye6225RDS": {
@@ -177,7 +192,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-0a192efb18debccf0"
+        "VpcId": "vpc-0839bfdf92131dbd8"
       }
     },
     "Dynamodb": {
@@ -195,7 +210,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "dynamo1",
+        "TableName": "myDB",
         "Tags": [
           {
             "Key": "csye6225",
@@ -212,7 +227,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.com",
+        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -249,9 +264,9 @@
         "DBSubnetGroupDescription": "RDS DB subnet group",
         "DBSubnetGroupName": "dbSubnetGrp-1",
         "SubnetIds": [
-          "subnet-064fd52a228d0c775",
-          "subnet-01b80136e1f094f12",
-          "subnet-061f7e12770a93f14"
+          "subnet-0de355116b6454eec",
+          "subnet-08c4d0f6ea5219bd3",
+          "subnet-01c87505c795d286c"
         ],
         "Tags": [
           {
@@ -264,7 +279,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-0a192efb18debccf0",
+        "EC2VpcId": "vpc-0839bfdf92131dbd8",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {

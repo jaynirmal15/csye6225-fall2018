@@ -16,7 +16,7 @@ trimdomain=${domain::-1}
 bucket_name="code-deploy.$trimdomain"
 echo "S3 Domain: $bucket_name"
 
-createOutput=$(aws cloudformation create-stack --stack-name $stack_name --capabilities CAPABILITY_NAMED_IAM --template-body file://../cloudformation/csye6225-cf-serverless.json --parameters ParameterKey=s3domain,ParameterValue=$bucket_name ParameterKey=lambdaRoleArn,ParameterValue=$lambdaRoleArn ParameterKey=roleName,ParameterValue=$roleName  ParameterKey=fnName,ParameterValue=$fnName)
+createOutput=$(aws cloudformation create-stack --stack-name $stack_name --capabilities CAPABILITY_NAMED_IAM --template-body file://../cloudformation/csye6225-cf-serverless.json --parameters ParameterKey=s3domain,ParameterValue=$bucket_name  ParameterKey=roleName,ParameterValue=$roleName  ParameterKey=fnName,ParameterValue=$fnName)
 
 if [ $? -eq 0 ]; then
 	echo "Creating stack..."
