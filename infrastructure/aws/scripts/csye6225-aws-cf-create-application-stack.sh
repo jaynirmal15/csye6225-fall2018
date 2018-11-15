@@ -19,14 +19,15 @@ read nw_stack_name
 echo "Enter the DynamoDB table name"
 read dynamoDB_table
 
-bucket_name="csye6225-fall2018-shingalar.me.tld.csye6225.com"
-dbidentifier="rshingala-csye6225-fall2018"
-dBsubnetGroup_name="rshingala-dbSubnetGrp"
+
+dbidentifier="csye6225-fall2018-1"
+dBsubnetGroup_name="dbSubnetGrp-1"
 
 domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 trimdomain=${domain::-1}
-s3domain="web-app.$trimdomain"
-echo "S3 Domain: $s3domain"
+senderEmail="noreply@$trimdomain"
+bucket_name="$trimdomain.tld.csye6225.com"
+echo "S3 Domain: $bucket_name"
 ###################################################################################
 #retrieve VPC_Id from the existing created STACK
 ###################################################################################
@@ -128,7 +129,9 @@ jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloud
 
 jq '.Parameters.s3domain.Default = "'$bucket_name'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
+jq '.Parameters.dynamoDB.Default = "'$dynamoDB_table'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 
+jq '.Parameters.senderEmail.Default = "'$senderEmail'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
 ###################################################################################
 # Create a stack with cloudformation  using all required parameters in .json and execute it
 ###################################################################################
@@ -162,3 +165,38 @@ fi
 ###################################################################################
 
 echo "Stack Create Execution Complete...!!!"
+
+
+val='
+{
+	"logs": {
+		"logs_collected": {
+			"files": {
+				"collect_list": [
+					{
+						"file_path": "/var/log/messages",
+						"log_group_name": "Log2"
+					}
+				]
+			}
+		}
+	},
+	"metrics": {
+		"metrics_collected": {
+			"collectd": {
+				"metrics_aggregation_interval": 60
+			},
+			"statsd": {
+				"metrics_aggregation_interval": 60,
+				"metrics_collection_interval": 10,
+				"service_address": ":8125"
+			}
+		}
+	}
+}
+'
+
+echo $val
+parameter_name="WebApp"
+aws ssm put-parameter --name "$parameter_name" --type "String" --value "$val"
+

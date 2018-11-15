@@ -7,7 +7,15 @@
     },
     "s3domain": {
       "Type": "String",
-      "Default": "csye6225-fall2018-shingalar.me.tld.csye6225.com"
+      "Default": "csye6225-fall2018-bhidesu.me.tld.csye6225.com"
+    },
+    "dynamoDB": {
+      "Type": "String",
+      "Default": "myDB"
+    },
+    "senderEmail": {
+      "Type": "String",
+      "Default": "noreply@csye6225-fall2018-bhidesu.me"
     }
   },
   "Resources": {
@@ -21,9 +29,9 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-0317e6fef9a822f49",
+        "SubnetId": "subnet-0bd23d33a7664224c",
         "IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
-        "KeyName": "ronak",
+        "KeyName": "MyEC2",
         "Tags": [
           {
             "Key": "Name",
@@ -47,6 +55,10 @@
                 "sudo yum install mysql-server -y \n",
                 "sudo systemctl start mysqld \n",
                 "sudo yum update  -y\n",
+                "sudo yum install collectd -y \n",
+                "sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm \n",
+                "sudo sudo rpm -U ./amazon-cloudwatch-agent.rpm \n",
+                "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:WebApp -s \n",
                 "sudo yum install -y python36u python36u-libs python36u-devel python36u-pip -y \n",
                 "sudo yum install nodejs -y \n",
                 "sudo yum install gcc gcc-c++ make -y \n",
@@ -59,8 +71,32 @@
                 "sudo echo NODE_ENV=development > /var/.env \n",
                 "sudo echo DB_USER=csye6225master >> /var/.env \n",
                 "sudo echo DB_PASS=csye6225password >> /var/.env \n",
-                "sudo echo DB_PORT=3306 >> /var/.env \n",
+                "sudo echo DB_PORT=3306 >> /var/.env \n",                
                 "sudo echo DB_NAME=csye6225 >> /var/.env \n",
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "sudo echo EMAIL_SOURCE=",
+                      {
+                        "Ref": "senderEmail"
+                      },
+                      " >> /var/.env \n"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "sudo echo DDB_TABLE=",
+                      {
+                        "Ref": "dynamoDB"
+                      },
+                      " >> /var/.env \n"
+                    ]
+                  ]
+                },
                 {
                   "Fn::Join": [
                     "",
@@ -130,7 +166,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-087c4b81864f25b89"
+        "VpcId": "vpc-0839bfdf92131dbd8"
       }
     },
     "csye6225RDS": {
@@ -156,7 +192,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-087c4b81864f25b89"
+        "VpcId": "vpc-0839bfdf92131dbd8"
       }
     },
     "Dynamodb": {
@@ -174,7 +210,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "DynamoDb",
+        "TableName": "myDB",
         "Tags": [
           {
             "Key": "csye6225",
@@ -191,7 +227,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-shingalar.me.tld.csye6225.com",
+        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -207,7 +243,7 @@
         "Engine": "MySQL",
         "DBInstanceClass": "db.t2.medium",
         "MultiAZ": "false",
-        "DBInstanceIdentifier": "rshingala-csye6225-fall2018",
+        "DBInstanceIdentifier": "csye6225-fall2018-1",
         "MasterUsername": "csye6225master",
         "MasterUserPassword": "csye6225password",
         "PubliclyAccessible": "false",
@@ -226,11 +262,11 @@
       "Type": "AWS::RDS::DBSubnetGroup",
       "Properties": {
         "DBSubnetGroupDescription": "RDS DB subnet group",
-        "DBSubnetGroupName": "rshingala-dbSubnetGrp",
+        "DBSubnetGroupName": "dbSubnetGrp-1",
         "SubnetIds": [
-          "subnet-0b6383984e482cc6a",
-          "subnet-0f9b921837c9e50f5",
-          "subnet-03180894454ce40b3"
+          "subnet-0de355116b6454eec",
+          "subnet-08c4d0f6ea5219bd3",
+          "subnet-01c87505c795d286c"
         ],
         "Tags": [
           {
@@ -243,7 +279,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-087c4b81864f25b89",
+        "EC2VpcId": "vpc-0839bfdf92131dbd8",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {
