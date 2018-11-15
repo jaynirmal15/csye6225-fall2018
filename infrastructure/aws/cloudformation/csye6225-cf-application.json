@@ -8,6 +8,10 @@
     "s3domain": {
       "Type": "String",
       "Default": "csye6225-fall2018-bhidesu.me.tld.csye6225.com"
+    },
+    "dynamoDB": {
+      "Type": "String",
+      "Default": "dhahahh"
     }
   },
   "Resources": {
@@ -60,7 +64,20 @@
                 "sudo echo DB_USER=csye6225master >> /var/.env \n",
                 "sudo echo DB_PASS=csye6225password >> /var/.env \n",
                 "sudo echo DB_PORT=3306 >> /var/.env \n",
+                "sudo echo EMAIL_SOURCE=noreply@csye6225-fall2018-nirmalj.me >> /var/.env \n",
                 "sudo echo DB_NAME=csye6225 >> /var/.env \n",
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "sudo echo DDB_TABLE=",
+                      {
+                        "Ref": "dynamoDB"
+                      },
+                      " >> /var/.env \n"
+                    ]
+                  ]
+                },
                 {
                   "Fn::Join": [
                     "",
