@@ -8,6 +8,14 @@
     "s3domain": {
       "Type": "String",
       "Default": "csye6225-fall2018-bhidesu.me.tld.csye6225.com"
+    },
+    "dynamoDB": {
+      "Type": "String",
+      "Default": "myDB"
+    },
+    "senderEmail": {
+      "Type": "String",
+      "Default": "noreply@csye6225-fall2018-bhidesu.me"
     }
   },
   "Resources": {
@@ -23,7 +31,7 @@
         "InstanceType": "t2.micro",
         "SubnetId": "subnet-0bd23d33a7664224c",
         "IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
-        "KeyName": "supriya",
+        "KeyName": "MyEC2",
         "Tags": [
           {
             "Key": "Name",
@@ -47,6 +55,10 @@
                 "sudo yum install mysql-server -y \n",
                 "sudo systemctl start mysqld \n",
                 "sudo yum update  -y\n",
+                "sudo yum install collectd -y \n",
+                "sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm \n",
+                "sudo sudo rpm -U ./amazon-cloudwatch-agent.rpm \n",
+                "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:WebApp -s \n",
                 "sudo yum install -y python36u python36u-libs python36u-devel python36u-pip -y \n",
                 "sudo yum install nodejs -y \n",
                 "sudo yum install gcc gcc-c++ make -y \n",
@@ -61,6 +73,30 @@
                 "sudo echo DB_PASS=csye6225password >> /var/.env \n",
                 "sudo echo DB_PORT=3306 >> /var/.env \n",
                 "sudo echo DB_NAME=csye6225 >> /var/.env \n",
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "sudo echo EMAIL_SOURCE=",
+                      {
+                        "Ref": "senderEmail"
+                      },
+                      " >> /var/.env \n"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "sudo echo DDB_TABLE=",
+                      {
+                        "Ref": "dynamoDB"
+                      },
+                      " >> /var/.env \n"
+                    ]
+                  ]
+                },
                 {
                   "Fn::Join": [
                     "",
@@ -174,7 +210,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "myDB1",
+        "TableName": "myDB",
         "Tags": [
           {
             "Key": "csye6225",
