@@ -791,7 +791,7 @@ app.get('/reset',(req,res)=>{
     //var useremail = "gupta.tus@northeastern.edu";
     
       var msg = userEmail+"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
-      logger.info("Message is --> " + msg)
+    //  logger.info("Message is --> " + msg)
       var params = {
         Message: msg, /* required */
         TopicArn:process.env.TOPIC_ARN
@@ -800,7 +800,7 @@ app.get('/reset',(req,res)=>{
       sns.publish(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else{
-          logger.info(data);        
+     //     logger.info(data);        
         }           // successful response
       });
     
