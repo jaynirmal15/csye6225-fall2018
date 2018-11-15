@@ -162,3 +162,38 @@ fi
 ###################################################################################
 
 echo "Stack Create Execution Complete...!!!"
+
+
+val='
+{
+	"logs": {
+		"logs_collected": {
+			"files": {
+				"collect_list": [
+					{
+						"file_path": "/var/log/messages",
+						"log_group_name": "Log2"
+					}
+				]
+			}
+		}
+	},
+	"metrics": {
+		"metrics_collected": {
+			"collectd": {
+				"metrics_aggregation_interval": 60
+			},
+			"statsd": {
+				"metrics_aggregation_interval": 60,
+				"metrics_collection_interval": 10,
+				"service_address": ":8125"
+			}
+		}
+	}
+}
+'
+
+echo $val
+parameter_name="WebApp"
+aws ssm put-parameter --name "$parameter_name" --type "String" --value "$val"
+

@@ -78,6 +78,11 @@
             }
           ]
         },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy",
+          "arn:aws:iam::aws:policy/AmazonSSMFullAccess",
+          "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+        ],
         "Path" : "/"
       }
     },
