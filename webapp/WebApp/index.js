@@ -786,7 +786,7 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
 
 
 app.get('/reset',(req,res)=>{
-    var userEmail = req.headers.userEmail
+    var userEmail = req.params.userEmail
     console.log(userEmail);
     console.log(process.env.EMAIL_SOURCE);
     console.log(req.get('host'));
