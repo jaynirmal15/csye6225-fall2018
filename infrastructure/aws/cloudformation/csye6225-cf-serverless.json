@@ -84,7 +84,7 @@
               "Protocol":"lambda"
             }
           ],
-          "TopicName":"LambdaTopic2"
+          "TopicName":"LambdaTopic"
         }
       },
       "LambdaInvokePermission": {
