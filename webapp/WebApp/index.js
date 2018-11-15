@@ -7,12 +7,15 @@ require('dotenv').config();
 const saltRounds = 10;
 const app = express();
 const path=require('path');
-const config = require('./config.js');
+const config = require('./config.json');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const fs = require('fs');
+const log4js = require('log4js');
+log4js.configure('config.json');
+const logger = log4js.getLogger('result');
 //testing
 //process.env.NODE_ENV = 'test';
 var request = require('supertest');
@@ -784,29 +787,34 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
     }
 });
 
-
 app.get('/reset',(req,res)=>{
-    var userEmail = req.header.userEmail
-    console.log(userEmail);
-    console.log(process.env.EMAIL_SOURCE);
-    console.log(req.get('host'));
-    //var useremail = "gupta.tus@northeastern.edu";
+    var username = req.headers.username
     AWS.config.update({region:'us-east-1'});
-    var testing = "sawale.p@northeastern.edu";
-      var msg = testing +"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
-    //  logger.info("Message is --> " + msg)
-      var params = {
-        Message: msg, /* required */
-        TopicArn:process.env.TOPIC_ARN
-      };
-      var sns = new AWS.SNS();
-      sns.publish(params, function(err, data) {
+    var abc={};
+    var sns = new AWS.SNS();
+    sns.listTopics(abc, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
-        else{
-     //     logger.info(data);        
-        }           // successful response
-      });
-    
+        else {
+            arn = data.Topics[0].TopicArn;
+            var msg = username +"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
+            var params = {
+                Message: msg, /* required */
+                TopicArn:arn
+              };
+              sns.publish(params, function(err, data) {
+                if (err){
+                    logger.error(err);
+                     console.log(err, err.stack);
+                }  // an error occurred
+                else{
+                    logger.info(data); 
+                    res.send(data);
+                         
+                }           // successful response
+              });
+              logger.info("Message is --> " + msg);
+        }             // successful response
+      }); 
   });
 
 
