@@ -58,8 +58,7 @@ deploy:
     secret_access_key: $secret_access_key
     wait-until-deployed: true
     on:
-      branch: Assg7-8
-
+      branch: master
 
   - provider: codedeploy
     access_key_id: $access_key_id
@@ -72,7 +71,7 @@ deploy:
     secret_access_key: $secret_access_key
     wait-until-deployed: true
     on:
-      branch: Assg7-8
+      branch: master
 
 
 cache:
