@@ -11,7 +11,7 @@
     },
     "dynamoDB": {
       "Type": "String",
-      "Default": "dynamo1"
+      "Default": "dynamo"
     },
     "senderEmail": {
       "Type": "String",
@@ -29,7 +29,7 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-0cfc1ce0f504cdffa",
+        "SubnetId": "subnet-048d55fb36e44a542",
         "IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
         "KeyName": "MyEC2",
         "Tags": [
@@ -166,7 +166,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-0a192efb18debccf0"
+        "VpcId": "vpc-07586be4491a4690e"
       }
     },
     "csye6225RDS": {
@@ -192,7 +192,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-0a192efb18debccf0"
+        "VpcId": "vpc-07586be4491a4690e"
       }
     },
     "Dynamodb": {
@@ -210,7 +210,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "dynamo1",
+        "TableName": "dynamo",
         "Tags": [
           {
             "Key": "csye6225",
@@ -264,9 +264,9 @@
         "DBSubnetGroupDescription": "RDS DB subnet group",
         "DBSubnetGroupName": "dbSubnetGrp-1",
         "SubnetIds": [
-          "subnet-064fd52a228d0c775",
-          "subnet-01b80136e1f094f12",
-          "subnet-061f7e12770a93f14"
+          "subnet-04104578b8bc7363f",
+          "subnet-013ae51dc0ab40cdd",
+          "subnet-0601448399fcf3cf5"
         ],
         "Tags": [
           {
@@ -279,7 +279,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-0a192efb18debccf0",
+        "EC2VpcId": "vpc-07586be4491a4690e",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {
