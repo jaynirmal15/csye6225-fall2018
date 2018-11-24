@@ -50,7 +50,7 @@ echo "Subnet ID: " $subnet_id
 
 pvt=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='$nw_stack_name-csye6225-private-route-table']].Associations[].SubnetId")
 #pvt=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='net1-csye6225-private-route-table']].Associations[].SubnetId")
-echo $pvt
+echo 'PVT: ' $pvt
 
 count=0
 for i in $pvt
@@ -62,13 +62,34 @@ do
     #subnet=`echo $i  | sed "s/\"//g" | sed 's/,/ /g'`
     subnet=`echo $i  | sed 's/,/ /g'`
     echo $subnet
-    jq '.Resources.DBsubnetGroup.Properties.SubnetIds['$count'] =  '"$subnet"'' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+    jq '.Resources.DBsubnetGroup.Properties.SubnetIds['$count'] =  '"$subnet"'' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
     ((count++))
     echo $count
   fi;
 done
 
 #echo $subnets
+
+# ADD PUBLIC SUBNETS TO LOAD BALANCER
+pub_sub=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='$nw_stack_name-csye6225-public-route-table']].Associations[].SubnetId")
+#pvt=$( aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='net1-csye6225-private-route-table']].Associations[].SubnetId")
+echo 'Pub Subs: ' $pub_sub
+
+count=0
+for i in $pub_sub
+do
+    if [ "$i" = "[" ] || [ "$i" = "]" ]; then
+    echo "...."
+  else
+    #subnets+=$i
+    #subnet=`echo $i  | sed "s/\"//g" | sed 's/,/ /g'`
+    subnet=`echo $i  | sed 's/,/ /g'`
+    echo $subnet
+    jq '.Resources.MyLoadBalancer.Properties.Subnets['$count'] =  '"$subnet"'' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
+    ((count++))
+    echo $count
+  fi;
+done
 
 
 subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'private')]] | [0].SubnetId " --output text)
@@ -90,9 +111,9 @@ subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'pr
 # VPC_ID reference given to the csye6225-cf-application.json for dynamic creation
 ###################################################################################
 
-jq '.Resources.Ec2Instance.Properties.Tags[0].Value = "'$stack_name'-ec2"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+#jq '.Resources.Ec2Instance.Properties.Tags[0].Value = "'$stack_name'-ec2"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
 
-jq '.Resources.Ec2Instance.Properties.SubnetId = "'$subnet_id_pub'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+#jq '.Resources.Ec2Instance.Properties.SubnetId = "'$subnet_id_pub'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
 # stack name reference given to the csye6225-cf-application.json for dynamic creation
 ###################################################################################
 
@@ -121,14 +142,14 @@ jq '.Resources.Ec2Instance.Properties.SubnetId = "'$subnet_id_pub'"' ../cloudfor
 # Reference of dbSubnetGroup Name to DBSubnetGroup Instance....
 ###################################################################################
 
-jq '.Resources.DBsubnetGroup.Properties.DBSubnetGroupName = "'$dBsubnetGroup_name'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+jq '.Resources.DBsubnetGroup.Properties.DBSubnetGroupName = "'$dBsubnetGroup_name'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
 
 
 ###################################################################################
 # Reference of dbIndentifier to DBInstanceIdentifier.....
 ###################################################################################
 
-jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
 
 
 ###################################################################################
