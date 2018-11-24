@@ -26,6 +26,7 @@ dbidentifier="csye6225-fall2018-1"
 dBsubnetGroup_name="dbSubnetGrp-1"
 
 domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
+echo 'Hosted Zone Name: ' $domain
 trimdomain=${domain::-1}
 senderEmail="noreply@$trimdomain"
 bucket_name="$trimdomain.tld.csye6225.com"
@@ -142,14 +143,14 @@ subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'pr
 # Reference of dbSubnetGroup Name to DBSubnetGroup Instance....
 ###################################################################################
 
-jq '.Resources.DBsubnetGroup.Properties.DBSubnetGroupName = "'$dBsubnetGroup_name'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
+#jq '.Resources.DBsubnetGroup.Properties.DBSubnetGroupName = "'$dBsubnetGroup_name'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
 
 
 ###################################################################################
 # Reference of dbIndentifier to DBInstanceIdentifier.....
 ###################################################################################
 
-jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
+#jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
 
 
 ###################################################################################
@@ -158,7 +159,7 @@ jq '.Resources.RDS.Properties.DBInstanceIdentifier = "'$dbidentifier'"' ../cloud
 
 echo "Executing Create Stack....."
 
-aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-auto-scaling-application.json --capabilities=CAPABILITY_NAMED_IAM --parameters ParameterKey=VpcId,ParameterValue=$vpc_id ParameterKey=senderEmail,ParameterValue=$senderEmail ParameterKey=dynamoDB,ParameterValue=$dynamoDB_table ParameterKey=s3domain,ParameterValue=$bucket_name ParameterKey=myAccountId,ParameterValue=$accid
+aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-auto-scaling-application.json --capabilities=CAPABILITY_NAMED_IAM --parameters ParameterKey=VpcId,ParameterValue=$vpc_id ParameterKey=senderEmail,ParameterValue=$senderEmail ParameterKey=dynamoDB,ParameterValue=$dynamoDB_table ParameterKey=s3domain,ParameterValue=$bucket_name ParameterKey=myAccountId,ParameterValue=$accid ParameterKey=DBSubnetGroupName,ParameterValue=$dBsubnetGroup_name ParameterKey=DBInstanceIdentifier,ParameterValue=$dbidentifier ParameterKey=HostedZoneName,ParameterValue=$domain
 
 if eq [ $? -if 0 ]; then
 	echo "Waiting to create gets executed completely...!"

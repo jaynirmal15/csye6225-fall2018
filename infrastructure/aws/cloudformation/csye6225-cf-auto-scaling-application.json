@@ -18,6 +18,15 @@
     },
     "VpcId": {
       "Type": "String"
+    },
+    "DBSubnetGroupName": {
+      "Type": "String"
+    },
+    "DBInstanceIdentifier": {
+      "Type": "String"
+    },
+    "HostedZoneName": {
+      "Type": "String"
     }
   },
   "Resources": {
@@ -317,6 +326,37 @@
         ]
       }
     },
+    "myDNSRecord": {
+      "Type": "AWS::Route53::RecordSetGroup",
+      "Properties": {
+        "HostedZoneName": {
+          "Ref": "HostedZoneName"
+        },
+        "Comment": "DNS name setting",
+        "RecordSets": [
+          {
+            "Name": {
+              "Ref": "HostedZoneName"
+            },
+            "Type": "A",
+            "AliasTarget": {
+              "HostedZoneId": {
+                "Fn::GetAtt": [
+                  "MyLoadBalancer",
+                  "CanonicalHostedZoneID"
+                ]
+              },
+              "DNSName": {
+                "Fn::GetAtt": [
+                  "MyLoadBalancer",
+                  "DNSName"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
     "csye6225Webapp": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -480,7 +520,9 @@
         "Engine": "MySQL",
         "DBInstanceClass": "db.t2.medium",
         "MultiAZ": "false",
-        "DBInstanceIdentifier": "csye6225-fall2018-1",
+        "DBInstanceIdentifier": {
+          "Ref": "DBInstanceIdentifier"
+        },
         "MasterUsername": "csye6225master",
         "MasterUserPassword": "csye6225password",
         "PubliclyAccessible": "false",
@@ -499,7 +541,9 @@
       "Type": "AWS::RDS::DBSubnetGroup",
       "Properties": {
         "DBSubnetGroupDescription": "RDS DB subnet group",
-        "DBSubnetGroupName": "dbSubnetGrp-1",
+        "DBSubnetGroupName": {
+          "Ref": "DBSubnetGroupName"
+        },
         "SubnetIds": [
           "subnet-051b4a4687ce33ce1",
           "subnet-0067d7726cbeae3fb",
