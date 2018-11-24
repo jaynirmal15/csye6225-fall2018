@@ -16,6 +16,10 @@
       "Type": "String",
       "Default": "noreply@csye6225-fall2018-bhidesu.me"
     },
+    "SSLArn": {
+      "Type": "String",
+      "Default": "noreply@csye6225-fall2018-bhidesu.me"
+    },
     "VpcId": {
       "Type": "String"
     },
@@ -73,7 +77,7 @@
     "ASGLaunchConfig": {
       "Type": "AWS::AutoScaling::LaunchConfiguration",
       "Properties": {
-        "AssociatePublicIpAddress": false,
+        "AssociatePublicIpAddress": true,
         "KeyName": "MyEC2",
         "ImageId": "ami-9887c6e7",
         "SecurityGroups": [
@@ -282,7 +286,9 @@
       "Properties": {
         "Certificates": [
           {
-            "CertificateArn": "placeHolder"
+            "CertificateArn":  {
+              "Ref": "SSLArn"
+            }
           }
         ],
         "DefaultActions": [
