@@ -29,13 +29,13 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-044bbd96752dbc3ca",
+        "SubnetId": "subnet-0bd23d33a7664224c",
         "IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
         "KeyName": "MyEC2",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "application-stack-ec2"
+            "Value": "application-stack1-ec2"
           }
         ],
         "UserData": {
@@ -264,9 +264,9 @@
         "DBSubnetGroupDescription": "RDS DB subnet group",
         "DBSubnetGroupName": "dbSubnetGrp-1",
         "SubnetIds": [
-          "subnet-0ce6dccf5b3a6525a",
-          "subnet-0cfa4eade1fe21ea3",
-          "subnet-0ddb6b2b6229d7d21"
+          "subnet-0de355116b6454eec",
+          "subnet-08c4d0f6ea5219bd3",
+          "subnet-01c87505c795d286c"
         ],
         "Tags": [
           {
