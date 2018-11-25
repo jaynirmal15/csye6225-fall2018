@@ -18,7 +18,7 @@
     },
     "SSLArn": {
       "Type": "String",
-      "Default": "noreply@csye6225-fall2018-bhidesu.me"
+      "Default": "csye6225-fall2018-bhidesu.me"
     },
     "VpcId": {
       "Type": "String"
@@ -44,9 +44,11 @@
             "PropagateAtLaunch": true
           }
         ],
-        "AvailabilityZones": {
-          "Fn::GetAZs": ""
-        },
+        "VPCZoneIdentifier": [
+          "subnet-060c7e62255166408",
+          "subnet-03cb6780452597885",
+          "subnet-091a5a42a977eef07"
+        ],
         "LaunchConfigurationName": {
           "Ref": "ASGLaunchConfig"
         },
@@ -67,12 +69,12 @@
               "GroupMaxSize"
             ]
           }
-        ],
-        "DependsOn": [
-          "Listener",
-          "ASGLaunchConfig"
         ]
-      }
+      },
+      "DependsOn": [
+        "Listener",
+        "ASGLaunchConfig"
+      ]
     },
     "ASGLaunchConfig": {
       "Type": "AWS::AutoScaling::LaunchConfiguration",
@@ -286,7 +288,7 @@
       "Properties": {
         "Certificates": [
           {
-            "CertificateArn":  {
+            "CertificateArn": {
               "Ref": "SSLArn"
             }
           }
