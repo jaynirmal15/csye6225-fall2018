@@ -172,7 +172,7 @@ echo "Executing Create Stack....."
 
 aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-auto-scaling-application.json --capabilities=CAPABILITY_NAMED_IAM --parameters ParameterKey=SSLArn,ParameterValue=$SSLArn ParameterKey=VpcId,ParameterValue=$vpc_id ParameterKey=senderEmail,ParameterValue=$senderEmail ParameterKey=dynamoDB,ParameterValue=$dynamoDB_table ParameterKey=s3domain,ParameterValue=$bucket_name ParameterKey=myAccountId,ParameterValue=$accid ParameterKey=DBSubnetGroupName,ParameterValue=$dBsubnetGroup_name ParameterKey=DBInstanceIdentifier,ParameterValue=$dbidentifier ParameterKey=HostedZoneName,ParameterValue=$domain
 
-if eq [ $? -if 0 ]; then
+if [ $? -eq 0 ]; then
 	echo "Waiting to create gets executed completely...!"
 else
 	echo "Error in Create Stack...Exiting..."

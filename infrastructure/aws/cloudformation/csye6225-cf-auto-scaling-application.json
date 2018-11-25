@@ -45,9 +45,9 @@
           }
         ],
         "VPCZoneIdentifier": [
-          "subnet-060c7e62255166408",
-          "subnet-03cb6780452597885",
-          "subnet-091a5a42a977eef07"
+          "subnet-07adb5a4834474d7b",
+          "subnet-071458d9142b5ee85",
+          "subnet-0e24193b25cf7206a"
         ],
         "LaunchConfigurationName": {
           "Ref": "ASGLaunchConfig"
@@ -260,9 +260,9 @@
       "Properties": {
         "Scheme": "internet-facing",
         "Subnets": [
-          "subnet-060c7e62255166408",
-          "subnet-03cb6780452597885",
-          "subnet-091a5a42a977eef07"
+          "subnet-07adb5a4834474d7b",
+          "subnet-071458d9142b5ee85",
+          "subnet-0e24193b25cf7206a"
         ],
         "LoadBalancerAttributes": [
           {
@@ -553,9 +553,9 @@
           "Ref": "DBSubnetGroupName"
         },
         "SubnetIds": [
-          "subnet-051b4a4687ce33ce1",
-          "subnet-0067d7726cbeae3fb",
-          "subnet-04d44c1567f59c77a"
+          "subnet-0195c5c63282acef4",
+          "subnet-0a7113c8edd5c2f7f",
+          "subnet-0167dff74d8126bd8"
         ],
         "Tags": [
           {
