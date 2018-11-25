@@ -7,15 +7,15 @@
     },
     "s3domain": {
       "Type": "String",
-      "Default": "csye6225-fall2018-bhidesu.me.tld.csye6225.com"
+      "Default": "csye6225-fall2018-sawale.me.tld.csye6225.com"
     },
     "dynamoDB": {
       "Type": "String",
-      "Default": "myDB"
+      "Default": "dynamo"
     },
     "senderEmail": {
       "Type": "String",
-      "Default": "noreply@csye6225-fall2018-bhidesu.me"
+      "Default": "noreply@csye6225-fall2018-sawale.me"
     }
   },
   "Resources": {
@@ -29,13 +29,13 @@
         ],
         "ImageId": "ami-9887c6e7",
         "InstanceType": "t2.micro",
-        "SubnetId": "subnet-060c7e62255166408",
+        "SubnetId": "subnet-01a9a6f176bea418f",
         "IamInstanceProfile": "EC2ToS3BucketInstanceProfile",
         "KeyName": "MyEC2",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "application-stack1-ec2"
+            "Value": "application-stack-ec2"
           }
         ],
         "UserData": {
@@ -166,7 +166,7 @@
             "Value": "new-stack-1-ec2"
           }
         ],
-        "VpcId": "vpc-0839bfdf92131dbd8"
+        "VpcId": "vpc-021a40897a734d5e8"
       }
     },
     "csye6225RDS": {
@@ -192,7 +192,7 @@
             "Value": "Assignment3"
           }
         ],
-        "VpcId": "vpc-0839bfdf92131dbd8"
+        "VpcId": "vpc-021a40897a734d5e8"
       }
     },
     "Dynamodb": {
@@ -210,7 +210,7 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "myDB",
+        "TableName": "dynamo",
         "Tags": [
           {
             "Key": "csye6225",
@@ -227,7 +227,7 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
+        "BucketName": "csye6225-fall2018-sawale.me.tld.csye6225.com",
         "Tags": [
           {
             "Key": "csye6225Bucket",
@@ -264,9 +264,9 @@
         "DBSubnetGroupDescription": "RDS DB subnet group",
         "DBSubnetGroupName": "dbSubnetGrp-1",
         "SubnetIds": [
-          "subnet-051b4a4687ce33ce1",
-          "subnet-0067d7726cbeae3fb",
-          "subnet-04d44c1567f59c77a"
+          "subnet-03e6c84b54551c0ff",
+          "subnet-0c89cb651b64dc1bf",
+          "subnet-0e99970c0af8f2597"
         ],
         "Tags": [
           {
@@ -279,7 +279,7 @@
     "csye6225RDSSG": {
       "Type": "AWS::RDS::DBSecurityGroup",
       "Properties": {
-        "EC2VpcId": "vpc-0839bfdf92131dbd8",
+        "EC2VpcId": "vpc-021a40897a734d5e8",
         "DBSecurityGroupIngress": [
           {
             "EC2SecurityGroupId": {

@@ -47,11 +47,12 @@ echo "SSLArn: $SSLArn"
 vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$nw_stack_name']].VpcId" --output text)
 echo "VPC ID: " $vpc_id
 
-subnet_id_pub=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'public')]] | [0].SubnetId " --output text)
+#subnet_id_pub=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'public')]] | [0].SubnetId " --output text)
+subnet_id_pub=$(aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='$nw_stack_name-csye6225-public-route-table']].Associations[].SubnetId")
 #retrieve subnet_ids from the existing created vpc using vpc_id and stack name
 ###################################################################################
 
-echo "Subnet ID: " $subnet_id
+echo "Subnet ID: " $subnet_id_pub
 
 
 ###################################################################################

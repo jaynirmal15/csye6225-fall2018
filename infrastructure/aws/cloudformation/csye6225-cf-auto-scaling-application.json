@@ -6,7 +6,7 @@
     },
     "s3domain": {
       "Type": "String",
-      "Default": "csye6225-fall2018-bhidesu.me.tld.csye6225.com"
+      "Default": "csye6225-fall2018-sawale.me.tld.csye6225.com"
     },
     "dynamoDB": {
       "Type": "String",
@@ -45,9 +45,9 @@
           }
         ],
         "VPCZoneIdentifier": [
-          "subnet-07adb5a4834474d7b",
-          "subnet-071458d9142b5ee85",
-          "subnet-0e24193b25cf7206a"
+          "subnet-0734e9f49a5d6be7b",
+          "subnet-01a9a6f176bea418f",
+          "subnet-093fc63d8e65e2860"
         ],
         "LaunchConfigurationName": {
           "Ref": "ASGLaunchConfig"
@@ -56,9 +56,9 @@
         "MaxSize": "10",
         "DesiredCapacity": "3",
         "Cooldown": "60",
-        "LoadBalancerNames": [
+        "TargetGroupARNs": [
           {
-            "Ref": "MyLoadBalancer"
+            "Ref": "myTargetGroup"
           }
         ],
         "MetricsCollection": [
@@ -70,11 +70,7 @@
             ]
           }
         ]
-      },
-      "DependsOn": [
-        "Listener",
-        "ASGLaunchConfig"
-      ]
+      }
     },
     "ASGLaunchConfig": {
       "Type": "AWS::AutoScaling::LaunchConfiguration",
@@ -260,9 +256,9 @@
       "Properties": {
         "Scheme": "internet-facing",
         "Subnets": [
-          "subnet-07adb5a4834474d7b",
-          "subnet-071458d9142b5ee85",
-          "subnet-0e24193b25cf7206a"
+          "subnet-0734e9f49a5d6be7b",
+          "subnet-01a9a6f176bea418f",
+          "subnet-093fc63d8e65e2860"
         ],
         "LoadBalancerAttributes": [
           {
@@ -553,9 +549,9 @@
           "Ref": "DBSubnetGroupName"
         },
         "SubnetIds": [
-          "subnet-0195c5c63282acef4",
-          "subnet-0a7113c8edd5c2f7f",
-          "subnet-0167dff74d8126bd8"
+          "subnet-03e6c84b54551c0ff",
+          "subnet-0c89cb651b64dc1bf",
+          "subnet-0e99970c0af8f2597"
         ],
         "Tags": [
           {
