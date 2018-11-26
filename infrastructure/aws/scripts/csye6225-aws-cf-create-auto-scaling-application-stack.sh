@@ -148,7 +148,7 @@ subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'pr
 ###################################################################################
 
 
-# jq '.Resources.S3Bucket.Properties.BucketName = "'$bucket_name'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+# jq '.Resources.S3Bucket.Properties.BucketName = "'$bucket_name'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
 
 
 ###################################################################################
