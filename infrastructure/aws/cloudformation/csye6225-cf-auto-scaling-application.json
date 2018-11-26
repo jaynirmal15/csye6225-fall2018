@@ -786,7 +786,7 @@
             "Value": "bhidesuBucket"
           }
         ]
-      }
+      
     },
     "RDS": {
       "Type": "AWS::RDS::DBInstance",
