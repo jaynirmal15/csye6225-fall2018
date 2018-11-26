@@ -1,4 +1,24 @@
 ###################################################################################
+###################################################################################
+
+appname="csye6225CodeDeployApplication"
+echo $appname
+depname="csye6225CodeDeployApplication-depgroup"
+echo $depname
+accid=$(aws sts get-caller-identity --output text --query 'Account')
+echo "AccountId: $accid"
+
+domain=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
+trimdomain=${domain::-1}
+s3codedeploy="code-deploy.$trimdomain"
+echo "S3 Domain: $s3codedeploy"
+
+
+###################################################################################
+###################################################################################
+
+
+###################################################################################
 #starting of script
 #Get a STACK name to create new one.
 ###################################################################################
@@ -47,11 +67,12 @@ echo "SSLArn: $SSLArn"
 vpc_id=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='aws:cloudformation:stack-name']|[?Value=='$nw_stack_name']].VpcId" --output text)
 echo "VPC ID: " $vpc_id
 
-subnet_id_pub=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'public')]] | [0].SubnetId " --output text)
+#subnet_id_pub=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'public')]] | [0].SubnetId " --output text)
+subnet_id_pub=$(aws ec2 describe-route-tables --query "RouteTables[?Tags[?Key=='Name']|[?Value=='$nw_stack_name-csye6225-public-route-table']].Associations[].SubnetId")
 #retrieve subnet_ids from the existing created vpc using vpc_id and stack name
 ###################################################################################
 
-echo "Subnet ID: " $subnet_id
+echo "Subnet ID: " $subnet_id_pub
 
 
 ###################################################################################
@@ -105,6 +126,8 @@ done
 
 
 subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'private')]] | [0].SubnetId " --output text)
+
+
 #echo "Subnet ID: " $subnet_id
 
 ###################################################################################
@@ -147,7 +170,7 @@ subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'pr
 ###################################################################################
 
 
-# jq '.Resources.S3Bucket.Properties.BucketName = "'$bucket_name'"' ../cloudformation/csye6225-cf-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-application.json
+# jq '.Resources.S3Bucket.Properties.BucketName = "'$bucket_name'"' ../cloudformation/csye6225-cf-auto-scaling-application.json > tmp.$$.json && mv tmp.$$.json ../cloudformation/csye6225-cf-auto-scaling-application.json
 
 
 ###################################################################################
@@ -170,7 +193,7 @@ subnet_id=$(aws ec2 describe-subnets --query "Subnets[?Tags[?contains(Value, 'pr
 
 echo "Executing Create Stack....."
 
-aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-auto-scaling-application.json --capabilities=CAPABILITY_NAMED_IAM --parameters ParameterKey=SSLArn,ParameterValue=$SSLArn ParameterKey=VpcId,ParameterValue=$vpc_id ParameterKey=senderEmail,ParameterValue=$senderEmail ParameterKey=dynamoDB,ParameterValue=$dynamoDB_table ParameterKey=s3domain,ParameterValue=$bucket_name ParameterKey=myAccountId,ParameterValue=$accid ParameterKey=DBSubnetGroupName,ParameterValue=$dBsubnetGroup_name ParameterKey=DBInstanceIdentifier,ParameterValue=$dbidentifier ParameterKey=HostedZoneName,ParameterValue=$domain
+aws cloudformation create-stack --stack-name ${stack_name} --template-body file://../cloudformation/csye6225-cf-auto-scaling-application.json --capabilities=CAPABILITY_NAMED_IAM --parameters ParameterKey=SSLArn,ParameterValue=$SSLArn ParameterKey=VpcId,ParameterValue=$vpc_id ParameterKey=senderEmail,ParameterValue=$senderEmail ParameterKey=dynamoDB,ParameterValue=$dynamoDB_table ParameterKey=s3domain,ParameterValue=$bucket_name ParameterKey=s3codedeploy,ParameterValue=$s3codedeploy ParameterKey=myAccountId,ParameterValue=$accid ParameterKey=DBSubnetGroupName,ParameterValue=$dBsubnetGroup_name ParameterKey=DBInstanceIdentifier,ParameterValue=$dbidentifier ParameterKey=HostedZoneName,ParameterValue=$domain ParameterKey=appname,ParameterValue=$appname ParameterKey=depname,ParameterValue=$depname ParameterKey=accid,ParameterValue=$accid
 
 if [ $? -eq 0 ]; then
 	echo "Waiting to create gets executed completely...!"
