@@ -1,12 +1,68 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
+  "Metadata": {
+    "AWS::CloudFormation::Interface": {
+      "ParameterGroups": [
+        {
+          "Label": {
+            "default": "Protection List"
+          },
+          "Parameters": [
+            "SqlInjectionProtectionParam",
+            "CrossSiteScriptingProtectionParam",
+            "ActivateHttpFloodProtectionParam"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Settings"
+          },
+          "Parameters": [
+            "AccessLogBucket"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Advanced Settings"
+          },
+          "Parameters": [
+            "RequestThreshold",
+            "ErrorThreshold",
+            "WAFBlockPeriod"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Anonymous Metrics Request"
+          },
+          "Parameters": [
+            "SendAnonymousUsageData"
+          ]
+        }
+      ],
+      "ParameterLabels": {
+        "SqlInjectionProtectionParam": {
+          "default": "Activate SQL Injection Protection"
+        },
+        "ActivateHttpFloodProtectionParam": {
+          "default": "Activate HTTP Flood Protection"
+        },
+        "RequestThreshold": {
+          "default": "Request Threshold"
+        }
+      }
+    }
+  },
   "Parameters": {
     "myAccountId": {
       "Type": "String"
     },
     "s3domain": {
       "Type": "String",
-      "Default": "csye6225-fall2018-sawale.me.tld.csye6225.com"
+      "Default": "csye6225-fall2018-bhidesu.me.tld.csye6225.com"
+    },
+    "s3codedeploy": {
+      "Type": "String"
     },
     "dynamoDB": {
       "Type": "String",
@@ -14,11 +70,11 @@
     },
     "senderEmail": {
       "Type": "String",
-      "Default": "noreply@csye6225-fall2018-bhidesu.me"
+      "Default": "noreply@csye6225-fall2018-sawale.me"
     },
     "SSLArn": {
       "Type": "String",
-      "Default": "csye6225-fall2018-bhidesu.me"
+      "Default": "csye6225-fall2018-sawale.me"
     },
     "VpcId": {
       "Type": "String"
@@ -31,9 +87,222 @@
     },
     "HostedZoneName": {
       "Type": "String"
+    },
+    "appname": {
+      "Description": "Application Name",
+      "Type": "String"
+    },
+    "depname": {
+      "Description": "Deployment Group Name",
+      "Type": "String"
+    },
+    "accid": {
+      "Description": "Account Id",
+      "Type": "String"
+    },
+    "SqlInjectionProtectionParam": {
+      "Type": "String",
+      "Default": "yes",
+      "AllowedValues": [
+        "yes",
+        "no"
+      ],
+      "Description": "Choose yes to enable the component designed to block common SQL injection attacks."
+    },
+    "ActivateHttpFloodProtectionParam": {
+      "Type": "String",
+      "Default": "yes",
+      "AllowedValues": [
+        "yes",
+        "no"
+      ],
+      "Description": "Choose yes to enable the component designed to block HTTP flood attacks."
+    },
+    "RequestThreshold": {
+      "Type": "Number",
+      "Default": "2000",
+      "MinValue": "2000",
+      "Description": "If you chose yes for the Activate HTTP Flood Protection parameter, enter the maximum acceptable requests per FIVE-minute period per IP address. Minimum value of 2000. If you chose to deactivate this protection, ignore this parameter."
+    }
+  },
+  "Conditions": {
+    "SqlInjectionProtectionActivated": {
+      "Fn::Equals": [
+        {
+          "Ref": "SqlInjectionProtectionParam"
+        },
+        "yes"
+      ]
+    },
+    "HttpFloodProtectionActivated": {
+      "Fn::Equals": [
+        {
+          "Ref": "ActivateHttpFloodProtectionParam"
+        },
+        "yes"
+      ]
+    },
+    "CreateWebACL": {
+      "Fn::Or": [
+        {
+          "Condition": "SqlInjectionProtectionActivated"
+        },
+        {
+          "Condition": "HttpFloodProtectionActivated"
+        }
+      ]
     }
   },
   "Resources": {
+    "MyWebACLAssociation": {
+      "Type": "AWS::WAFRegional::WebACLAssociation",
+      "Properties": {
+        "ResourceArn": {
+          "Ref": "MyLoadBalancer"
+        },
+        "WebACLId": {
+          "Ref": "WAFWebACL"
+        }
+      }
+    },
+    "WAFSqlInjectionDetection": {
+      "Type": "AWS::WAFRegional::SqlInjectionMatchSet",
+      "Condition": "SqlInjectionProtectionActivated",
+      "Properties": {
+        "Name": {
+          "Fn::Join": [
+            " - ",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "SQL injection Detection"
+            ]
+          ]
+        },
+        "SqlInjectionMatchTuples": [
+          {
+            "FieldToMatch": {
+              "Type": "QUERY_STRING"
+            },
+            "TextTransformation": "URL_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "QUERY_STRING"
+            },
+            "TextTransformation": "HTML_ENTITY_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "BODY"
+            },
+            "TextTransformation": "URL_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "BODY"
+            },
+            "TextTransformation": "HTML_ENTITY_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "URI"
+            },
+            "TextTransformation": "URL_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "URI"
+            },
+            "TextTransformation": "HTML_ENTITY_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "HEADER",
+              "Data": "Cookie"
+            },
+            "TextTransformation": "URL_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "HEADER",
+              "Data": "Cookie"
+            },
+            "TextTransformation": "HTML_ENTITY_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "HEADER",
+              "Data": "Authorization"
+            },
+            "TextTransformation": "URL_DECODE"
+          },
+          {
+            "FieldToMatch": {
+              "Type": "HEADER",
+              "Data": "Authorization"
+            },
+            "TextTransformation": "HTML_ENTITY_DECODE"
+          }
+        ]
+      }
+    },
+    "WAFSqlInjectionRule": {
+      "Type": "AWS::WAFRegional::Rule",
+      "Condition": "SqlInjectionProtectionActivated",
+      "DependsOn": "WAFSqlInjectionDetection",
+      "Properties": {
+        "Name": {
+          "Fn::Join": [
+            " - ",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "SQL Injection Rule"
+            ]
+          ]
+        },
+        "MetricName": "SecurityAutomationsSqlInjectionRule",
+        "Predicates": [
+          {
+            "DataId": {
+              "Ref": "WAFSqlInjectionDetection"
+            },
+            "Negated": false,
+            "Type": "SqlInjectionMatch"
+          }
+        ]
+      }
+    },
+    "WAFWebACL": {
+      "Type": "AWS::WAFRegional::WebACL",
+      "Condition": "CreateWebACL",
+      "DependsOn": [
+        "WAFSqlInjectionRule"
+      ],
+      "Properties": {
+        "Name": {
+          "Ref": "AWS::StackName"
+        },
+        "DefaultAction": {
+          "Type": "ALLOW"
+        },
+        "MetricName": "SecurityAutomationsMaliciousRequesters",
+        "Rules": [
+          {
+            "Action": {
+              "Type": "BLOCK"
+            },
+            "Priority": 1,
+            "RuleId": {
+              "Ref": "WAFSqlInjectionRule"
+            }
+          }
+        ]
+      }
+    },
     "WebServerGroup": {
       "Type": "AWS::AutoScaling::AutoScalingGroup",
       "Properties": {
@@ -45,9 +314,9 @@
           }
         ],
         "VPCZoneIdentifier": [
-          "subnet-0734e9f49a5d6be7b",
-          "subnet-01a9a6f176bea418f",
-          "subnet-093fc63d8e65e2860"
+          "subnet-060c7e62255166408",
+          "subnet-03cb6780452597885",
+          "subnet-091a5a42a977eef07"
         ],
         "LaunchConfigurationName": {
           "Ref": "ASGLaunchConfig"
@@ -139,6 +408,21 @@
                       "sudo echo DDB_TABLE=",
                       {
                         "Ref": "dynamoDB"
+                      },
+                      " >> /var/.env \n"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "sudo echo DB_HOST=",
+                      {
+                        "Fn::GetAtt": [
+                          "RDS",
+                          "Endpoint.Address"
+                        ]
                       },
                       " >> /var/.env \n"
                     ]
@@ -256,9 +540,9 @@
       "Properties": {
         "Scheme": "internet-facing",
         "Subnets": [
-          "subnet-0734e9f49a5d6be7b",
-          "subnet-01a9a6f176bea418f",
-          "subnet-093fc63d8e65e2860"
+          "subnet-060c7e62255166408",
+          "subnet-03cb6780452597885",
+          "subnet-091a5a42a977eef07"
         ],
         "LoadBalancerAttributes": [
           {
@@ -508,11 +792,35 @@
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "AccessControl": "Private",
-        "BucketName": "csye6225-fall2018-bhidesu.me.tld.csye6225.com",
+        "BucketName": {
+          "Ref": "s3domain"
+        },
         "Tags": [
           {
             "Key": "csye6225Bucket",
-            "Value": "psawaleBucket"
+            "Value": "bhidesuBucket"
+          }
+        ]
+      }
+    },
+    "RDS": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AllocatedStorage": "10",
+        "Engine": "MySQL",
+        "DBInstanceClass": "db.t2.medium",
+        "MultiAZ": "false",
+        "DBInstanceIdentifier": "csye6225-fall2018-1",
+        "MasterUsername": "csye6225master",
+        "MasterUserPassword": "csye6225password",
+        "PubliclyAccessible": "false",
+        "DBName": "csye6225",
+        "DBSubnetGroupName": {
+          "Ref": "DBsubnetGroup"
+        },
+        "DBSecurityGroups": [
+          {
+            "Ref": "csye6225RDSSG"
           }
         ]
       }
@@ -549,9 +857,9 @@
           "Ref": "DBSubnetGroupName"
         },
         "SubnetIds": [
-          "subnet-03e6c84b54551c0ff",
-          "subnet-0c89cb651b64dc1bf",
-          "subnet-0e99970c0af8f2597"
+          "subnet-051b4a4687ce33ce1",
+          "subnet-0067d7726cbeae3fb",
+          "subnet-04d44c1567f59c77a"
         ],
         "Tags": [
           {
@@ -580,6 +888,212 @@
             "Key": "csye6225",
             "Value": "RDS SEcurity Group"
           }
+        ]
+      }
+    },
+    "TravisToCodeDeployInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [
+          {
+            "Ref": "TravisToCodeDeployRole"
+          }
+        ]
+      }
+    },
+    "TravisToCodeDeployPolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "ManagedPolicyName": "TravisToCodeDeployPolicy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "codedeploy:RegisterApplicationRevision",
+                "codedeploy:GetApplicationRevision"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:us-east-1:",
+                      {
+                        "Ref": "accid"
+                      },
+                      ":application:csye6225CodeDeployApplication"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "codedeploy:CreateDeployment",
+                "codedeploy:GetDeployment"
+              ],
+              "Resource": [
+                "*"
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "codedeploy:GetDeploymentConfig"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:us-east-1:",
+                      {
+                        "Ref": "accid"
+                      },
+                      ":deploymentconfig:CodeDeployDefault.OneAtATime"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:us-east-1:",
+                      {
+                        "Ref": "accid"
+                      },
+                      ":deploymentconfig:CodeDeployDefault.HalfAtATime"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:codedeploy:us-east-1:",
+                      {
+                        "Ref": "accid"
+                      },
+                      ":deploymentconfig:CodeDeployDefault.AllAtOnce"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "Roles": [
+          {
+            "Ref": "TravisToCodeDeployRole"
+          }
+        ]
+      }
+    },
+    "TravisToCodeDeployRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/"
+      }
+    },
+    "CodeDeployServiceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+        ],
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com",
+                  "codedeploy.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "RoleName": "CodeDeployServiceRole"
+      }
+    },
+    "CodeDeployS3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {
+          "Ref": "s3codedeploy"
+        }
+      }
+    },
+    "CodeDeployApplication": {
+      "Type": "AWS::CodeDeploy::Application",
+      "Properties": {
+        "ApplicationName": {
+          "Ref": "appname"
+        }
+      }
+    },
+    "CodeDeployDeploymentGroup": {
+      "Type": "AWS::CodeDeploy::DeploymentGroup",
+      "Properties": {
+        "ApplicationName": {
+          "Ref": "appname"
+        },
+        "Ec2TagFilters": [
+          {
+            "Key": "NAME",
+            "Value": "CSYE6225",
+            "Type": "KEY_AND_VALUE"
+          }
+        ],
+        "AutoScalingGroups": [
+          {
+            "Ref": "WebServerGroup"
+          }
+        ],
+        "ServiceRoleArn": {
+          "Fn::GetAtt": [
+            "CodeDeployServiceRole",
+            "Arn"
+          ]
+        },
+        "DeploymentGroupName": {
+          "Ref": "depname"
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "CodeDeployServiceRoleArn": {
+      "Description": "Code Deploy Arn",
+      "Value": {
+        "Fn::GetAtt": [
+          "CodeDeployServiceRole",
+          "Arn"
         ]
       }
     }
