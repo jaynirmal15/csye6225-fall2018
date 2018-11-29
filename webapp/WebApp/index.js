@@ -67,7 +67,7 @@ else if(process.env.NODE_ENV==="development")
 //init upload
 const upload=multer({
     storage:storage,
-    limits:{fileSize:1000000},
+    limits:{fileSize:2000000},
     fileFilter:function(req,file,callback){
         checkFileType(file,callback);
         console.log(file);
