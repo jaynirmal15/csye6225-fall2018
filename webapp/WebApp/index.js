@@ -812,41 +812,45 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
 
 app.get('/reset',(req,res)=>{
     client.increment('reset');
-    var username = req.headers.username
-    AWS.config.update({region:'us-east-1'});
-    var abc={};
-    var sns = new AWS.SNS();
-    sns.listTopics(abc, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else {
-            arn = data.Topics[0].TopicArn;
-            var msg = username +"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
-            var params = {
-                Message: msg, /* required */
-                TopicArn:arn
-              };
-              sns.publish(params, function(err, data) {
-                if (err){
-                    logger.error(err);
-                     console.log(err, err.stack);
-                }  // an error occurred
-                else{
-                    logger.info(data); 
-                    res.send(data);
-                         
-                }           // successful response
-              });
-              logger.info("Message is --> " + msg);
-        }             // successful response
-      }); 
+    var userSql = `SELECT username from login WHERE username = '${req.headers.username}'`;
+    db.query(userSql,function(err,resul){
+        if(err){
+            throw err;
+        }
+        else if(resul[0]){
+            var username = req.headers.username
+            AWS.config.update({region:'us-east-1'});
+            var abc={};
+            var sns = new AWS.SNS();
+            sns.listTopics(abc, function(err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else {
+                    arn = data.Topics[0].TopicArn;
+                    var msg = username +"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
+                    var params = {
+                        Message: msg, /* required */
+                        TopicArn:arn
+                      };
+                      sns.publish(params, function(err, data) {
+                        if (err){
+                            logger.error(err);
+                             console.log(err, err.stack);
+                        }  // an error occurred
+                        else{
+                            logger.info(data); 
+                            res.send(data);
+                                 
+                        }           // successful response
+                      });
+                      logger.info("Message is --> " + msg);
+                }             // successful response
+              }); 
+        }
+        else{
+            res.send("User not registered");
+        }
+    });
   });
-
-
-
-
-
-
-
 
 
 //Code to validate email

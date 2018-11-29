@@ -1,25 +1,26 @@
-
 {
-"AWSTemplateFormatVersion" : "2010-09-09",
-"Description" : "SNS",
-"Parameters" : {
-  "roleName" : {
-    "Type": "String"    
-  },
-  "s3domain": {
-    "Type": "String",
-    "Default": "code-deploy.csye6225-fall2018-sawale.me"
-  },
-  "fnName": {
-    "Type": "String",
-    "Default": "lambdaFunction"
-  }
-},
-"Resources" : {
-			"lambdaServiceRole": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "SNS",
+    "Parameters": {
+        "roleName": {
+            "Type": "String"
+        },
+        "s3domain": {
+            "Type": "String",
+            "Default": "code-deploy.csye6225-fall2018-sawale.me"
+        },
+        "fnName": {
+            "Type": "String",
+            "Default": "lambdaFunction"
+        }
+    },
+    "Resources": {
+        "lambdaServiceRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
-                "RoleName": { "Ref" : "roleName" },
+                "RoleName": {
+                    "Ref": "roleName"
+                },
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [
@@ -69,53 +70,61 @@
                     }
                 ]
             }
-        },		
-      "MySNSTopic":{
-        "Type":"AWS::SNS::Topic",
-        "Properties":{
-            "Subscription":[
-            {
-              "Endpoint":{
-              	"Fn::GetAtt": [
-            			"MyLambdaFunction",
-            			"Arn"
-           			]
-         			},
-              "Protocol":"lambda"
+        },
+        "MySNSTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "Subscription": [
+                    {
+                        "Endpoint": {
+                            "Fn::GetAtt": [
+                                "MyLambdaFunction",
+                                "Arn"
+                            ]
+                        },
+                        "Protocol": "lambda"
+                    }
+                ],
+                "TopicName": "LambdaTopic"
             }
-          ],
-          "TopicName":"LambdaTopic"
+        },
+        "LambdaInvokePermission": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "Principal": "sns.amazonaws.com",
+                "SourceArn": {
+                    "Ref": "MySNSTopic"
+                },
+                "FunctionName": {
+                    "Ref": "MyLambdaFunction"
+                }
+            }
+        },
+        "MyLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [
+                "lambdaServiceRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "s3domain"
+                    },
+                    "S3Key": "csye6225-lambda.zip"
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "lambdaServiceRole",
+                        "Arn"
+                    ]
+                },
+                "Handler": "index.handler",
+                "Runtime": "nodejs8.10",
+                "FunctionName": {
+                    "Ref": "fnName"
+                }
+            }
         }
-      },
-      "LambdaInvokePermission": {
-        "Type": "AWS::Lambda::Permission",
-        "Properties": {
-            "Action": "lambda:InvokeFunction",
-            "Principal": "sns.amazonaws.com",
-            "SourceArn": {"Ref": "MySNSTopic"},
-            "FunctionName": {"Ref": "MyLambdaFunction"}
-         }
-      },
-      "MyLambdaFunction": {
-       "Type": "AWS::Lambda::Function",
-       "DependsOn": [
-         "lambdaServiceRole"
-       ],
-       "Properties": {
-       		"Code": {
-         		"S3Bucket": { "Ref" : "s3domain"},
-          	"S3Key": "csye6225-lambda.zip"
-       		},
-       		"Role": {
-	          "Fn::GetAtt": [
-	            "lambdaServiceRole",
-	            "Arn"
-          	]
-        	},
-         	"Handler": "index.handler",
-         	"Runtime": "nodejs8.10",
-         	"FunctionName": {"Ref" : "fnName"}
-       }
-     }
     }
 }
