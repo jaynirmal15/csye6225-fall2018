@@ -35,17 +35,7 @@ after_success:
 #   - cp infrastructure/aws/codedeploy/*.sh codedeploy_artifact/
 #   - cp infrastructure/aws/codedeploy/*.yml codedeploy_artifact/
 #   - ls -la
-#   - zip -r csye6225-fall2018.zip ./* >/dev/null
-#   - cp csye6225-fall2018.zip ./../codedeploy_artifact/
-#   - rm -rf csye6225-fall2018.zip
-#   - pwd
-#   - cd codedeploy_artifact/
-#   - ls -la
-#   - zip -r csye6225-fall2018-$TRAVIS_JOB_NUMBER.zip *.yml *.sh csye6225-fall2018.zip >/dev/null 2>&1
-#   - rm -rf csye6225-fall2018.zip
-#   - pwd
-#   - cd ..
-#   - pwd
+
 
 
 deploy:
