@@ -7,7 +7,7 @@ echo $ELB
 
 
 
-Valid=$(aws cloudformation  validate-template --template-body file://../csye6225-cf-waf.json)
+Valid=$(aws cloudformation  validate-template --template-body file://../cloudformation/csye6225-cf-waf.json)
 if [ $? -ne "0" ]
 then
   echo "$Valid"
@@ -18,7 +18,7 @@ else
   echo ""
 fi
 
-create=$(aws cloudformation create-stack --stack-name $sn --template-body file://../csye6225-cf-waf.json --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=MyLoadBalancer,ParameterValue=$ELB)
+create=$(aws cloudformation create-stack --stack-name $sn --template-body file://../cloudformation/csye6225-cf-waf.json --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=MyLoadBalancer,ParameterValue=$ELB)
 
 if [ $? -ne "0" ]
 then
