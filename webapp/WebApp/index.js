@@ -67,7 +67,7 @@ else if(process.env.NODE_ENV==="development")
 //init upload
 const upload=multer({
     storage:storage,
-    limits:{fileSize:1000000},
+    limits:{fileSize:2000000},
     fileFilter:function(req,file,callback){
         checkFileType(file,callback);
         console.log(file);
@@ -567,7 +567,17 @@ app.post('/transaction',(req,res) => {
                         }
                         if(transac)
                         {
-                            res.status(201).json(transac);
+                            let success_sql = `SELECT * from transactions where id= "${uidtesting}"`;
+                            db.query(success_sql,function(err,succeee){
+                                if(err){
+                                    console.log(err);
+                                    throw err;
+                                }
+                                if(succeee){
+                                    res.status(201).json(succeee);
+                                }
+                            });
+                           
                         }
                         if(!transac)
                         {
@@ -802,41 +812,45 @@ app.put('/transactions/:id/attachments/:attachmentId', (req,res) =>{
 
 app.get('/reset',(req,res)=>{
     client.increment('reset');
-    var username = req.headers.username
-    AWS.config.update({region:'us-east-1'});
-    var abc={};
-    var sns = new AWS.SNS();
-    sns.listTopics(abc, function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else {
-            arn = data.Topics[0].TopicArn;
-            var msg = username +"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
-            var params = {
-                Message: msg, /* required */
-                TopicArn:arn
-              };
-              sns.publish(params, function(err, data) {
-                if (err){
-                    logger.error(err);
-                     console.log(err, err.stack);
-                }  // an error occurred
-                else{
-                    logger.info(data); 
-                    res.send(data);
-                         
-                }           // successful response
-              });
-              logger.info("Message is --> " + msg);
-        }             // successful response
-      }); 
+    var userSql = `SELECT username from login WHERE username = '${req.headers.username}'`;
+    db.query(userSql,function(err,resul){
+        if(err){
+            throw err;
+        }
+        else if(resul[0]){
+            var username = req.headers.username
+            AWS.config.update({region:'us-east-1'});
+            var abc={};
+            var sns = new AWS.SNS();
+            sns.listTopics(abc, function(err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else {
+                    arn = data.Topics[0].TopicArn;
+                    var msg = username +"|"+process.env.EMAIL_SOURCE+"|"+process.env.DDB_TABLE+"|"+req.get('host');
+                    var params = {
+                        Message: msg, /* required */
+                        TopicArn:arn
+                      };
+                      sns.publish(params, function(err, data) {
+                        if (err){
+                            logger.error(err);
+                             console.log(err, err.stack);
+                        }  // an error occurred
+                        else{
+                            logger.info(data); 
+                            res.send(data);
+                                 
+                        }           // successful response
+                      });
+                      logger.info("Message is --> " + msg);
+                }             // successful response
+              }); 
+        }
+        else{
+            res.send("User not registered");
+        }
+    });
   });
-
-
-
-
-
-
-
 
 
 //Code to validate email
