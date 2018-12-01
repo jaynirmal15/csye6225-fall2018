@@ -1,0 +1,11 @@
+username,password,description,merchant,amount,date,category
+a1@gmail.com,a1,abc,startbuks,10,10/10/19,coffee
+a2@gmail.com,a2,efg,ahold,11,10/10/19,coffee
+a3@gmail.com,a3,hij,startbuks,12,10/10/19,coffee
+a4@gmail.com,a4,klm,ahold,13,10/10/19,coffee
+a5@gmail.com,a5,nop,startbuks,14,10/10/19,coffee
+a6@gmail.com,a6,qrs,ahold,15,10/10/19,coffee
+a7@gmail.com,a7,abc,startbuks,16,10/10/19,coffee
+a8@gmail.com,a8,efg,ahold,17,10/10/19,coffee
+a9@gmail.com,a9,hij,startbuks,18,10/10/19,coffee
+a10@gmail.com,a10,klm,ahold,19,10/10/19,coffee
