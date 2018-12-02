@@ -374,8 +374,7 @@ throw err;
 }
 else console.log("Database Selected")
 })
-var createTBLLoginSql = 'CREATE table if not exists login ( username
-varchar(255), password varchar(255))';
+var createTBLLoginSql = 'CREATE table if not exists login ( username varchar(255), password varchar(255));';
 db.query(createTBLLoginSql, function (err,createSuc) {
 if(err){
 throw err;
@@ -384,11 +383,7 @@ console.log("Login Created");
 }
 });
 
-const createTBLTransactionsSql = 'CREATE table if not exists
-transactions (id varchar(255),tran_description varchar(255), merchant
-varchar(255),amount varchar(255),transaction_date
-varchar(255),category varchar(255), username varchar(255),PRIMARY KEY
-(id));';
+const createTBLTransactionsSql = 'CREATE table if not exists transactions (id varchar(255),tran_description varchar(255), merchant varchar(255),amount varchar(255),transaction_date varchar(255),category varchar(255), username varchar(255),PRIMARY KEY (id));';
 db.query(createTBLTransactionsSql, function (err,createSuc) {
 if(err){
 throw err;
@@ -397,9 +392,7 @@ console.log("Transactions Table Created successfully");
 }
 });
 
-const createTBLAttachmentsSql = 'CREATE table if not exists
-attachments ( id varchar(255), receipt varchar(255), transaction_id
-varchar(255),environment varchar(255));';
+const createTBLAttachmentsSql = 'CREATE table if not exists attachments ( id varchar(255), receipt varchar(255), transaction_id varchar(255),environment varchar(255));';
 db.query(createTBLAttachmentsSql, function (err,createSuc) {
 if(err){
 throw err;
@@ -423,8 +416,7 @@ if (err) {
 throw err;
 }
 if (!resu[0]) {
-let sql = `INSERT INTO login (username,password) VALUES
-('${req.body.username}','${hash}')`
+let sql = `INSERT INTO login (username,password) VALUES ('${req.body.username}','${hash}')`
 db.query(sql, function (err, result) {
 if (err) {
 throw err;
