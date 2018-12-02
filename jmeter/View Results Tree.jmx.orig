@@ -28,7 +28,11 @@
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
+<<<<<<< HEAD
+          <stringProp name="filename">/home/jaynirmal/Downloads/user.csv</stringProp>
+=======
           <stringProp name="filename">/Users/user/Desktop/user.csv</stringProp>
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
           <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">false</boolProp>
@@ -66,7 +70,11 @@
               </elementProp>
             </collectionProp>
           </elementProp>
+<<<<<<< HEAD
+          <stringProp name="HTTPSampler.domain">csye6225-fall2018-nirmalj.me</stringProp>
+=======
           <stringProp name="HTTPSampler.domain">csye6225-fall2018-shingalar.me</stringProp>
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -98,7 +106,11 @@
         <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
           <collectionProp name="AuthManager.auth_list">
             <elementProp name="" elementType="Authorization">
+<<<<<<< HEAD
+              <stringProp name="Authorization.url">https://csye6225-fall2018-nirmalj.me/</stringProp>
+=======
               <stringProp name="Authorization.url">https://csye6225-fall2018-shingalar.me/</stringProp>
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
               <stringProp name="Authorization.username">${username}</stringProp>
               <stringProp name="Authorization.password">${password}</stringProp>
               <stringProp name="Authorization.domain"></stringProp>
@@ -125,7 +137,11 @@
               </elementProp>
             </collectionProp>
           </elementProp>
+<<<<<<< HEAD
+          <stringProp name="HTTPSampler.domain">csye6225-fall2018-nirmalj.me</stringProp>
+=======
           <stringProp name="HTTPSampler.domain">csye6225-fall2018-shingalar.me</stringProp>
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -140,6 +156,15 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+<<<<<<< HEAD
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">id</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.id</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+=======
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
@@ -154,6 +179,15 @@
           </HeaderManager>
           <hashTree/>
         </hashTree>
+<<<<<<< HEAD
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Attachment Request" enabled="true">
+          <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
+            <collectionProp name="HTTPFileArgs.files">
+              <elementProp name="/home/jaynirmal/Pictures/Screenshot from 2018-11-26 12-24-23.png" elementType="HTTPFileArg">
+                <stringProp name="File.path">/home/jaynirmal/Pictures/Screenshot from 2018-11-26 12-24-23.png</stringProp>
+                <stringProp name="File.paramname">fileupload</stringProp>
+                <stringProp name="File.mimetype">png</stringProp>
+=======
         <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
           <stringProp name="JSONPostProcessor.referenceNames">transactions_id</stringProp>
           <stringProp name="JSONPostProcessor.jsonPathExprs">$.transactions_id</stringProp>
@@ -168,17 +202,26 @@
                 <stringProp name="File.path">/Users/user/Desktop/squirrel.png</stringProp>
                 <stringProp name="File.paramname">fileupload</stringProp>
                 <stringProp name="File.mimetype">image/png</stringProp>
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
               </elementProp>
             </collectionProp>
           </elementProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
+<<<<<<< HEAD
+          <stringProp name="HTTPSampler.domain">csye6225-fall2018-nirmalj.me</stringProp>
+          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/transactions/${id}/attachments</stringProp>
+=======
           <stringProp name="HTTPSampler.domain">csye6225-fall2018-shingalar.me</stringProp>
           <stringProp name="HTTPSampler.port">443</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/transactions/${transactions_id}/attachments</stringProp>
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -189,19 +232,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Content-Type</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">application/json</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
+<<<<<<< HEAD
           <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
@@ -215,6 +246,37 @@
             </collectionProp>
           </AuthManager>
           <hashTree/>
+=======
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">application/json</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+<<<<<<< HEAD
+=======
+          <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
+            <collectionProp name="AuthManager.auth_list">
+              <elementProp name="" elementType="Authorization">
+                <stringProp name="Authorization.url">https://csye6225-fall2018-nirmalj.me/</stringProp>
+                <stringProp name="Authorization.username">${username}</stringProp>
+                <stringProp name="Authorization.password">${password}</stringProp>
+                <stringProp name="Authorization.domain"></stringProp>
+                <stringProp name="Authorization.realm"></stringProp>
+                <stringProp name="Authorization.mechanism">BASIC_DIGEST</stringProp>
+              </elementProp>
+            </collectionProp>
+          </AuthManager>
+          <hashTree/>
+>>>>>>> 13c6add0b49cfeebcaa243049d12bb6409e376dc
         </hashTree>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
