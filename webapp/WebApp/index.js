@@ -364,7 +364,7 @@ db.query(data,function (err,succc) {
     }
     else console.log("Database Selected")
 })
-var createTBLLoginSql = 'CREATE table if not exists login  ( username varchar(255), password varchar(255))';
+var createTBLLoginSql = 'CREATE table if not exists login  ( username varchar(255), password varchar(255));';
 db.query(createTBLLoginSql, function (err,createSuc) {
     if(err){
         throw err;
