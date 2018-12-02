@@ -117,9 +117,9 @@
           "Ref": "DBSubnetGroupName"
         },
         "SubnetIds": [
-          "subnet-0d454159fb9dff67f",
-          "subnet-0bc78ee2bc6e5dc9a",
-          "subnet-0683dcca13ee3ad9c"
+          "subnet-03a71ba12b3a2b48f",
+          "subnet-00c8cffe8c092d7da",
+          "subnet-03e9a859fc9cf1c6f"
         ]
       }
     },
@@ -168,6 +168,7 @@
             "ToPort": "80",
             "CidrIp": "0.0.0.0/0"
           }
+          
         ],
         "VpcId": {
           "Ref": "VpcId"
@@ -351,9 +352,9 @@
         "Cooldown": "60",
         "DesiredCapacity": "3",
         "VPCZoneIdentifier": [
-          "subnet-05dc0d1f0582414de",
-          "subnet-0db62a3e62607c632",
-          "subnet-0504b2f0bebfa3001"
+          "subnet-014858c5c3a2c3015",
+          "subnet-02b04f3581a2a65f0",
+          "subnet-0ce066a11af281d93"
         ],
         "LaunchConfigurationName": {
           "Ref": "ASGLaunchConfig"
@@ -464,9 +465,9 @@
         "Name": "MyALB",
         "Scheme": "internet-facing",
         "Subnets": [
-          "subnet-05dc0d1f0582414de",
-          "subnet-0db62a3e62607c632",
-          "subnet-0504b2f0bebfa3001"
+          "subnet-014858c5c3a2c3015",
+          "subnet-02b04f3581a2a65f0",
+          "subnet-0ce066a11af281d93"
         ],
         "LoadBalancerAttributes": [
           {
