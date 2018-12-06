@@ -376,7 +376,7 @@
         "MaxSize": "10",
         "Tags": [
           {
-            "Key": "NAME",
+            "Key": "Name",
             "Value": "CSYE6225",
             "PropagateAtLaunch": "true"
           }
