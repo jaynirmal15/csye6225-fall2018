@@ -108,4 +108,55 @@ db.query(database, function (err, dataa) {
     }
 });
 
+//Code to validate email
+function validationemail(email) {
+    var em = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return em.test(email);
+}
+
+// Code to validate whitespaces and tabs.
+function hasWhiteSpace(sr) {
+    reWhiteSpace = /\s/g;
+    return reWhiteSpace.test(sr);
+}
+
+
+app.post('/register', (req, res) => {
+    client.increment('registering');
+    if (!req.body.username || !req.body.password) {
+        console.log(req.body);
+        res.json({ success: false, message: 'Please enter username and password.' });
+    }
+    if (req.body.username && req.body.password) {
+        if (validationemail(req.body.username)) {
+            var salt = bcryptjs.genSaltSync(saltRounds);
+            var hash = bcryptjs.hashSync(req.body.password, salt);
+            let selectsql = `Select username from login WHERE username = '${req.body.username}'`;
+            db.query(selectsql, function (err, resu) {
+                if (err) {
+                    throw err;
+                }
+                if (!resu[0]) {
+                    let sql = `INSERT INTO login (username,password) VALUES ('${req.body.username}','${hash}')`
+                    db.query(sql, function (err, result) {
+                        if (err) {
+                            throw err;
+                        }
+                        res.send("User Successfully Created");
+                    })
+                }
+                if (resu[0]) {
+                    res.send("User already exits");
+                }
+            })
+        }
+        else {
+            res.send("incorrect username")
+        }
+    }
+    else {
+        res.send("enter valid username and password")
+    }
+});
+
 
