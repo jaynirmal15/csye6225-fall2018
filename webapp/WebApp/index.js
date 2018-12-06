@@ -8,15 +8,10 @@ require('dotenv').config();
 const saltRounds = 10;
 const app = express();
 const path=require('path');
-const config = require('./config.json');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
-const fs = require('fs');
-const log4js = require('log4js');
-log4js.configure('config.json');
-const logger = log4js.getLogger('result');
 var StatsD = require('node-statsd'),
 client = new StatsD();
 //testing
