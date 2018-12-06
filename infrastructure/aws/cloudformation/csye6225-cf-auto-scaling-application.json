@@ -225,7 +225,9 @@
             "KeyType": "HASH"
           }
         ],
-        "TableName": "myDB",
+        "TableName": {
+          "Ref": "dynamoDB"
+        },
         "ProvisionedThroughput": {
           "ReadCapacityUnits": 2,
           "WriteCapacityUnits": 2
