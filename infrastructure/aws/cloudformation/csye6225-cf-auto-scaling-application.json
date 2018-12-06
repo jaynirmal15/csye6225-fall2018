@@ -156,11 +156,16 @@
             "ToPort": "443",
             "CidrIp": "0.0.0.0/0"
           },
-          {
+         	{
             "IpProtocol": "tcp",
             "FromPort": "3000",
             "ToPort": "3000",
-            "CidrIp": "0.0.0.0/0"
+            "SourceSecurityGroupId": {
+              "Fn::GetAtt": [
+                "LoadBalancerSecurityGroup",
+                "GroupId"
+              ]
+            }
           },
           {
             "IpProtocol": "tcp",
@@ -571,17 +576,7 @@
             "ToPort": "3000",
             "CidrIp": "0.0.0.0/0"
           }
-        ],
-        "SecurityGroupEgress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "3000",
-            "ToPort": "3000",
-            "DestinationSecurityGroupId": {
-              "Ref": "csye6225Webapp"
-            }
-          }
-        ],
+        ],        
         "Tags": [
           {
             "Key": "CSTY6225LB-SG",
