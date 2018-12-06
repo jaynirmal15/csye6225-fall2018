@@ -114,11 +114,7 @@ function validationemail(email) {
     return em.test(email);
 }
 
-// Code to validate whitespaces and tabs.
-function hasWhiteSpace(sr) {
-    reWhiteSpace = /\s/g;
-    return reWhiteSpace.test(sr);
-}
+
 
 
 app.post('/register', (req, res) => {
