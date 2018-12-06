@@ -856,15 +856,15 @@ TopicArn:arn
 };
 sns.publish(params, function(err, data) {
 if (err){
-logger.error(err);
+//logger.error(err);
 console.log(err, err.stack);
 } // an error occurred
 else{
-logger.info(data);
+//logger.info(data);
 res.send(data);
 } // successful response
 });
-logger.info("Message is --> " + msg);
+//logger.info("Message is --> " + msg);
 } // successful response
 });
 }
