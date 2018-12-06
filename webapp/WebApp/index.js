@@ -159,17 +159,6 @@ app.post('/register', (req, res) => {
     }
 });
 
-//Test case for register
-// chai.request(app)
-// .post('/register')
-// .send({username: 'rini@gmail.com',password : 'rinimini'})
-// .end(function (err,res) {
-// expect(res).have.status(200);
-// if(err)
-// {
-// console.log(err);
-// }
-// console.log("Test Successfull");
-// })
+
 
 
